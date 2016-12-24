@@ -1,0 +1,240 @@
+
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Fira+Mono:400,700&subset=cyrillic,cyrillic-ext');
+
+
+body {
+  font-family: 'Noto Serif', serif;
+  font-size: 16px;
+  background-color: #f8f8f8;
+  text-color: #171717
+}
+
+.content-wrap {
+  width: 90%;
+  margin: 0 auto;
+}
+
+@media (max-width: 690px) {
+  .content-wrap {
+    width: 100%;
+  }
+}
+
+a {
+  color: #028;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #03b;
+  text-decoration: underline;
+}
+
+pre {
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #d2d2d2;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 3px;
+}
+
+header .logo > a {
+  color: inherit;
+  text-decoration: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Noto Sans", sans-serif;
+}
+
+.big-logo header .logo > a {
+  font-size: 70px;
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Noto Sans", sans-serif;
+}
+
+h1 > a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+h2 > a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+h3 > a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+h4 > a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+h2 > small {
+  color: #555;
+  padding-left: 1em;
+}
+
+header {
+  border-bottom: solid 1px #aaa;
+}
+
+footer {
+  border-top: solid 1px #aaa;
+  color: #555;
+}
+
+.article-list .intro {
+  margin-left: 2em;
+}
+
+.content img {
+  display: block;
+  max-width: 100%;
+}
+
+/* archive */
+
+.archive {
+  width: 70%;
+}
+
+@media (max-width: 690px) {
+  width: 100%;
+}
+
+.archive a, .archive span{
+  display: block;
+  float: left;
+  margin-bottom: -1px;
+}
+
+.archive li:not(:last-child) {
+	border-bottom: 1px solid #d2d2d2;
+	margin-bottom: -1px;
+}
+
+.archive a.last, .archive span.last {
+  border: 0;
+  margin-bottom: 0;
+}
+
+.archive a {
+  width: 21em;
+  text-indent: 1em;
+  white-space: nowrap;
+}
+
+.archive .year-label,
+.archive .month-label{
+  width: 4em;
+  font-weight: 400;
+  text-rendering: auto;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.archive .month-label {
+  width: 7em;
+}
+
+.archive ul {
+  list-style: none;
+  margin: 0;
+}
+
+.archive ul li {
+  margin: 0;
+}
+
+/* code styling */
+
+code {
+  font-family: 'Fira Mono', monospace;
+  color: #000;
+}
+
+pre code {
+  display: block;
+  line-height: 1.1;
+}
+
+p code {
+  padding: 0.1em 0.3em 0.2em;
+  position: relative;
+  background: #fffff3;
+
+  white-space: nowrap;
+}
+
+/* syntax hl stuff */
+
+code.lang-markdown {
+  color: #424242;
+}
+
+code.lang-markdown .header,
+code.lang-markdown .strong {
+  font-weight: bold;
+}
+
+code.lang-markdown .emphasis {
+  font-style: italic;
+}
+
+code.lang-markdown .horizontal_rule,
+code.lang-markdown .link_label,
+code.lang-markdown .code,
+code.lang-markdown .header,
+code.lang-markdown .link_url {
+  color: #555;
+}
+
+code.lang-markdown .blockquote,
+code.lang-markdown .bullet {
+  color: #bbb;
+}
+
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+.tomorrow-comment, pre .comment, pre .title {
+  color: #8e908c;
+}
+
+.tomorrow-red, pre .variable, pre .attribute, pre .tag, pre .regexp, pre .ruby .constant, pre .xml .tag .title, pre .xml .pi, pre .xml .doctype, pre .html .doctype, pre .css .id, pre .css .class, pre .css .pseudo {
+  color: #c82829;
+}
+
+.tomorrow-orange, pre .number, pre .preprocessor, pre .built_in, pre .literal, pre .params, pre .constant {
+  color: #f5871f;
+}
+
+.tomorrow-yellow, pre .class, pre .ruby .class .title, pre .css .rules .attribute {
+  color: #eab700;
+}
+
+.tomorrow-green, pre .string, pre .value, pre .inheritance, pre .header, pre .ruby .symbol, pre .xml .cdata {
+  color: #718c00;
+}
+
+.tomorrow-aqua, pre .css .hexcolor {
+  color: #3e999f;
+}
+
+.tomorrow-blue, pre .function, pre .python .decorator, pre .python .title, pre .ruby .function .title, pre .ruby .title .keyword, pre .perl .sub, pre .javascript .title, pre .coffeescript .title {
+  color: #4271ae;
+}
+
+.tomorrow-purple, pre .keyword, pre .javascript .function {
+  color: #8959a8;
+}
+
