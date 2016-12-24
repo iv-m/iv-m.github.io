@@ -1,0 +1,27 @@
+
+extends layout
+
+block append vars
+  - bodyclass = 'big-logo'
+
+block content
+  !=contents['about_index.md'].html
+  each article in articles
+    .article-list
+      h2
+        a(href=article.url)= article.title
+        small= moment.utc(article.date).format('YYYY, MMMM DD')
+      .intro
+        if article.intro.length > 0
+          != typogr(article.intro).typogrify()
+        if article.hasMore
+          p.more
+            a(href=article.url) Read it!
+
+block prepend footer
+  if prevPage || nextPage
+    .nav
+      if prevPage
+        a(href=prevPage.url) &laquo; Newer
+      if nextPage
+        a(href=nextPage.url) Next page &raquo;
