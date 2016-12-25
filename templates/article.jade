@@ -5,8 +5,8 @@ block prepend footer
   .about
     !=contents['about_footer.md'].html
   .last-update
-    p This page was last time updated on #{env.helpers.getLastUpdateTime(page.filepath.relative)};
-      | it's build from&nbsp;
+    p Last updated #{env.helpers.getLastUpdateTime(page.filepath.relative)}.
+      | Build on #{ now.toISOString().replace(/T.*/, "") } from&nbsp;
       a(href='https://github.com/iv-m/iv-m.github.io/blob/src/contents/' + page.filepath.relative)
         | #{ page.filepath.relative }
-      | &nbsp;on #{ now.toISOString().replace(/T.*/, "") }.
+      |.
