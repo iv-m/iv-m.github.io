@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "wintersmith build",
+    "build": "rm -rf build/* && wintersmith build",
     "preview": "wintersmith preview",
     "clean": "rm -rf build/*",
     "bash": "bash -i"
