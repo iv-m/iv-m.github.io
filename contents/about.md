@@ -1,7 +1,7 @@
 ---
 title: About this site
 date: 2016-12-25
-template: article.jade
+template: page.jade
 ---
 
 Under construction.
