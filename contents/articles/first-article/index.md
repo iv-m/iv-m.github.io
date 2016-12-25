@@ -14,7 +14,7 @@ how and what was done, and how I feel about it.
 
 They say that most of programmers are optimistic, and also tend to
 search for technical solutions for non-technical problems. So here I am,
-thinkining: "Maybe if tooling around my blog is awesome and convenient
+thinking: "Maybe if tooling around my blog is awesome and convenient
 enough, I'll finally start writing stuff." Well, maybe. It did not work
 for last two or three attempts, but that's certainly not because I just
 was lazy and could not come up with something interesting to write --
@@ -31,7 +31,7 @@ like to share, then come back and fix, then come back and rewrite...
 ## So, do you want a blog?
 
 Let's see. I want to write some stuff. Locally, in my Vim, as it's the
-most convinent way of writing.  Preferably using some neat markup, like
+most convenient way of writing.  Preferably using some neat markup, like
 markdown.
 
 I want to commit what's written to git. I'm fond of git. I'm a git
@@ -44,7 +44,7 @@ goes to production.
 
 ## How do I get there?
 
-First [github pages]. The tutorial is very straghtforward, and I walked
+First [github pages]. The tutorial is very straightforward, and I walked
 it throgh some time ago, leaving it with a simple `index.html` saying
 "Under construction".  The main outcome was: I can put some pages into
 the master branch of a particular repository, and then push it to
@@ -127,7 +127,7 @@ My system is RPM-based, so I stick to RPM when it's about global
 packages. With this setup, I can copy the generated files and
 merge my `project.json` with the generated one in less than a minute,
 and then surprise -- I don't need the global `wintersmith` any more,
-it'll leave in `node_modules` happily ever after.
+it'll live in `node_modules` happily ever after.
 
 Ok, now it's time to clean the stuff up.  One thing I did not expect is
 how complex default Wintersmith template actually is. It really has a
@@ -161,7 +161,7 @@ check how the generated HTMLs have changed -- and when I commit and push
 *in that directory*, I actually update the `master` branch -- and my
 site, thanks to the Github magic.
 
-Now I have a small script for commiting there, which includes
+Now I have a small script for committing there, which includes
 shortlog of the commit of `src` branch into the commit message.
 But that's beyond the basic setup.
 
