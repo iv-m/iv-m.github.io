@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>First article, or how this site started - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>First article, or how this site started</h1>
+        <div class="content"><p>Hi&nbsp;there!</p>
+<p>Now, when I ductaped together quite a bit of infrastructure,
+it’s time to write something <strong>for real</strong>. I’d also like to describe
+how and what was done, and how I feel about&nbsp;it.</p>
+<h2 id="so-do-you-want-a-blog-">So, do you want a&nbsp;blog?</h2>
+<p>They say that most of programmers are optimistic, and also tend to
+search for technical solutions for non-technical problems. So here I am,
+thinkining: “Maybe if tooling around my blog is awesome and convenient
+enough, I’ll finally start writing stuff.” Well, maybe. It did not work
+for last two or three attempts, but that’s certainly not because I just
+was lazy and could not come up with something interesting to write –
+that was because <em>the tooling was not awesome enough</em>. 100% sure it was&nbsp;that.</p>
+<p>So, let’s build something&nbsp;neat.</p>
+<h2 id="so-do-you-want-a-blog-">So, do you want a&nbsp;blog?</h2>
+<p>Well, not exactly. It should be more like a place to dump some stuff I’d
+like to share, then come back and fix, then come back and&nbsp;rewrite…</p>
+<h2 id="so-do-you-want-a-blog-">So, do you want a&nbsp;blog?</h2>
+<p>Let’s see. I want to write some stuff. Locally, in my Vim, as it’s the
+most convinent way of writing.  Preferably using some neat markup, like&nbsp;markdown.</p>
+<p>I want to commit what’s written to git. I’m fond of git. I’m a git
+junky. When I’m editing something, I simply need my doze of version
+control to be&nbsp;productive.</p>
+<p>Then, I want to publish it nicely, with certain meta-information added
+for me by, say, robots. But I want to manually check stuff before it
+goes to&nbsp;production.</p>
+<h2 id="how-do-i-get-there-">How do I get&nbsp;there?</h2>
+<p>First <a href="https://pages.github.com/">github pages</a>. The tutorial is very straghtforward, and I walked
+it throgh some time ago, leaving it with a simple <code>index.html</code> saying
+“Under construction”.  The main outcome was: I can put some pages into
+the master branch of a particular repository, and then push it to
+<code>origin</code> – and these pages immediately become my site,
+<a href="http://iv-m.github.io">http://iv-m.github.io</a>.</p>
+<p>Then, <a href="http://wintersmith.io/">Wintersmith</a> – a static website generator based on <code>node.js</code>.
+Wintersmith was really easy to start with, and seems pretty
+customizable, so I think I’ll stick to it for some time. It uses
+<a href="http://jade-lang.com">jade</a> (whcih was <a href="https://github.com/pugjs/pug/issues/2184">renamed to pugs</a>, but renamed version is
+in beta) as the default template engine, which I find interesting.
+I’ve always liked haml-like markup (pythonist in me?), but
+never dared to use it in non-toy projects. Well, we’ll&nbsp;see.</p>
+<p>Why Wintersmith? Frontend all gone <code>node</code> now, so I need something
+node-based if I want to use all the cool stuff. Also,
+I don’t feel like building my own static site generator
+from separate components (like markdown renderer and templating
+engine) using a general-purpose build system. Other than that,
+the choice of Wintersmith out of all the node-base static site
+generators was almost&nbsp;arbitrary.</p>
+<h2 id="commands-and-details">Commands and&nbsp;details</h2>
+<p>I’d like to use a separate git branch for sources – let’s name it
+<code>src</code>. Then, I can commit one of the build results to <code>master</code> and
+push it to publish the&nbsp;update.</p>
+<p>Let’s create the&nbsp;branch:</p>
+<pre><code class="lang-bash">git checkout --orphan src
+vim .gitignore
+vim README.md
+git add .
+git commit <span class="_">-a</span>
+git push --set-upstream origin src
+</code></pre>
+<p>Then let’s create new <code>npm</code> project:</p>
+<pre><code class="lang-bash">npm init
+</code></pre>
+<p>After answering all the questions, let’s add Wintersmith to our&nbsp;dependencies:</p>
+<pre><code class="lang-bash">npm install --save wintersmith
+</code></pre>
+<p>Also, let’s add an <code>npm</code> script for the “enhanced bash” to
+<a href="https://github.com/iv-m/iv-m.github.io/blob/src/package.json"><code>package.json</code></a>:</p>
+<pre><code class="lang-javascript">  <span class="string">"scripts"</span>: {
+    [...]
+    <span class="string">"bash"</span>: <span class="string">"bash -i"</span>
+  },
+</code></pre>
+<p>Now, it’s time to init the Wintersmith&nbsp;blog:</p>
+<pre><code class="lang-bash">npm run bash
+<span class="comment"># and, in that enhanced bash:</span>
+wintersmith new tmp
+</code></pre>
+<p>Why so hard? I don’t want to install things globally with <code>npm</code>.
+My system is <span class="caps">RPM</span>-based, so I stick to RPM when it’s about global
+packages. With this setup, I can copy the generated files and
+merge my <code>project.json</code> with the generated one in less than a minute,
+and then surprise – I don’t need the global <code>wintersmith</code> any more,
+it’ll leave in <code>node_modules</code> happily ever&nbsp;after.</p>
+<p>Ok, now it’s time to clean the stuff up.  One thing I did not expect is
+how complex default Wintersmith template actually is. It really has a
+lot of features; I had to be really cruel to it’s <span class="caps">CSS</span> and markup,
+removing the things I did not use or understand.  In just three hours,
+I’ve got something more or less usable, and, what’s more important, it’s
+totally <strong>mine</strong>.</p>
+<p>The last bit to setup is publishing. I already have <code>build</code>
+directory (where Wintersmith puts the generated site) in my
+<code>.gitignore</code>, so I’ll just go and use it for some git&nbsp;magic:</p>
+<pre><code class="lang-bash">rm -rf ./build
+git worktree add build master
+</code></pre>
+<p>Now I have <code>mater</code> branch checked out in the <code>build</code> directory. If
+I run <code>wintersmith build</code>, wintersmith will update the files
+<em>right there</em>. Like&nbsp;this:</p>
+<pre><code class="lang-bash">rm -rf ./build/*  <span class="comment"># keeps .git there</span>
+wintersmith build
+</code></pre>
+<p>I even have an npm script for&nbsp;that.</p>
+<p>I can use <code>git diff</code>  to check the effect of my changes – that is, to
+check how the generated HTMLs have changed – and when I commit and push
+<em>in that directory</em>, I actually update the <code>master</code> branch – and my
+site, thanks to the Github&nbsp;magic.</p>
+<p>Now I have a small script for commiting there, which includes
+shortlog of the commit of <code>src</code> branch into the commit message.
+But that’s beyond the basic&nbsp;setup.</p>
+<h2 id="kind-of-conclusion">Kind of&nbsp;conclusion</h2>
+<p>If you’re reading this, it seems to work – at least, I
+have something I’m not terribly ashamed of, and I can build up
+from&nbsp;here:</p>
+<ul>
+<li>mess with [wintersmith-tag plugin] to see if it suits me better
+then the default paginator – probably learn from both of them
+and make something of my&nbsp;own;</li>
+<li>switch to <span class="caps">CSS</span> preprocessor (probably <a href="http://sass-lang.com/">SaaS</a>);</li>
+<li>get how code syntax highliting really works, select another&nbsp;theme;</li>
+<li>generally, just play with technologies I’m not usually working
+with (npm, SaaS, CoffeeScript, pugsjs and what&nbsp;not).</li>
+<li>see if I can employ github for&nbsp;comments.</li>
+</ul>
+<p>There is still an open question if it’ll work for me, but that only time
+will&nbsp;show.</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer leaving at
+Saratov, Russia. One lonely winter evening he started this mess
+of a site bacause it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2016-12-25 23:56:29 +0400.
+            Build on 2016-12-25 from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/first-article/index.md">articles/first-article/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
