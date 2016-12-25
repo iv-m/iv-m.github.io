@@ -6,7 +6,8 @@
     "description": "Some stuff I'd like to share"
   },
   "plugins": [
-    "./plugins/paginator.coffee"
+    "./plugins/paginator.coffee",
+    "./plugins/hacks.coffee"
   ],
   "require": {
     "moment": "moment",

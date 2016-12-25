@@ -1,6 +1,7 @@
 doctype html
 block vars
   - var bodyclass = null;
+  - var now = new Date();
 html(lang='en')
   head
     block head
@@ -30,12 +31,8 @@ html(lang='en')
     footer
       .content-wrap
         block footer
-          .about
-            !=contents['about_footer.md'].html
           .copy
-            p
-              a(href=locals.url)= locals.name
-              |   &copy; #{ new Date().getFullYear() } #{ locals.owner } &mdash; powered by&nbsp;
+            p &copy; #{ now.getFullYear() } #{ locals.owner } &mdash; powered by&nbsp;
               a(href='https://github.com/jnordberg/wintersmith') Wintersmith
               |   &mdash;&nbsp;
               a(href='https://github.com/iv-m/iv-m.github.io/tree/src') source on github

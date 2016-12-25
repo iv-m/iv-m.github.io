@@ -7,3 +7,13 @@ block prepend title
 block content
   h1= page.title
   .content!= typogr(page.html).typogrify()
+
+block prepend footer
+  .last-update
+    p Last updated on #{env.helpers.getLastUpdateTime(page.filepath.relative)};
+      | build from&nbsp;
+      a(href='https://github.com/iv-m/iv-m.github.io/blob/src/contents/' + page.filepath.relative)
+        | #{ page.filepath.relative }
+      | &nbsp;on #{ now.toISOString().replace(/T.*/, "") }.
+  .about
+    !=contents['about_footer.md'].html
