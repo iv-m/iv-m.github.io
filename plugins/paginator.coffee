@@ -21,6 +21,8 @@ module.exports = (env, callback) ->
     articles = contents[options.articles]._.directories.map (item) -> item.index
     # skip articles that does not have a template associated
     articles = articles.filter (item) -> item.template isnt 'none'
+    # also, skip drafts:
+    articles = articles.filter (item) -> item.template.indexOf('draft') < 0
     # sort article by date
     articles.sort (a, b) -> b.date - a.date
     return articles
