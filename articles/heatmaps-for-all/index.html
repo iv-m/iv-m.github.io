@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Heatmaps for all! - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <div class="warn">
+          <h3>This is a DRAFT ARTICLE</h3>
+          <p>
+            It is probably incomplete, wrong, and broken in
+            many respects. Please hesitate from reading this until
+            this work is complete; or just consider yourself warned.
+          </p>
+        </div>
+        <h1>Heatmaps for all!</h1>
+        <div class="content"><p>Heatmaps are awesome: in many cases, using color to represent an extra
+dimension allows to get pretty serious insight of what’s really
+happening. But how do I create a heatmap from some randomly formatted
+data? Below, I’ll present you a couple of&nbsp;ways.</p>
+<h2 id="the-data">The&nbsp;Data</h2>
+<p>Currently, I work on a Solr-based search service for one of the <span class="caps">US</span>
+e-retailers, and of course I’m interested in its performance. I can
+easiliy gather the response times from the services – from various
+testbeds, or production – in form of the application logs, where a
+relevant message may look like&nbsp;this:</p>
+<pre><code>2017-01-01 13:42:33,559 INFO [..skip..] - Client request: /search?keyword=denim%20shirt, response time: 57 ms, found=73, stage=1
+</code></pre><p>Let’s extract the repsonse times and build some heatmaps! For the
+experiment, I’m taking response times for the few minutes after the
+application startup, with all the cache warming disabled. This way,
+we’ll be able to see how performance changes as <span class="caps">JVM</span> and Solr caches
+are&nbsp;warming.</p>
+<h2 id="trace2heatmap-pl">trace2heatmap.pl</h2>
+<p><a href="http://www.brendangregg.com">Brendan Gregg</a> once created a very simpe, easy to use perl script
+to build heat maps from traces gathered with <a href="http://www.brendangregg.com/HeatMaps/latency.html">various tools</a>, most
+notably <a href="http://www.brendangregg.com/blog/2014-07-01/perf-heat-maps.html">perf</a>, and made it available
+<a href="https://github.com/brendangregg/HeatMap">on github</a>.</p>
+<p>While this tool is usually presented with something hardcore like
+<code>perf</code> or <code>iosnoop</code> as the data source, it’s in fact quite generic.
+The input format is simple: just two space-separated numbers per
+line, the timestamp and the latency (or whatever you want to&nbsp;map):</p>
+<pre><code>$ tail -n 5 ~/tmp/responses.dat
+1483264686092 108
+1483264686142 48
+1483264686182 38
+1483264686203 18
+1483264686798 592
+</code></pre><p>To parse the dates from logs and convert them to unix time, I had to
+write some ugly python code, but that was not hard. In just a couple of
+minutes of coding, and dozen more minutes for playing with
+<code>trace2heatmap.pl</code> parameters, I came up with the following&nbsp;command:</p>
+<pre><code>$ trace2heatmap.pl --grid --unitstime ms --unitslatency ms \
+    --stepsec 5 --rows 100 --maxlat 1500 --boxsize 4 \
+    --title &#39;Search response time -- warmup&#39; \
+    ~/tmp/responses.dat &gt; heatmap-warmup.svg
+</code></pre><p>And it procuced the following&nbsp;<span class="caps">SVG</span>:</p>
+<object data="heatmap-warmup.svg" type="image/svg+xml"></object>
+
+<p>The cool feature of this heatmap is that it is interactive: it shows
+some metadata for the cell under the pointer in a status line it&nbsp;has.</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-01-01 21:07:20 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/heatmaps-for-all/index.md">articles/heatmaps-for-all/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

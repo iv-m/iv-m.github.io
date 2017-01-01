@@ -91,6 +91,12 @@ footer {
   color: #555;
 }
 
+.warn {
+    color: #000;
+    background-color: #fba;
+    padding-left: 20px;
+}
+
 .article-list .intro {
   margin-left: 2em;
 }
