@@ -1,0 +1,38 @@
+doctype html
+block vars
+  - var bodyclass = null;
+  - var now = new Date();
+html(lang='en')
+  head
+    block head
+      meta(charset='utf-8')
+      meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+      meta(name='viewport', content='width=device-width')
+      title
+        block title
+          = locals.name
+      link(rel='stylesheet', href=contents.css['main.css'].url)
+  body(class=bodyclass)
+    header
+      block header
+        p
+          span.logo
+            a(href=locals.url)= locals.name
+          | &nbsp;&#9899;&nbsp;
+          a(href='/') home
+          | &nbsp;&#9899;&nbsp;
+          a(href='/about.html') about
+          | &nbsp;&#9899;&nbsp;
+          a(href='/archive.html') articles by date
+    #content
+      .content-wrap
+        block content
+          h2 Welcome to zombocom!
+    footer
+      .content-wrap
+        block footer
+          .copy
+            p &copy; 2016-#{ now.getFullYear() } #{ locals.owner } &mdash; powered by&nbsp;
+              a(href='https://github.com/jnordberg/wintersmith') Wintersmith
+              |   &mdash;&nbsp;
+              a(href='https://github.com/iv-m/iv-m.github.io/tree/src') source on github

@@ -1,0 +1,27 @@
+{
+  "locals": {
+    "url": "http://iv-m.github.io",
+    "name": "iv goes technical",
+    "owner": "Ivan A. Melnikov",
+    "description": "Some stuff I'd like to share"
+  },
+  "plugins": [
+    "./plugins/paginator.coffee",
+    "./plugins/hacks.coffee"
+  ],
+  "require": {
+    "moment": "moment",
+    "_": "underscore",
+    "typogr": "typogr"
+  },
+  "jade": {
+    "pretty": true
+  },
+  "markdown": {
+    "smartLists": true,
+    "smartypants": true
+  },
+  "paginator": {
+    "perPage": 20
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "iv-m.github.io",
+  "version": "0.0.1",
+  "description": "my blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf build/* && wintersmith build",
+    "preview": "wintersmith preview",
+    "clean": "rm -rf build/*",
+    "bash": "bash -i"
+  },
+  "dependencies": {
+    "wintersmith": "^2.3.6",
+    "moment": "2.3.x",
+    "underscore": "1.4.x",
+    "typogr": "0.5.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iv-m/iv-m.github.io.git"
+  },
+  "author": "Ivan A. Melnikov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iv-m/iv-m.github.io/issues"
+  },
+  "homepage": "https://github.com/iv-m/iv-m.github.io#readme",
+  "private": "true"
+}

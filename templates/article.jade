@@ -1,0 +1,12 @@
+
+extends page
+
+block prepend footer
+  .about
+    !=contents['about_footer.md'].html
+  .last-update
+    p Last updated #{env.helpers.getLastUpdateTime(page.filepath.relative)}.
+      | Build from&nbsp;
+      a(href='https://github.com/iv-m/iv-m.github.io/blob/src/contents/' + page.filepath.relative)
+        | #{ page.filepath.relative }
+      |.
