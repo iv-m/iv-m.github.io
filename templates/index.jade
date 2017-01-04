@@ -14,6 +14,3 @@ block content
       .intro
         if article.intro.length > 0
           != typogr(article.intro).typogrify()
-        if article.hasMore
-          p.more
-            a(href=article.url) Read it!
