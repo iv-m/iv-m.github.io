@@ -7,6 +7,7 @@
   },
   "port": "18080",
   "plugins": [
+    "./node_modules/wintersmith-markdown-it/",
     "./plugins/hacks.coffee"
   ],
   "require": {
@@ -17,8 +18,26 @@
   "jade": {
     "pretty": true
   },
-  "markdown": {
-    "smartLists": true,
-    "smartypants": true
+  "markdown-it": {
+    "markdown-it-sub": {},
+    "markdown-it-sup": {},
+    "markdown-it-abbr": {},
+    "markdown-it-emoji": {},
+    "markdown-it-footnote": {},
+    "markdown-it-anchor": {
+        "level": 2,
+        "permalink": true,
+        "permalinkClass": "header-anchor",
+        "permalinkSymbol": "¶"
+    },
+    "markdown-it-table-of-contents": {
+        "includeLevel": [2, 3]
+    },
+    "settings": {
+      "html": true,
+      "linkify": true,
+      "langPrefix": "hljs lang-",
+      "typographer": true
+    }
   }
 }

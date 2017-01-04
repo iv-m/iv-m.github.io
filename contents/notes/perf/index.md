@@ -6,6 +6,8 @@ template: article.jade
 
 Some useful commands and links related to using `perf` utility (AKA perf_events).
 
+[[toc]]
+
 ## Links
 
 Getting started:
@@ -140,7 +142,10 @@ Relevant kernel options include:
     `raw_syscalls:*`, sometimes with `perf trace`, sometimes with
     filters.
 
-## Commands
+## Some commands
+
+I don't want to repeat http://www.brendangregg.com/perf.html#OneLiners,
+but commands I keep forgetting just have to be here.
 
 Trigger on every n-th data cache miss:
 
