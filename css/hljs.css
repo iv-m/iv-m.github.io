@@ -1,0 +1,74 @@
+/**
+ * GitHub Gist Theme for hljs
+ * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
+ * iv-m: changed selectors for the cruel reality of my blog
+ */
+
+/*
+code.hljs {
+  display: block;
+  background: white;
+  padding: 0.5em;
+  color: #333333;
+  overflow-x: auto;
+}
+*/
+
+code.hljs .comment,
+code.hljs .meta {
+  color: #969896;
+}
+
+code.hljs .string,
+code.hljs .variable,
+code.hljs .template-variable,
+code.hljs .strong,
+code.hljs .emphasis,
+code.hljs .quote {
+  color: #df5000;
+}
+
+code.hljs .keyword,
+code.hljs .selector-tag,
+code.hljs .type {
+  color: #a71d5d;
+}
+
+code.hljs .literal,
+code.hljs .symbol,
+code.hljs .bullet,
+code.hljs .attribute {
+  color: #0086b3;
+}
+
+code.hljs .section,
+code.hljs .name {
+  color: #63a35c;
+}
+
+code.hljs .tag {
+  color: #333333;
+}
+
+code.hljs .title,
+code.hljs .attr,
+code.hljs .selector-id,
+code.hljs .selector-class,
+code.hljs .selector-attr,
+code.hljs .selector-pseudo {
+  color: #795da3;
+}
+
+code.hljs .addition {
+  color: #55a532;
+  background-color: #eaffea;
+}
+
+code.hljs .deletion {
+  color: #bd2c00;
+  background-color: #ffecec;
+}
+
+code.hljs .link {
+  text-decoration: underline;
+}

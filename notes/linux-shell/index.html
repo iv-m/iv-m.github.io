@@ -7,6 +7,7 @@
     <title>Shell commands notes, mostly linux - iv goes technical
     </title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
   </head>
   <body>
     <header>
@@ -16,17 +17,18 @@
       <div class="content-wrap">
         <h1>Shell commands notes, mostly linux</h1>
         <div class="content"><p>Mini-notes related to linux command&nbsp;line.</p>
-<h2 id="grepping-mans">Grepping&nbsp;mans</h2>
+<h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
 <p>Here’s piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
 00000b0: 086f 5f08 6720 5b3c 6f70 7469 6f6e 733e  .o_.g [&lt;options&gt;
 00000c0: 5d20 5b3c 7265 7669 7369 6f6e 2072 616e  ] [&lt;revision ran
 00000d0: 6765 3e5d 205b 5b2d 2d5d 203c 7061 7468  ge&gt;] [[--] &lt;path
 00000e0: 3e2e 2e2e 5d0a 0a0a 4408 4445 0845 5308  &gt;...]...D.DE.ES.
-</code></pre><p><code>08</code> is a backspace char — which means terminal will display this,
+</code></pre>
+<p><code>08</code> is a backspace char — which means terminal will display this,
 but grep won’t find it: it needs a help for yet another command,
 <code>col</code>:</p>
-<pre><code class="lang-bash">$ man git-log | col -b | grep <span class="string">'git log'</span> | head -n 1
+<pre><code class="hljs lang-bash">$ man git-log | col -b | grep <span class="string">'git log'</span> | head -n 1
     git <span class="built_in">log</span> [&lt;options&gt;] [&lt;revision range&gt;] [[--] &lt;path&gt;...]
 </code></pre>
 </div>

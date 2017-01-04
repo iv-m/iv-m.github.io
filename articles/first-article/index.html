@@ -7,6 +7,7 @@
     <title>First article, or how this site started - iv goes technical
     </title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
   </head>
   <body>
     <header>
@@ -19,7 +20,7 @@
 <p>Now, when I ductaped together quite a bit of infrastructure,
 it’s time to write something <strong>for real</strong>. I’d also like to describe
 how and what was done, and how I feel about&nbsp;it.</p>
-<h2 id="so-do-you-want-a-blog-">So, do you want a&nbsp;blog?</h2>
+<h2 id="so-do-you-want-a-blog">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog" aria-hidden="true">¶</a></h2>
 <p>They say that most of programmers are optimistic, and also tend to
 search for technical solutions for non-technical problems. So here I am,
 thinking: “Maybe if tooling around my blog is awesome and convenient
@@ -28,10 +29,10 @@ for last two or three attempts, but that’s certainly not because I just
 was lazy and could not come up with something interesting to write –
 that was because <em>the tooling was not awesome enough</em>. 100% sure it was&nbsp;that.</p>
 <p>So, let’s build something&nbsp;neat.</p>
-<h2 id="so-do-you-want-a-blog-">So, do you want a&nbsp;blog?</h2>
+<h2 id="so-do-you-want-a-blog-2">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog-2" aria-hidden="true">¶</a></h2>
 <p>Well, not exactly. It should be more like a place to dump some stuff I’d
 like to share, then come back and fix, then come back and&nbsp;rewrite…</p>
-<h2 id="so-do-you-want-a-blog-">So, do you want a&nbsp;blog?</h2>
+<h2 id="so-do-you-want-a-blog-3">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog-3" aria-hidden="true">¶</a></h2>
 <p>Let’s see. I want to write some stuff. Locally, in my Vim, as it’s the
 most convenient way of writing.  Preferably using some neat markup, like&nbsp;markdown.</p>
 <p>I want to commit what’s written to git. I’m fond of git. I’m a git
@@ -40,10 +41,10 @@ control to be&nbsp;productive.</p>
 <p>Then, I want to publish it nicely, with certain meta-information added
 for me by, say, robots. But I want to manually check stuff before it
 goes to&nbsp;production.</p>
-<h2 id="how-do-i-get-there-">How do I get&nbsp;there?</h2>
+<h2 id="how-do-i-get-there">How do I get there? <a class="header-anchor" href="#how-do-i-get-there" aria-hidden="true">¶</a></h2>
 <p>First <a href="https://pages.github.com/">github pages</a>. The tutorial is very straightforward, and I walked
 it throgh some time ago, leaving it with a simple <code>index.html</code> saying
-“Under construction”.  The main outcome was: I can put some pages into
+&quot;Under construction&quot;.  The main outcome was: I can put some pages into
 the master branch of a particular repository, and then push it to
 <code>origin</code> – and these pages immediately become my site,
 <a href="http://iv-m.github.io">http://iv-m.github.io</a>.</p>
@@ -61,12 +62,12 @@ from separate components (like markdown renderer and templating
 engine) using a general-purpose build system. Other than that,
 the choice of Wintersmith out of all the node-base static site
 generators was almost&nbsp;arbitrary.</p>
-<h2 id="commands-and-details">Commands and&nbsp;details</h2>
+<h2 id="commands-and-details">Commands and details <a class="header-anchor" href="#commands-and-details" aria-hidden="true">¶</a></h2>
 <p>I’d like to use a separate git branch for sources – let’s name it
 <code>src</code>. Then, I can commit one of the build results to <code>master</code> and
 push it to publish the&nbsp;update.</p>
 <p>Let’s create the&nbsp;branch:</p>
-<pre><code class="lang-bash">git checkout --orphan src
+<pre><code class="hljs lang-bash">git checkout --orphan src
 vim .gitignore
 vim README.md
 git add .
@@ -74,20 +75,21 @@ git commit <span class="_">-a</span>
 git push --set-upstream origin src
 </code></pre>
 <p>Then let’s create new <code>npm</code> project:</p>
-<pre><code class="lang-bash">npm init
+<pre><code class="hljs lang-bash">npm init
 </code></pre>
 <p>After answering all the questions, let’s add Wintersmith to our&nbsp;dependencies:</p>
-<pre><code class="lang-bash">npm install --save wintersmith
+<pre><code class="hljs lang-bash">npm install --save wintersmith
 </code></pre>
 <p>Also, let’s add an <code>npm</code> script for the “enhanced bash” to
 <a href="https://github.com/iv-m/iv-m.github.io/blob/src/package.json"><code>package.json</code></a>:</p>
-<pre><code class="lang-javascript">  <span class="string">"scripts"</span>: {
+<pre><code class="hljs lang-javascript">  <span class="string">"scripts"</span>: {
     [...]
     <span class="string">"bash"</span>: <span class="string">"bash -i"</span>
   },
+
 </code></pre>
 <p>Now, it’s time to init the Wintersmith&nbsp;blog:</p>
-<pre><code class="lang-bash">npm run bash
+<pre><code class="hljs lang-bash">npm run bash
 <span class="comment"># and, in that enhanced bash:</span>
 wintersmith new tmp
 </code></pre>
@@ -106,13 +108,13 @@ totally <strong>mine</strong>.</p>
 <p>The last bit to setup is publishing. I already have <code>build</code>
 directory (where Wintersmith puts the generated site) in my
 <code>.gitignore</code>, so I’ll just go and use it for some git&nbsp;magic:</p>
-<pre><code class="lang-bash">rm -rf ./build
+<pre><code class="hljs lang-bash">rm -rf ./build
 git worktree add build master
 </code></pre>
 <p>Now I have <code>mater</code> branch checked out in the <code>build</code> directory. If
 I run <code>wintersmith build</code>, wintersmith will update the files
 <em>right there</em>. Like&nbsp;this:</p>
-<pre><code class="lang-bash">rm -rf ./build/*  <span class="comment"># keeps .git there</span>
+<pre><code class="hljs lang-bash">rm -rf ./build/*  <span class="comment"># keeps .git there</span>
 wintersmith build
 </code></pre>
 <p>I even have an npm script for&nbsp;that.</p>
@@ -123,7 +125,7 @@ site, thanks to the Github&nbsp;magic.</p>
 <p>Now I have a small script for committing there, which includes
 shortlog of the commit of <code>src</code> branch into the commit message.
 But that’s beyond the basic&nbsp;setup.</p>
-<h2 id="kind-of-conclusion">Kind of&nbsp;conclusion</h2>
+<h2 id="kind-of-conclusion">Kind of conclusion <a class="header-anchor" href="#kind-of-conclusion" aria-hidden="true">¶</a></h2>
 <p>If you’re reading this, it seems to work – at least, I
 have something I’m not terribly ashamed of, and I can build up
 from&nbsp;here:</p>
