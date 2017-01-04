@@ -1,0 +1,18 @@
+
+extends layout
+
+block prepend title
+  | Pale of notes - 
+
+block content
+  h1 Pale of notes
+  p I'm often making notes while learning stuff. Most of the notes are
+    so small so they won't worth a separate article; some notes might
+    grow into an article one day.
+  p.warn Most of the notes are permanent work-in-progress. I mean, expect
+    seeing quite a mess here.
+  h2 Notes, in order of appearance
+  ul
+    each note in env.helpers.getPages(contents, 'notes')
+      li
+        a(href=note.url)= note.title
