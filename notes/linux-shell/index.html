@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Shell commands notes, mostly linux - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes.html">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Shell commands notes, mostly linux</h1>
+        <div class="content"><p>Mini-notes related to linux command&nbsp;line.</p>
+<h2 id="grepping-mans">Grepping&nbsp;mans</h2>
+<p>Here’s piece of <code>man git-log | xxd</code>:</p>
+<pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
+00000b0: 086f 5f08 6720 5b3c 6f70 7469 6f6e 733e  .o_.g [&lt;options&gt;
+00000c0: 5d20 5b3c 7265 7669 7369 6f6e 2072 616e  ] [&lt;revision ran
+00000d0: 6765 3e5d 205b 5b2d 2d5d 203c 7061 7468  ge&gt;] [[--] &lt;path
+00000e0: 3e2e 2e2e 5d0a 0a0a 4408 4445 0845 5308  &gt;...]...D.DE.ES.
+</code></pre><p><code>08</code> is a backspace char — which means terminal will display this,
+but grep won’t find it: it needs a help for yet another command,
+<code>col</code>:</p>
+<pre><code class="lang-bash">$ man git-log | col -b | grep <span class="string">'git log'</span> | head -n 1
+    git <span class="built_in">log</span> [&lt;options&gt;] [&lt;revision range&gt;] [[--] &lt;path&gt;...]
+</code></pre>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-01-04 11:42:12 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

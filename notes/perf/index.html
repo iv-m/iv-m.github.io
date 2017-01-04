@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>perf_events notes - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes.html">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>perf_events notes</h1>
+        <div class="content"><p>Some useful commands and links related to using <code>perf</code> utility (<span class="caps">AKA</span>&nbsp;perf_events).</p>
+<h2 id="links">Links</h2>
+<p>Getting&nbsp;started:</p>
+<ul>
+<li><a href="http://www.brendangregg.com/perf.html">http://www.brendangregg.com/perf.html</a></li>
+<li><a href="https://perf.wiki.kernel.org/index.php/Tutorial">https://perf.wiki.kernel.org/index.php/Tutorial</a></li>
+<li>more internals: <a href="http://web.eece.maine.edu/~vweaver/projects/perf_events/">http://web.eece.maine.edu/~vweaver/projects/perf_events/</a></li>
+</ul>
+<p>Flame&nbsp;graphs:</p>
+<ul>
+<li><a href="http://www.brendangregg.com/flamegraphs.html">http://www.brendangregg.com/flamegraphs.html</a></li>
+<li>python example <a href="https://github.com/nylas/nylas-perftools/blob/master/stacksampler.py">https://github.com/nylas/nylas-perftools/blob/master/stacksampler.py</a></li>
+<li>convert from/to various trace formats: <a href="https://github.com/spiermar/node-stack-convert">https://github.com/spiermar/node-stack-convert</a></li>
+</ul>
+<h2 id="history">History</h2>
+<p>Highlights of <code>perf</code> features by kernel releases; only features that
+personally interested me are&nbsp;mentioned.</p>
+<p>2.6&nbsp;series:</p>
+<ul>
+<li>2.6.31: <code>perf</code> was created as a way to work with performance&nbsp;counters</li>
+<li>2.6.32: <code>perf shed</code>, <code>perf timechart</code>, static tracepoints&nbsp;support</li>
+<li>2.6.33: dynamic probes – <code>perf probe</code>, <code>perf diff</code>, <code>--filter</code></li>
+<li>2.6.34: buildid cache, <code>perf lock</code>, python&nbsp;scripting</li>
+<li>2.6.35: <code>perf trace</code> (but <span class="caps">NOT</span> strace), <code>perf kvm</code>, newt&nbsp;<span class="caps">TUI</span></li>
+<li>2.6.36: <code>perf report --sort cpu,comm</code></li>
+<li>2.6.37:&nbsp;–</li>
+<li>2.6.38: <code>perf record --nodelay</code> (live recording), <code>perf stat -a -A</code> (per-<span class="caps">CPU</span>&nbsp;stats)</li>
+<li>2.6.39: <code>perf top</code>, <code>perf evlist</code> (which events were recorded), <code>perf stat --filter</code></li>
+</ul>
+<p>3.X&nbsp;series:</p>
+<ul>
+<li>3.0: <code>perf stat -d -d</code>, <code>--sync</code> (run sunc() before&nbsp;test)</li>
+<li>3.1: inverted call graph report (caller/callee, <code>-G</code>), <span class="caps">CPU</span>&nbsp;range</li>
+<li>3.2: <code>perf top</code>: zoom into tasks and&nbsp;libs</li>
+<li>3.3:&nbsp;–</li>
+<li>3.4: <code>perf report --gtk</code>, hardware branch profiling (<code>perf record -b</code>), user and thread&nbsp;filtering</li>
+<li>3.5: userspace&nbsp;probes</li>
+<li>3.6: sort by source&nbsp;line</li>
+<li>3.7: <code>perf trace</code> (strace)</li>
+<li>3.8: scripts integration into report <span class="caps">TUI</span> (try ‘r’),&nbsp;/sys/devices/cpu/events/</li>
+<li>3.9: <code>--group</code> for evlist and report; wildcards in tracepoint system&nbsp;names</li>
+<li>3.10: <code>perf mem</code>, weighted&nbsp;sampling</li>
+<li>3.11: <code>perf report --percent-limit</code></li>
+<li>3.12: <code>perf stat --initial-delay</code></li>
+<li>3.13: <code>--max-stack</code> for report and&nbsp;top</li>
+<li>3.14: <code>perf record --delay</code></li>
+<li>3.15:&nbsp;–</li>
+<li>3.16: <code>perf report --children</code></li>
+<li>3.17: pagefault tracing in <code>perf trace</code>, <span class="caps">IO</span> mode for <code>perf timechart</code></li>
+<li>3.18:&nbsp;–</li>
+<li>3.19:&nbsp;–</li>
+</ul>
+<p>4.x&nbsp;series:</p>
+<ul>
+<li>4.0:&nbsp;–</li>
+<li>4.1: <code>tracefs</code> (/sys/kernel/tracing), <code>perf trace --events foo:bar --no-syscalls</code>, <code>perf trace --filter-pids [...]</code></li>
+<li>4.2:&nbsp;–</li>
+<li>4.3: <code>perf record --exclude-perf</code>, <code>perf trace</code> syscall groups, Intel&nbsp;<span class="caps">PT</span></li>
+<li>4.4: eBPF&nbsp;integration</li>
+<li>4.5: <code>perf stat record/report</code>, <code>perf report --call-graph</code></li>
+<li>4.6: <code>perf top --hierarchy</code>, improved Java support (<span class="caps">TBD</span>), <code>perf stat --per-core/--per-socket</code></li>
+<li>4.7: <code>perf trace</code> call stack, tracepoints with <span class="caps">BPF</span>, hist triggers, perf_event_max_stack, <code>perf record --switch-output</code>, <code>perf script --max-stack=N</code></li>
+<li>4.8: <code>perf stat --topdown</code>, <code>--stdio-color</code></li>
+<li>4.9:&nbsp;???</li>
+</ul>
+<h2 id="setup">Setup</h2>
+<h3 id="run-perf-as-regular-user">Run perf as regular&nbsp;user</h3>
+<p>You’ll probably end up running it as root anyway, here are couple of things
+to try before&nbsp;that.</p>
+<p>Allow regular users to read kernel mapping&nbsp;data:</p>
+<pre><code># echo 0 &gt; /proc/sys/kernel/kptr_restrict
+</code></pre><p>Or, in other&nbsp;words:</p>
+<pre><code class="lang-bash">sudo sysctl -w kernel.kptr_restrict=0
+sudo sysctl -w kernel.perf_event_paranoid=0 <span class="comment"># or -1, if not on prod</span>
+</code></pre>
+<p>Paranoia levels for&nbsp;perf:</p>
+<pre><code> -1: Allow use of (almost) all events by all users
+&gt;=0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
+&gt;=1: Disallow CPU event access by users without CAP_SYS_ADMIN
+&gt;=2: Disallow kernel profiling by users without CAP_SYS_ADMIN
+</code></pre><p>Check out this <a href="http://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar">stackexchange question</a>.</p>
+<h3 id="increasing-stack-size-limit">Increasing stack size&nbsp;limit</h3>
+<p>Requires linux <em>and</em> linux-tools&nbsp;4.7+</p>
+<p>The default stack size limit is 127, which is definitely not enough for
+most of the Java frameworks and servlet containers – for example, on our
+Spring Boot + Jetty + Emedded Solr app I’ve seen the stacks of length
+169, which is, in fact, quite&nbsp;moderate.</p>
+<p>Increasing the limit in&nbsp;kernel:</p>
+<pre><code>sysctl -w kernel.perf_event_max_stack=1024
+</code></pre><p><code>perf script</code> will often need this limit to be set&nbsp;explicitly:</p>
+<pre><code>perf script --max-stack=1024 [...]
+</code></pre><p>This will increase the size of some in-kernel buffers and <code>perf</code> utility
+memory usage, so it’s good idea to be carefull with it in
+memory-constraint&nbsp;environments.</p>
+<h3 id="a-couple-of-checks-">A couple of&nbsp;checks:</h3>
+<pre><code>less /sys/kernel/debug/tracing/available_events
+papi_native_avail
+perf list
+</code></pre><h3 id="kernel-configuration">Kernel&nbsp;configuration</h3>
+<p>Relevant kernel options&nbsp;include:</p>
+<ul>
+<li>CONFIG_DEBUG_INFO for in-kernel stack&nbsp;traces;</li>
+<li>CONFIG_PERF_EVENTS;</li>
+<li>CONFIG_TRACEPOINTS:<ul>
+<li>CONFIG_FTRACE and&nbsp;CONFIG_FUNCTION_TRACER;</li>
+<li>CONFIG_FTRACE and&nbsp;CONFIG_ENABLE_DEFAULT_TRACERS;</li>
+<li>CONFIG_KPROBE_EVENT</li>
+<li>CONFIG_FTRACE_SYSCALLS – enables <code>syscalls:*</code> tracepoints, which are
+convenient sometimes, are rumored to incur runtime overhead, so are
+disabled in some distributions by default; this can be worked via
+<code>raw_syscalls:*</code>, sometimes with <code>perf trace</code>, sometimes with&nbsp;filters.</li>
+</ul>
+</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<p>Trigger on every n-th data cache&nbsp;miss:</p>
+<pre><code class="lang-bash">perf record –e L1-dcache-load-miss -c <span class="variable">$n</span> <span class="variable">$command</span>
+</code></pre>
+<p>Profiler, correct&nbsp;direction:</p>
+<pre><code class="lang-bash">perf record -g <span class="variable">$command</span>
+perf report -g <span class="string">'graph,0.5,caller'</span>
+</code></pre>
+<p>Don’t forget max-stack if you redefined&nbsp;it:</p>
+<pre><code> sudo perf script --max-stack=1024
+</code></pre><h2 id="java">Java</h2>
+<h3 id="netflix-way">Netflix&nbsp;way</h3>
+<p>Start here: <a href="http://techblog.netflix.com/2015/07/java-in-flames.html">http://techblog.netflix.com/2015/07/java-in-flames.html</a></p>
+<p>1.8u60+ + <code>-XX:+PreserveFramePointer</code></p>
+<p><code>-XX:InlineSmallCode=500</code> can help if you are totally lost, and disabling
+inlining is too&nbsp;brutal.</p>
+<h3 id="from-the-kernel-source-">From the kernel&nbsp;source:</h3>
+<ul>
+<li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94</a></li>
+<li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db</a></li>
+<li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e</a></li>
+</ul>
+<h2 id="profiling-with-in-kernel-summaries">Profiling with in-kernel&nbsp;summaries</h2>
+<p>One day I’d like to try this out. Maybe when our production will get closer to 4.9&nbsp;kernels.</p>
+<p><a href="https://github.com/iovisor/bcc"><span class="caps">BPF</span> Compiler Collection</a> includes the following&nbsp;tools:</p>
+<ul>
+<li><code>tools/profile.py</code> for Linux&nbsp;4.9+</li>
+<li><code>tools/old/profile.py</code> for Linux&nbsp;4.6-4.8</li>
+</ul>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-01-04 11:42:12 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/perf/index.md">notes/perf/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
