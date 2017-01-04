@@ -5,6 +5,7 @@
     "owner": "Ivan A. Melnikov",
     "description": "Some stuff I'd like to share"
   },
+  "port": "18080",
   "plugins": [
     "./plugins/hacks.coffee"
   ],
