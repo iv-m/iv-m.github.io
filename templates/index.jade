@@ -6,7 +6,7 @@ block append vars
 
 block content
   !=contents['about_index.md'].html
-  each article in articles
+  each article in env.helpers.getPages(contents, 'articles')
     .article-list
       h2
         a(href=article.url)= article.title
@@ -17,11 +17,3 @@ block content
         if article.hasMore
           p.more
             a(href=article.url) Read it!
-
-block prepend footer
-  if prevPage || nextPage
-    .nav
-      if prevPage
-        a(href=prevPage.url) &laquo; Newer
-      if nextPage
-        a(href=nextPage.url) Next page &raquo;
