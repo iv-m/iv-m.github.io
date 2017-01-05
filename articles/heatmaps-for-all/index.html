@@ -32,7 +32,7 @@ experiment, I’m taking response times for the few minutes after the
 application startup, with all the cache warming disabled. This way,
 we’ll be able to see how response time changes as <span class="caps">JVM</span> and Solr caches
 are&nbsp;warming.</p>
-<h2 id="trace2heatmappl"><a href="http://trace2heatmap.pl">trace2heatmap.pl</a> <a class="header-anchor" href="#trace2heatmappl" aria-hidden="true">¶</a></h2>
+<h2 id=""><code>trace2heatmap.pl</code> <a class="header-anchor" href="#" aria-hidden="true">¶</a></h2>
 <p><a href="http://www.brendangregg.com">Brendan Gregg</a> once created a very simpe, easy to use perl script
 to build heat maps from traces gathered with <a href="http://www.brendangregg.com/HeatMaps/latency.html">various tools</a>, most
 notably <a href="http://www.brendangregg.com/blog/2014-07-01/perf-heat-maps.html">perf</a>, and made it available
@@ -65,7 +65,7 @@ in the status line below the map. For that, the <span class="caps">SVG</span> sh
 included not as image, but as&nbsp;object:</p>
 <pre><code class="hljs lang-html"><span class="tag">&lt;<span class="name">object</span> <span class="attr">data</span>=<span class="string">"heatmap-warmup.svg"</span> <span class="attr">type</span>=<span class="string">"image/svg+xml"</span>&gt;</span><span class="tag">&lt;/<span class="name">object</span>&gt;</span>
 </code></pre>
-<h2 id="numpy-matplotlib">numpy + matplotlib <a class="header-anchor" href="#numpy-matplotlib" aria-hidden="true">¶</a></h2>
+<h2 id="-2"><code>numpy + matplotlib</code> <a class="header-anchor" href="#-2" aria-hidden="true">¶</a></h2>
 <p><a href="http://matplotlib.org/">matplotlib</a> is a python 2D plotting library known in the scientific&nbsp;community.</p>
 <p>Creating heatmap with it is totally googleable, but the simplest option
 — <code>plt.hist2d(...)</code> —  did not work for me: it displayed the picture
@@ -120,10 +120,11 @@ Also, the interactive <span class="caps">UI</span> is rather slow, and making it
 data for the point under cursor is somewhat&nbsp;tricky.</p>
 <p>In fact, everything is kind of tricky. There are just so
 may knobs and&nbsp;buttons…</p>
-<h2 id="gnuplot">gnuplot <a class="header-anchor" href="#gnuplot" aria-hidden="true">¶</a></h2>
+<h2 id="-3"><code>gnuplot</code> <a class="header-anchor" href="#-3" aria-hidden="true">¶</a></h2>
 <p>A few years ago I was using <code>gnuplot</code> every day: no other plotting tool
-could handle a few thousand data points with that ease and speed. Since
-that&nbsp;time</p>
+could handle a few thousand data points with that ease and speed.
+Since that days I try to use it whenever I have some data to
+visualize and some time to get the good&nbsp;results.</p>
 <p>For heatmaps, <code>gnuplot</code> will not prepare the data for you: you need to
 define your buckets and transform individual events into the matrix
 summary yourself. There are couple of possible formats, shown in
@@ -225,7 +226,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-05 14:40:44 +0400.
+            Last updated 2017-01-05 17:29:11 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/heatmaps-for-all/index.md">articles/heatmaps-for-all/index.md</a>.
           </p>
         </div>
