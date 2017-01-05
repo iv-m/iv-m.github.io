@@ -14,3 +14,7 @@ block content
       .intro
         if article.intro.length > 0
           != typogr(article.intro).typogrify()
+
+block prepend footer
+ .last-update
+      p Last site update: #{env.helpers.getLastUpdateTime('.')}.
