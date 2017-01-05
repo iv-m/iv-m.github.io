@@ -188,3 +188,12 @@ p code {
   background: inherit;
   white-space: nowrap;
 }
+
+/* hide the source of the slides */
+textarea#source {
+  display: none;
+}
+
+.remark-slide-content {
+  background-size: contain;
+}
