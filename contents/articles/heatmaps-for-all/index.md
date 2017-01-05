@@ -27,7 +27,7 @@ application startup, with all the cache warming disabled. This way,
 we'll be able to see how response time changes as JVM and Solr caches
 are warming.
 
-## trace2heatmap.pl
+## `trace2heatmap.pl`
 
 [Brendan Gregg] once created a very simpe, easy to use perl script
 to build heat maps from traces gathered with [various tools], most
@@ -77,7 +77,7 @@ included not as image, but as object:
 <object data="heatmap-warmup.svg" type="image/svg+xml"></object>
 ```
 
-## numpy + matplotlib
+## `numpy + matplotlib`
 
 [matplotlib] is a python 2D plotting library known in the scientific
 community.
@@ -154,11 +154,12 @@ data for the point under cursor is somewhat tricky.
 In fact, everything is kind of tricky. There are just so
 may knobs and buttons...
 
-## gnuplot
+## `gnuplot`
 
 A few years ago I was using `gnuplot` every day: no other plotting tool
-could handle a few thousand data points with that ease and speed. Since
-that time 
+could handle a few thousand data points with that ease and speed.
+Since that days I try to use it whenever I have some data to
+visualize and some time to get the good results.
 
 For heatmaps, `gnuplot` will not prepare the data for you: you need to
 define your buckets and transform individual events into the matrix
