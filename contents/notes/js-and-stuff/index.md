@@ -28,6 +28,11 @@ Too many questions.
 [gitbook plugin for mermaid]: https://github.com/JozoVilcek/gitbook-plugin-mermaid
 [pandoc filter for mermaid]: https://github.com/raghur/mermaid-filter
 
+## More for markdown-it
+
+* https://github.com/markdown-it/markdown-it-container
+* https://github.com/waylonflinn/markdown-it-katex
+
 ## d3.js
 
 Good place to start: http://mikemcdearmon.com/portfolio/techposts/charting-libraries-using-d3

@@ -164,7 +164,7 @@ Don't forget max-stack if you redefined it:
 
      sudo perf script --max-stack=1024
 
-## Java
+## Java and Node
 
 ### Netflix way
 
@@ -175,12 +175,46 @@ Start here: http://techblog.netflix.com/2015/07/java-in-flames.html
 `-XX:InlineSmallCode=500` can help if you are totally lost, and disabling
 inlining is too brutal.
 
-### From the kernel source:
+### From the kernel source
 
+Initial patches:
 * https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94
 * https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db
 * https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e
 
+There is JMTI agent for Java in the kernel source.
+
+### Same, but for node
+
+V8 support: https://chromium.googlesource.com/v8/v8/+/82e95f597b3563e3c1947d760ba138f67d45bf6a
+
+```bash
+sudo perf record -k mono -F99 -g node --perf-prof $script
+sudo perf inject -j -i perf.data -o perf.data.jitted
+sudo perf script --max-stack=1024 -i perf.data.jitted \
+   | stackcollapse-perf.pl | flamegraph.pl --colors js > flamegraph.svg
+```
+
+Note that `perf inject` creates a ton of small elf files in the local
+directory (one per compiled function).
+
+```
+$ ls -lh jitted* | head -n 4
+-rw-r--r-- 2 root root 1008 янв  6 21:15 jitted-21146-0.so
+-rw-r--r-- 2 root root  768 янв  6 21:15 jitted-21146-10000.so
+-rw-r--r-- 2 root root  784 янв  6 21:15 jitted-21146-10001.so
+-rw-r--r-- 2 root root  768 янв  6 21:15 jitted-21146-10002.so
+$ ls -l jitted* | wc -l
+15231
+```
+
+Also, `perf.data.jitted` is much bigger than `perf.data` (maybe that's because
+I've got not so many samples):
+
+```
+-rw------- 1 root root 471K янв  6 21:14 perf.data
+-rw------- 1 root root 4,2M янв  6 21:15 perf.data.jitted
+```
 
 ## Profiling with in-kernel summaries
 
