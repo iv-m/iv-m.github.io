@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>git tips - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>git tips</h1>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#bus-factor">Bus&nbsp;factor</a></li><li><a href="#useful-aliases">Useful&nbsp;aliases</a></li><li><a href="#highlighting-differences-of-changed-lines">Highlighting differences of changed&nbsp;lines</a></li><li><a href="#http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed&nbsp;certificates</a></li><li><a href="#git-grep-configuration">git grep&nbsp;configuration</a></li><li><a href="#seldom-known-commands-and-features">Seldom known commands and&nbsp;features</a></li></ul></div></p>
+<h2 id="bus-factor">Bus factor <a class="header-anchor" href="#bus-factor" aria-hidden="true">¶</a></h2>
+<p><a href="http://zgrossbart.github.io/busfactor/">http://zgrossbart.github.io/busfactor/</a></p>
+<h2 id="useful-aliases">Useful aliases <a class="header-anchor" href="#useful-aliases" aria-hidden="true">¶</a></h2>
+<pre><code>[alias]
+    hist = log --pretty=format:\&quot;%C(auto)%h %ad %s%d [%an]\&quot; --graph --date=short
+</code></pre>
+<p>Basicaly the same, if you’re not the machine&nbsp;owner:</p>
+<pre><code>$ git log --all --oneline --graph --decorate=short
+</code></pre>
+<h2 id="highlighting-differences-of-changed-lines">Highlighting differences of changed lines <a class="header-anchor" href="#highlighting-differences-of-changed-lines" aria-hidden="true">¶</a></h2>
+<p>Git <code>congrib</code> directory has a script for that: <code>diff-highlight</code>
+(<code>/usr/share/git-core/contrib/diff-highlight/diff-highlight</code>).
+To use it, add the following to your <code>~/.gitconfig</code>:</p>
+<pre><code>[pager]
+	log = diff-highlight | less -SR
+	show = diff-highlight | less -SR
+	diff = diff-highlight | less -SR
+</code></pre>
+<p>Result:</p>
+<p><img src="diff-highlight.png" alt=""></p>
+<p>Of course, you can always use <code>git-diff --color-words=.</code> or something
+like&nbsp;that.</p>
+<h2 id="http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed certificates <a class="header-anchor" href="#http-proxy-and-self-signed-certificates" aria-hidden="true">¶</a></h2>
+<pre><code>[http]
+        sslVerify = true
+[http &quot;https://weak.example.com&quot;]
+        sslVerify = false
+        proxy = proxy.example.com:3128
+</code></pre>
+<h2 id="git-grep-configuration">git grep configuration <a class="header-anchor" href="#git-grep-configuration" aria-hidden="true">¶</a></h2>
+<pre><code>[color]
+	grep = auto
+[grep]
+	lineNumber = true
+[color &quot;grep&quot;]
+	filename = magenta
+	linenumber = green
+	function = yellow
+</code></pre>
+<h2 id="seldom-known-commands-and-features">Seldom known commands and features <a class="header-anchor" href="#seldom-known-commands-and-features" aria-hidden="true">¶</a></h2>
+<p>Mainly because they’re seldom&nbsp;needed?</p>
+<pre><code>git clean -fxd
+
+git config merge.log 9000
+
+git instaweb
+
+git notes
+
+git rerere
+
+git whatchanged
+
+git gc --aggressive
+</code></pre>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-01-07 10:38:34 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/git/index.md">notes/git/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

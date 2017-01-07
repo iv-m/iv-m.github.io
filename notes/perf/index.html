@@ -17,7 +17,7 @@
       <div class="content-wrap">
         <h1>perf_events notes</h1>
         <div class="content"><p>Some useful commands and links related to using <code>perf</code> utility (<span class="caps">AKA</span>&nbsp;perf_events).</p>
-<p><div class="table-of-contents"><ul><li><a href="#links">Links</a></li><li><a href="#history">History</a></li><li><a href="#setup">Setup</a><ul><li><a href="#run-perf-as-regular-user">Run perf as regular&nbsp;user</a></li><li><a href="#increasing-stack-size-limit">Increasing stack size&nbsp;limit</a></li><li><a href="#a-couple-of-checks">A couple of&nbsp;checks:</a></li><li><a href="#kernel-configuration">Kernel&nbsp;configuration</a></li></ul></li><li><a href="#some-commands">Some&nbsp;commands</a></li><li><a href="#java">Java</a><ul><li><a href="#netflix-way">Netflix&nbsp;way</a></li><li><a href="#from-the-kernel-source">From the kernel&nbsp;source:</a></li></ul></li><li><a href="#profiling-with-in-kernel-summaries">Profiling with in-kernel&nbsp;summaries</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#links">Links</a></li><li><a href="#history">History</a></li><li><a href="#setup">Setup</a><ul><li><a href="#run-perf-as-regular-user">Run perf as regular&nbsp;user</a></li><li><a href="#increasing-stack-size-limit">Increasing stack size&nbsp;limit</a></li><li><a href="#a-couple-of-checks">A couple of&nbsp;checks:</a></li><li><a href="#kernel-configuration">Kernel&nbsp;configuration</a></li></ul></li><li><a href="#some-commands">Some&nbsp;commands</a></li><li><a href="#java-and-node">Java and Node</a><ul><li><a href="#netflix-way">Netflix&nbsp;way</a></li><li><a href="#from-the-kernel-source">From the kernel&nbsp;source</a></li><li><a href="#same-but-for-node">Same, but for&nbsp;node</a></li><li><a href="#node-older-way">Node, older&nbsp;way</a></li></ul></li><li><a href="#profiling-with-in-kernel-summaries">Profiling with in-kernel&nbsp;summaries</a></li></ul></div></p>
 <h2 id="links">Links <a class="header-anchor" href="#links" aria-hidden="true">¶</a></h2>
 <p>Getting&nbsp;started:</p>
 <ul>
@@ -150,18 +150,47 @@ perf report -g <span class="string">'graph,0.5,caller'</span>
 <p>Don’t forget max-stack if you redefined&nbsp;it:</p>
 <pre><code> sudo perf script --max-stack=1024
 </code></pre>
-<h2 id="java">Java <a class="header-anchor" href="#java" aria-hidden="true">¶</a></h2>
+<h2 id="java-and-node">Java and Node <a class="header-anchor" href="#java-and-node" aria-hidden="true">¶</a></h2>
 <h3 id="netflix-way">Netflix way <a class="header-anchor" href="#netflix-way" aria-hidden="true">¶</a></h3>
 <p>Start here: <a href="http://techblog.netflix.com/2015/07/java-in-flames.html">http://techblog.netflix.com/2015/07/java-in-flames.html</a></p>
 <p>1.8u60+ + <code>-XX:+PreserveFramePointer</code></p>
 <p><code>-XX:InlineSmallCode=500</code> can help if you are totally lost, and disabling
 inlining is too&nbsp;brutal.</p>
-<h3 id="from-the-kernel-source">From the kernel source: <a class="header-anchor" href="#from-the-kernel-source" aria-hidden="true">¶</a></h3>
+<h3 id="from-the-kernel-source">From the kernel source <a class="header-anchor" href="#from-the-kernel-source" aria-hidden="true">¶</a></h3>
+<p>Initial&nbsp;patches:</p>
 <ul>
 <li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94</a></li>
 <li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db</a></li>
 <li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e</a></li>
 </ul>
+<p>There is <span class="caps">JMTI</span> agent for Java in the kernel&nbsp;source.</p>
+<h3 id="same-but-for-node">Same, but for node <a class="header-anchor" href="#same-but-for-node" aria-hidden="true">¶</a></h3>
+<p>V8 support: <a href="https://chromium.googlesource.com/v8/v8/+/82e95f597b3563e3c1947d760ba138f67d45bf6a">https://chromium.googlesource.com/v8/v8/+/82e95f597b3563e3c1947d760ba138f67d45bf6a</a></p>
+<pre><code class="hljs lang-bash">sudo perf record -k mono -F99 -g node --perf-prof <span class="variable">$script</span>
+sudo perf inject -j -i perf.data -o perf.data.jitted
+sudo perf script --max-stack=1024 -i perf.data.jitted \
+   | stackcollapse-perf.pl | flamegraph.pl --colors js &gt; flamegraph.svg
+</code></pre>
+<p>Note that <code>perf inject</code> creates a ton of small elf files in the local
+directory (one per compiled&nbsp;function).</p>
+<pre><code>$ ls -lh jitted* | head -n 4
+-rw-r--r-- 2 root root 1008 янв  6 21:15 jitted-21146-0.so
+-rw-r--r-- 2 root root  768 янв  6 21:15 jitted-21146-10000.so
+-rw-r--r-- 2 root root  784 янв  6 21:15 jitted-21146-10001.so
+-rw-r--r-- 2 root root  768 янв  6 21:15 jitted-21146-10002.so
+$ ls -l jitted* | wc -l
+15231
+</code></pre>
+<p>Also, <code>perf.data.jitted</code> is much bigger than <code>perf.data</code> (maybe that’s because
+I’ve got not so many&nbsp;samples):</p>
+<pre><code>-rw------- 1 root root 471K янв  6 21:14 perf.data
+-rw------- 1 root root 4,2M янв  6 21:15 perf.data.jitted
+</code></pre>
+<h3 id="node-older-way">Node, older way <a class="header-anchor" href="#node-older-way" aria-hidden="true">¶</a></h3>
+<p><a href="https://codereview.chromium.org/2167553002/">Custom object dump</a> video: <a href="https://asciinema.org/a/9bu72wh7cf09rns1bc7qhk01h">https://asciinema.org/a/9bu72wh7cf09rns1bc7qhk01h</a></p>
+<pre><code>perf record -- node --perf-basic-prof --print-code --redirect-code-traces /tmp/fib.js
+perf report --objdump=$HOME/src/chr/v8/tools/objdump-v8
+</code></pre>
 <h2 id="profiling-with-in-kernel-summaries">Profiling with in-kernel summaries <a class="header-anchor" href="#profiling-with-in-kernel-summaries" aria-hidden="true">¶</a></h2>
 <p>One day I’d like to try this out. Maybe when our production will get closer to 4.9&nbsp;kernels.</p>
 <p><a href="https://github.com/iovisor/bcc"><span class="caps">BPF</span> Compiler Collection</a> includes the following&nbsp;tools:</p>
@@ -181,7 +210,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-04 14:57:30 +0400.
+            Last updated 2017-01-07 10:38:34 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/perf/index.md">notes/perf/index.md</a>.
           </p>
         </div>
