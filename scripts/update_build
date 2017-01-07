@@ -1,0 +1,24 @@
+#!/bin/bash
+
+die() {
+    echo "$@" >&2
+    exit 1
+}
+
+set -e
+
+# Check if everything is committed
+[ -z "$(git status --porcelain)" ] || die "Repository is not clean! Please commit your changes."
+
+# Get the hash of `src` branch commit
+HASH=$(git log -1 --pretty=%h)
+
+# run the build
+npm run build
+
+# commit the changes
+cd build
+git add .
+git commit -m "Build from $HASH" "$@"
+
+echo "Changes committed in the build directory. Check them out and run git push."
