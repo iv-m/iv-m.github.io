@@ -216,6 +216,15 @@ I've got not so many samples):
 -rw------- 1 root root 4,2M янв  6 21:15 perf.data.jitted
 ```
 
+### Node, older way
+
+[Custom object dump](https://codereview.chromium.org/2167553002/) video: https://asciinema.org/a/9bu72wh7cf09rns1bc7qhk01h
+
+```
+perf record -- node --perf-basic-prof --print-code --redirect-code-traces /tmp/fib.js
+perf report --objdump=$HOME/src/chr/v8/tools/objdump-v8
+```
+
 ## Profiling with in-kernel summaries
 
 One day I'd like to try this out. Maybe when our production will get closer to 4.9 kernels.

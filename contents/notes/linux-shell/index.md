@@ -1,14 +1,16 @@
 ---
-title: Shell commands notes, mostly linux
+title: Shell tips
 date: 2017-01-04 11:00
 template: article.jade
 ---
 
-Mini-notes related to linux command line.
+Command-line (unix shell) tips. Some may be bash- or linux-specific.
+
+[[toc]]
 
 ## Grepping mans
 
-Here's piece of `man git-log | xxd`:
+Here's a piece of `man git-log | xxd`:
 
     00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
     00000b0: 086f 5f08 6720 5b3c 6f70 7469 6f6e 733e  .o_.g [<options>
@@ -25,3 +27,7 @@ but grep won't find it: it needs a help for yet another command,
 $ man git-log | col -b | grep 'git log' | head -n 1
     git log [<options>] [<revision range>] [[--] <path>...]
 ```
+
+## When you're too lazy to explain everything
+
+http://explainshell.com/
