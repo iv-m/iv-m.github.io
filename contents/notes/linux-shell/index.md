@@ -28,6 +28,25 @@ $ man git-log | col -b | grep 'git log' | head -n 1
     git log [<options>] [<revision range>] [[--] <path>...]
 ```
 
+## mosh + tmux + systemd
+
+Systemd-logind kills user processes when the session is over.
+To overcome this, I've created the following one-line script
+in my `~/bin`.
+
+```
+#!/bin/sh
+
+exec urxvt -e mosh "${1:-gd-ws}" \
+    --server='systemd-run --scope --user mosh-server new' \
+    -- tmux att
+```
+
+Explaining this command would make a nice article `;)`[^smF]
+
+[^smF]: it's classy to render smile in Fira Mono when you
+        can do smth like ;).
+
 ## When you're too lazy to explain everything
 
 http://explainshell.com/
