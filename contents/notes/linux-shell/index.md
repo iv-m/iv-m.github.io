@@ -1,5 +1,5 @@
 ---
-title: Shell tips
+title: (Linux) shell tips
 date: 2017-01-04 11:00
 template: article.jade
 ---
@@ -34,7 +34,7 @@ Systemd-logind kills user processes when the session is over.
 To overcome this, I've created the following one-line script
 in my `~/bin`.
 
-```
+```bash
 #!/bin/sh
 
 exec urxvt -e mosh "${1:-gd-ws}" \
@@ -46,6 +46,35 @@ Explaining this command would make a nice article `;)`[^smF]
 
 [^smF]: it's classy to render smile in Fira Mono when you
         can do smth like ;).
+
+## Entering docker container without docker
+
+`docker exec` executes command within the container cgroup;
+if this cgroup has hard CPU and/or RAM limitations, this
+may affect your production code. If you have root access
+to the box, you can use `nsenter` instead:
+
+```bash
+nsenter --target $PID --mount --uts --ipc --net --pid
+```
+
+`$PID` here is the process ID of one of the processes running
+in the container, as seen from the host.
+
+Example:
+
+```
+$ sudo nsenter --target 10372  --mount --uts --ipc --net --pid cat /proc/self/cgroup | head -n3
+11:cpu,cpuacct:/
+10:pids:/user.slice/user-500.slice/session-1.scope
+9:memory:/
+```
+```
+$ docker exec 2b341597dbf7 cat /proc/self/cgroup | head -n3
+11:cpu,cpuacct:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
+10:pids:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
+9:memory:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
+```
 
 ## When you're too lazy to explain everything
 
