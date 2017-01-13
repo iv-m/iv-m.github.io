@@ -52,6 +52,12 @@ vboxmanage list vms
 vboxmanage showvminfo minikube | less
 ```
 
+Switch to mikube context after using gcloud context for a while:
+
+```
+kubectl config use-context minikube
+```
+
 ## Deploying kafka: fist try
 
 From https://github.com/CloudTrackInc/kubernetes-kafka
@@ -147,9 +153,63 @@ Test with a separate deployed image:
 
 `tailf` does not work -- there is no such command in most of the images.
 
+## Environment variables for services
+
+Kubernetes includes service location information into environment variables:
+
+```
+$ kubectl exec kafka-broker-msggm -- sh -c set | grep SERVICE
+KAFKA_SERVICE_HOST='10.0.0.2'
+KAFKA_SERVICE_PORT='9092'
+KAFKA_SERVICE_PORT_KAFKA_PORT='9092'
+KAFKA_ZOO_SVC_EXT_SERVICE_HOST='10.0.0.253'
+KAFKA_ZOO_SVC_EXT_SERVICE_PORT='2181'
+KAFKA_ZOO_SVC_SERVICE_HOST='10.0.0.78'
+KAFKA_ZOO_SVC_SERVICE_PORT='2181'
+KAFKA_ZOO_SVC_SERVICE_PORT_CLIENT='2181'
+KAFKA_ZOO_SVC_SERVICE_PORT_FOLLOWER='2888'
+KAFKA_ZOO_SVC_SERVICE_PORT_LEADER='3888'
+KUBERNETES_SERVICE_HOST='10.0.0.1'
+KUBERNETES_SERVICE_PORT='443'
+KUBERNETES_SERVICE_PORT_HTTPS='443'
+```
+
+See https://kubernetes.io/docs/user-guide/connecting-applications/#accessing-the-service
+
+If you need more information about the service, you can get it from the
+Kubernetes service. K8s kindly injects the API key and the CA of the
+service into every container. For example, this is how to get
+an external IP and port of `kafka-service` service in the `default`
+namesapce:
+
+```
+curl -sS \
+    --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+    -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+    https://kubernetes/api/v1/namespaces/default/services/kafka-service \
+    | jq  -r '.| .status.loadBalancer.ingress[].ip + ":" + (.spec.ports[].nodePort | tostring)'
+```
+
+The default namespace to be used for namespaced API operations is placed in a file
+at `/var/run/secrets/kubernetes.io/serviceaccount/namespace` in each container.
+
 ## When you're done with it
 
 ```
 minikube stop
 vboxmanage list runningvms  # oh it's gone...
 ```
+
+## Random links
+
+* https://github.com/Yolean/kubernetes-kafka
+* https://github.com/kubernetes/kubernetes/issues/5017
+* https://github.com/kubernetes/kubernetes/issues/23794
+
+By Spring Cloud Dataflow:
+* http://docs.spring.io/spring-cloud-dataflow-server-kubernetes/docs/current-SNAPSHOT/reference/htmlsingle/#_deploying_streams_on_kubernetes
+* https://github.com/spring-cloud/spring-cloud-dataflow-server-kubernetes
+
+ZooKeeper @GKE:
+* https://kubernetes.io/docs/tutorials/stateful-application/zookeeper/
+* https://cloudplatform.googleblog.com/2016/04/taming-the-herd-using-Zookeeper-and-Exhibitor-on-Google-Container-Engine.html

@@ -76,6 +76,19 @@ $ docker exec 2b341597dbf7 cat /proc/self/cgroup | head -n3
 9:memory:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
 ```
 
+## Environment variables of a running process
+
+You can get them from `/proc/$PID/environ`. Variables are NULL-separated. For example:
+
+```
+# cat /proc/`pgrep dockerd`/environ | xargs -0L1
+LANG=ru_RU.UTF-8
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+NOTIFY_SOCKET=/run/systemd/notify
+OPTIONS=
+DOCKER_STORAGE_OPTIONS=
+```
+
 ## When you're too lazy to explain everything
 
 http://explainshell.com/
