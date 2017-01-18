@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>First steps in securing Apache Kafka: SSL and SASL/PLAIN - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <div class="warn">
+          <h3>This is a DRAFT ARTICLE</h3>
+          <p>
+            It is probably incomplete, wrong, and broken in
+            many respects. Please hesitate from reading this until
+            this work is complete; or just consider yourself warned.
+          </p>
+        </div>
+        <h1>First steps in securing Apache Kafka: SSL and SASL/PLAIN</h1>
+        <div class="content"><p>In this article, we’ll take a quick look onto configuring
+a more secured installation of Apache Kafka: we’ll
+enable the network communication encryption with <span class="caps">SSL</span>
+and simple authentication with SASL/PLAIN. We’ll use
+Kafka 0.10.1.0 build with Scala&nbsp;2.11.</p>
+<h2 id="ssl"><span class="caps">SSL</span> <a class="header-anchor" href="#ssl" aria-hidden="true">¶</a></h2>
+<p>The <a href="http://kafka.apache.org/documentation/#security_ssl">kafka documentation</a> has a good and comprehensive section
+about configuring the <span class="caps">SSL</span>. The only problem is that I want
+everything more automated – I don’t want to be prompted
+for passwords (let the passwords be generated!) or certificate
+DNAME&nbsp;details.</p>
+<p>So, we need to go through the same steps while adding enough
+options to each command so that the process is not&nbsp;interactive.</p>
+<h3 id="creating-ssl-authority">Creating <span class="caps">SSL</span> authority <a class="header-anchor" href="#creating-ssl-authority" aria-hidden="true">¶</a></h3>
+<p>To make a self-signed certificate (and that’s what we’re about
+to do) we need an <span class="caps">SSL</span> authority certificate and key to sign&nbsp;it.</p>
+<pre><code class="hljs lang-bash">openssl req -new -x509 \
+    -keyout cakey.pem -out ca.pem -days 3650 \
+    -passout pass:ougieceiphego \
+    -subj <span class="string">"/C=<span class="caps">US</span>/O=My Awesome Organization/OU=Middleware Team/CN=My Cool Authority"</span>
+</code></pre>
+<p>There are 3 parameters you will not want to&nbsp;hardcode:</p>
+<ul>
+<li>subject base (<code>/C=US/O=My Awesome Organization/OU=Middleware Team</code>)
+is the first thing you will want to change — you probably
+don’t work for My Awesome Organization in its Middleware Team;
+you may hardcode it in your scripts&nbsp;though;</li>
+<li>password: I have it generated and saved to file, so actually password
+argument looks like <code>-passout &quot;pass:$(cat CApassword.txt)&quot;</code>;</li>
+<li>subject <span class="caps">CN</span> – in fact, in my scripts, this is the script&nbsp;parameter.</li>
+</ul>
+<p>I doubt that subject actually affects anything – that’s your
+private <span class="caps">CA</span>, so you can write almost anything here. But I prefer
+to give it good names anyway, in the same spirit in which I give
+descriptive names to my&nbsp;variables.</p>
+<p>As the result, you’ll have the&nbsp;following:</p>
+<ul>
+<li><code>ca.pem</code> — the Certificate Authority certificate. Publish it
+the way you want, there is nothing secret in&nbsp;it;</li>
+<li><code>cakey.pem</code> – the certificate key. It is needed only to sign
+the certificates. You should keep it secure it you don’t want
+everybody to be able to sign certificates with your freshly
+generated&nbsp;authority.</li>
+<li>you’ll also have the most security sensitive thing: the password
+for the key. You can’t use a key without a password. So,
+<ul>
+<li>don’t loose the&nbsp;password;</li>
+<li>store it&nbsp;securely.</li>
+</ul>
+</li>
+</ul>
+<h3 id="trust-store">Trust store <a class="header-anchor" href="#trust-store" aria-hidden="true">¶</a></h3>
+<p>When authority certificates is generated, we can create a trust store
+— a keystore Java programs will use to validate our&nbsp;certificates.</p>
+<pre><code class="hljs lang-bash">keytool -keystore truststore.jks -alias CARoot -noprompt \
+    -import -file ca.pem -storepass chooruanguchi
+</code></pre>
+<p>As the result you’ll have a Java keystore file named
+<code>truststore.jks</code>, which will be used by both servers
+and clients that will have to validate the certificates
+signed by our&nbsp;authority.</p>
+<p>Again, we have a password here — the value of the <code>-storepass</code>
+option. It will be required to open the keystore. And again,
+it’s better to generate the password and save it to a file.
+On tmpfs. In a secure location of your file system. While
+no one is looking into your monitor. <s>In a basement with
+a heavy steel door, locked from the inside.</s></p>
+<h3 id="creating-the-server-key">Creating the server key <a class="header-anchor" href="#creating-the-server-key" aria-hidden="true">¶</a></h3>
+<p>The same precautions regarding the passwords apply&nbsp;here.</p>
+<p>First, we need to generate the&nbsp;key:</p>
+<pre><code class="hljs lang-bash">keytool -genkey -noprompt \
+    -dname <span class="string">'<span class="caps">CN</span>="my.broker.host.name", OU="Middleware Tam", O="My Awesome Organization", C=US'</span> \
+    -alias broker \
+    -keystore broker.jks \
+    -storepass ierayaekoinot \
+    -keypass ierayaekoinot \
+    -validity 3650 \
+    -keyalg <span class="caps">RSA</span>
+</code></pre>
+<p>As the result, you’ll have a keystore file named <code>broker.jks</code>,
+with a freshly-generated but unsigned&nbsp;keys.</p>
+<p>The notes about <code>-subj</code> above also apply to <code>-dname</code> here, as this
+is almost the same thing, only the format is&nbsp;different.</p>
+<p>You may note that I’m reusing password fo <code>-storepass</code> and <code>-keypass</code>.
+Well, we’ll have only one key in this keystore, so I see no need
+in additional security different passwords may&nbsp;provide.</p>
+<p>Now, we can sign the key with our&nbsp;authority:</p>
+<pre><code class="hljs lang-bash"><span class="comment"># import authority key into our keystore:</span>
+keytool -keystore broker.jks -alias CARoot -noprompt -import -file ca.pem -storepass ierayaekoinot
+
+<span class="comment"># create a certificate signing request:</span>
+keytool -keystore broker.jks -alias broker -certreq -file ./broker.req -storepass ierayaekoinot
+
+<span class="comment"># sign the request:</span>
+openssl x509 -req -CAcreateserial \
+    -<span class="caps">CA</span> ca.pem -CAkey cakey.pem  -passin pass:ougieceiphego \
+    -in ./broker.req -out ./broker.signed \
+    -days 3650
+
+<span class="comment"># import the signed certificate into our keystore:</span>
+keytool -keystore broker.jks -alias broker -import -file ./broker.signed -storepass ierayaekoinot
+</code></pre>
+<p>As the result, you’ll have two new files, <code>broker.reg</code> with the signing
+request, and <code>broker.signed</code> with the signed certificate. For our
+purposes, these files are temporary; you can safely delete&nbsp;them.</p>
+<h3 id="configuring-the-broker">Configuring the broker <a class="header-anchor" href="#configuring-the-broker" aria-hidden="true">¶</a></h3>
+<p>Let’s say you have the simple single-node Kafka installation,
+like the one described in <a href="http://kafka.apache.org/quickstart">Kafka quckstart</a>. Let’s upgrade
+it to use&nbsp;<span class="caps">SSL</span>!</p>
+<p>First, shut your producers, consumers and brokers&nbsp;down.</p>
+<p>Edit your ‘server.properties’. Modify a line describing&nbsp;listeners:</p>
+<pre><code class="hljs lang-jproperties">listeners=SSL://:9093
+</code></pre>
+<p>Also, add the following lines – e.g. at the&nbsp;end:</p>
+<pre><code class="hljs lang-jproperties"># keystore location and password
+ssl.keystore.location=/path/to/broker.jks
+ssl.keystore.password=ierayaekoinot
+ssl.key.password=ierayaekoinot
+
+# truststore location and password
+ssl.truststore.location=/path/to/truststore.jks
+ssl.truststore.password=chooruanguchi
+
+# a setting recommended by the documentation
+ssl.secure.random.implementation=SHA1PRNG
+
+# explicitly state that we don't validate client certificates:
+ssl.client.auth=none
+
+# make broker use SSL for inter-broker communication;
+# without this, we'll have to add a PLAINTEXT listener
+# to the 'listeners' line above
+security.inter.broker.protocol=SSL
+</code></pre>
+<p>That’s it! You can start the broker with&nbsp;usual</p>
+<pre><code class="hljs lang-bash">bin/kafka-server-start.sh config/server-ssl.properties
+</code></pre>
+<h3 id="configuring-the-console-clients">Configuring the console clients <a class="header-anchor" href="#configuring-the-console-clients" aria-hidden="true">¶</a></h3>
+<p>The simplest way to test this broker is with the console producer
+and consumer. To pass the additional properties into the <code>Producer</code>
+and <code>Consumer</code> constructor, you can put them into a property file.
+Here is the minimum of what we need to connect to our&nbsp;broker:</p>
+<pre><code class="hljs lang-jproperties">security.protocol=SSL
+ssl.truststore.location=/path/to/truststore.jks
+ssl.truststore.password=chooruanguchi
+</code></pre>
+<p>Then, you can start the console&nbsp;producer:</p>
+<pre><code class="hljs lang-bash">bin/kafka-console-producer.sh --broker-list  SSL://localhost:9093 --topic <span class="built_in">test</span> \
+    --producer.config ssl/client-ssl.properties
+</code></pre>
+<p>and&nbsp;consumer:</p>
+<pre><code class="hljs lang-bash">bin/kafka-console-consumer.sh --bootstrap-server SSL://localhost:9093 \
+    --topic <span class="built_in">test</span> --from-beginning \
+    --consumer.config ssl/client-ssl.properties
+</code></pre>
+<p>And… it&nbsp;works!</p>
+<h2 id="sasl"><span class="caps">SASL</span> <a class="header-anchor" href="#sasl" aria-hidden="true">¶</a></h2>
+<p>Comparing to <span class="caps">SSL</span>, SASL is pretty simple. One thing to know is that
+PLAIN mechanism passes the passwords in plain text, so it can be
+securely used only over SSL. Well, that’s how we were planning
+to do it <code>;)</code>.</p>
+<h3 id="jaas-configuration"><span class="caps">JAAS</span> configuration <a class="header-anchor" href="#jaas-configuration" aria-hidden="true">¶</a></h3>
+<p><span class="caps">SASL</span> is implemented via <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/jaas/JAASRefGuide.html"><span class="caps">JAAS</span></a>, and <span class="caps">JAAS</span> configuration is specified
+in system properties — <code>-Djava.security.auth.login.config=/path/to/jaas.conf</code>.
+To add this property to either Kafka server or the console
+producer and consumer, we can use <code>KAFKA_OPTS</code> variable, like&nbsp;this:</p>
+<pre><code>KAFKA_OPTS='-Djava.security.auth.login.config=/path/to/jaas.conf' bin/kafka_start_server.sh ...
+</code></pre>
+<p>The <span class="caps">JAAS</span> configuration themselves are also simple. For&nbsp;server:</p>
+<pre><code>KafkaServer {
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username=&quot;admin&quot;
+    password=&quot;ol1eigheeN4eg&quot;
+    user_admin=&quot;ol1eigheeN4eg&quot;
+    user_iv=&quot;Starch+relief9relief&quot;;
+};
+</code></pre>
+<p>This creates two users, <code>admin</code> and <code>iv</code>, and configures the broker
+to use <code>admin</code> user.</p>
+<p>For client, it’s even&nbsp;simpler:</p>
+<pre><code>KafkaClient {
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username=&quot;iv&quot;
+    password=&quot;Starch+relief9relief&quot;;
+};
+</code></pre>
+<p>Just configure client to use <code>iv</code> user.</p>
+<h3 id="adjusting-broker-settings">Adjusting broker settings <a class="header-anchor" href="#adjusting-broker-settings" aria-hidden="true">¶</a></h3>
+<p>Again, we have to change the listeners&nbsp;line:</p>
+<pre><code class="hljs lang-jproperties">listeners=SASL_SSL://:9093
+</code></pre>
+<p>Also, we need to configure <span class="caps">SSL</span> in the same way it was configured
+above. We need to change <code>security.inter.broker.protocol</code> and
+add three more&nbsp;lines:</p>
+<pre><code class="hljs lang-jproperties">sasl.enabled.mechanisms=PLAIN
+sasl.mechanism=PLAIN
+
+security.inter.broker.protocol=SASL_SSL
+sasl.mechanism.inter.broker.protocol=PLAIN
+</code></pre>
+<p>When you’re done, you can start the&nbsp;broker:</p>
+<pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/server.jaas.conf'</span> bin/kafka-server-start.sh config/server-sasl.properties
+</code></pre>
+<h3 id="console-clients-settings">Console clients settings <a class="header-anchor" href="#console-clients-settings" aria-hidden="true">¶</a></h3>
+<p>Wen need <span class="caps">JAAS</span> configuration from the above; also, you need to
+update the property&nbsp;file:</p>
+<pre><code class="hljs lang-jproperties">security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+ssl.truststore.location=/path/to/truststore.jks
+ssl.truststore.password=chooruanguchi
+</code></pre>
+<p>Now, it’s easy to start the&nbsp;producer:</p>
+<pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-console-producer.sh \
+    --broker-list  <span class="caps">SSL</span>://localhost:9093 --topic <span class="built_in">test</span> --producer.config ssl/client-sasl.properties
+</code></pre>
+<p>and the&nbsp;consumer:</p>
+<pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-console-consumer.sh \
+    --bootstrap-server SASL_SSL://localhost:9093 \
+    --topic <span class="built_in">test</span> --from-beginning \
+    --consumer.config ssl/client-sasl.properties
+</code></pre>
+<h2 id="whats-left">What’s left? <a class="header-anchor" href="#whats-left" aria-hidden="true">¶</a></h2>
+<p>Zookeeper of course. Securing a zookeeper installation is surely out of
+scope of this article, and Kafka is merely a client to&nbsp;it.</p>
+<p><span class="caps">TODO</span>: Play ACLs&nbsp;FTW?</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-01-18 19:13:34 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-with-ssl-and-sasl-plain/index.md">articles/kafka-with-ssl-and-sasl-plain/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

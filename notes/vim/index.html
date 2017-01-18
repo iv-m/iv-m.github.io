@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Vim notes - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Vim notes</h1>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#list-of-plugins-i-use">List of plugins I&nbsp;use</a></li><li><a href="#markdown-configuration">Markdown&nbsp;configuration</a></li><li><a href="#interesting-plugins-to-check-out-one-day">Interesting plugins to check out one&nbsp;day</a></li></ul></div></p>
+<h2 id="list-of-plugins-i-use">List of plugins I use <a class="header-anchor" href="#list-of-plugins-i-use" aria-hidden="true">¶</a></h2>
+<ul>
+<li><a href="https://github.com/tpope/vim-pathogen">https://github.com/tpope/vim-pathogen</a></li>
+<li><a href="https://github.com/kien/rainbow_parentheses.vim">https://github.com/kien/rainbow_parentheses.vim</a></li>
+<li><a href="https://github.com/digitaltoad/vim-pug">https://github.com/digitaltoad/vim-pug</a> – Jade,&nbsp;too</li>
+<li><a href="https://github.com/kchmck/vim-coffee-script">https://github.com/kchmck/vim-coffee-script</a></li>
+<li><a href="https://github.com/derekwyatt/vim-scala">https://github.com/derekwyatt/vim-scala</a></li>
+<li><a href="https://github.com/rust-lang/rust.vim.git">https://github.com/rust-lang/rust.vim.git</a></li>
+<li><a href="https://github.com/hynek/vim-python-pep8-indent.git">https://github.com/hynek/vim-python-pep8-indent.git</a></li>
+<li><a href="https://github.com/neovimhaskell/haskell-vim">https://github.com/neovimhaskell/haskell-vim</a></li>
+<li><a href="https://github.com/elzr/vim-json">https://github.com/elzr/vim-json</a> with <code>let g:vim_json_syntax_conceal = 0</code></li>
+<li><a href="https://github.com/godlygeek/tabular">https://github.com/godlygeek/tabular</a></li>
+<li><a href="https://github.com/guns/xterm-color-table.vim">https://github.com/guns/xterm-color-table.vim</a> <code>:XtermColorTable</code></li>
+<li><a href="https://github.com/tmux-plugins/vim-tmux.git">https://github.com/tmux-plugins/vim-tmux.git</a></li>
+<li><a href="https://github.com/ctrlpvim/ctrlp.vim">https://github.com/ctrlpvim/ctrlp.vim</a> with popup on <code>&lt;Leader&gt;e</code></li>
+<li><a href="https://github.com/plasticboy/vim-markdown">https://github.com/plasticboy/vim-markdown</a> with additional&nbsp;configuration.</li>
+</ul>
+<p>Initializing <code>~/.vim/bundle</code> on a new&nbsp;machine:</p>
+<pre><code class="hljs lang-bash">xclip -o | <span class="keyword">while</span> <span class="built_in">read</span> repo comment; <span class="keyword">do</span> git <span class="built_in">clone</span> <span class="string">"<span class="variable">$repo</span>"</span>; <span class="keyword">done</span>
+</code></pre>
+<h2 id="markdown-configuration">Markdown configuration <a class="header-anchor" href="#markdown-configuration" aria-hidden="true">¶</a></h2>
+<pre><code class="hljs lang-vim"><span class="keyword">let</span> <span class="variable">g:vim_markdown_conceal</span> = <span class="number">0</span>
+<span class="keyword">let</span> <span class="variable">g:vim_markdown_fenced_languages</span> = [<span class="string">'bash=sh'</span>, <span class="string">'java'</span>, <span class="string">'python'</span>, <span class="string">'html'</span>, <span class="string">'javascript'</span>]
+<span class="keyword">let</span> <span class="variable">g:vim_markdown_frontmatter</span> = <span class="number">1</span>
+<span class="keyword">let</span> <span class="variable">g:vim_markdown_new_list_item_indent</span> = <span class="number">2</span>
+
+<span class="comment">" by default mkdCode is String, but I find PreProc (blueish in my config) nicer</span>
+<span class="keyword">autocmd</span> <span class="keyword">filetype</span> markdown <span class="keyword">hi</span> link mkdCode PreProc
+
+<span class="comment">" make code start and end more visible, since now the code is not all in one color</span>
+<span class="keyword">autocmd</span> <span class="keyword">filetype</span> markdown <span class="keyword">hi</span> mkdCodeStart cterm=bold ctermfg=<span class="number">16</span> ctermbg=<span class="number">43</span>
+<span class="keyword">autocmd</span> <span class="keyword">filetype</span> markdown <span class="keyword">hi</span> link mkdCodeEnd mkdCodeStart
+</code></pre>
+<h2 id="interesting-plugins-to-check-out-one-day">Interesting plugins to check out one day <a class="header-anchor" href="#interesting-plugins-to-check-out-one-day" aria-hidden="true">¶</a></h2>
+<ul>
+<li><a href="https://github.com/vim-syntastic/syntastic">https://github.com/vim-syntastic/syntastic</a></li>
+<li><a href="https://github.com/tpope/vim-surround">https://github.com/tpope/vim-surround</a></li>
+</ul>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-01-18 19:09:09 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/vim/index.md">notes/vim/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

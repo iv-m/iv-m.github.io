@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <title>Shell tips - iv goes technical
+    <title>(Linux) shell tips - iv goes technical
     </title>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/hljs.css">
@@ -15,9 +15,9 @@
     </header>
     <div id="content">
       <div class="content-wrap">
-        <h1>Shell tips</h1>
+        <h1>(Linux) shell tips</h1>
         <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or&nbsp;linux-specific.</p>
-<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without&nbsp;docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running&nbsp;process</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
 <h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
 <p>Here’s a piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
@@ -36,13 +36,42 @@ but grep won’t find it: it needs a help for yet another command,
 <p>Systemd-logind kills user processes when the session is over.
 To overcome this, I’ve created the following one-line script
 in my <code>~/bin</code>.</p>
-<pre><code>#!/bin/sh
-
-exec urxvt -e mosh &quot;${1:-gd-ws}&quot; \
-    --server='systemd-run --scope --user mosh-server new' \
+<pre><code class="hljs lang-bash"><span class="meta">#!/bin/sh
+</span>
+<span class="built_in">exec</span> urxvt <span class="_">-e</span> mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
+    --server=<span class="string">'systemd-run --scope --user mosh-server new'</span> \
     -- tmux att
 </code></pre>
 <p>Explaining this command would make a nice article <code>;)</code><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p>
+<h2 id="entering-docker-container-without-docker">Entering docker container without docker <a class="header-anchor" href="#entering-docker-container-without-docker" aria-hidden="true">¶</a></h2>
+<p><code>docker exec</code> executes command within the container cgroup;
+if this cgroup has hard <span class="caps">CPU</span> and/or RAM limitations, this
+may affect your production code. If you have root access
+to the box, you can use <code>nsenter</code> instead:</p>
+<pre><code class="hljs lang-bash">nsenter --target <span class="variable">$<span class="caps">PID</span></span> --mount --uts --ipc --net --pid
+</code></pre>
+<p><code>$PID</code> here is the process <span class="caps">ID</span> of one of the processes running
+in the container, as seen from the&nbsp;host.</p>
+<p>Example:</p>
+<pre><code>$ sudo nsenter --target 10372  --mount --uts --ipc --net --pid cat /proc/self/cgroup | head -n3
+11:cpu,cpuacct:/
+10:pids:/user.slice/user-500.slice/session-1.scope
+9:memory:/
+</code></pre>
+<pre><code>$ docker exec 2b341597dbf7 cat /proc/self/cgroup | head -n3
+11:cpu,cpuacct:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
+10:pids:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
+9:memory:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
+</code></pre>
+<h2 id="environment-variables-of-a-running-process">Environment variables of a running process <a class="header-anchor" href="#environment-variables-of-a-running-process" aria-hidden="true">¶</a></h2>
+<p>You can get them from <code>/proc/$PID/environ</code>. Variables are <span class="caps">NULL</span>-separated. For&nbsp;example:</p>
+<pre><code># cat /proc/`pgrep dockerd`/environ | xargs -0L1
+LANG=ru_RU.UTF-8
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+NOTIFY_SOCKET=/run/systemd/notify
+OPTIONS=
+DOCKER_STORAGE_OPTIONS=
+</code></pre>
 <h2 id="when-youre-too-lazy-to-explain-everything">When you’re too lazy to explain everything <a class="header-anchor" href="#when-youre-too-lazy-to-explain-everything" aria-hidden="true">¶</a></h2>
 <p><a href="http://explainshell.com/">http://explainshell.com/</a></p>
 <hr class="footnotes-sep">
@@ -65,7 +94,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-08 19:04:33 +0400.
+            Last updated 2017-01-13 18:05:28 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
           </p>
         </div>
