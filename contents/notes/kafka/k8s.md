@@ -182,7 +182,7 @@ service into every container. For example, this is how to get
 an external IP and port of `kafka-service` service in the `default`
 namesapce:
 
-```
+```bash
 curl -sS \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
     -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
@@ -192,6 +192,16 @@ curl -sS \
 
 The default namespace to be used for namespaced API operations is placed in a file
 at `/var/run/secrets/kubernetes.io/serviceaccount/namespace` in each container.
+
+### WAT?
+
+```bash
+curl -sS \
+    --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+    -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+    "https://$KUBERNETES_SERVICE_HOST/api/v1/namespaces/manual-lle/secrets/tvs-mysql-mysqldb" \
+    | jq -r '.data."mysql-root-password"' | base64 -d
+```
 
 ## When you're done with it
 
@@ -203,8 +213,11 @@ vboxmanage list runningvms  # oh it's gone...
 ## Random links
 
 * https://github.com/Yolean/kubernetes-kafka
-* https://github.com/kubernetes/kubernetes/issues/5017
-* https://github.com/kubernetes/kubernetes/issues/23794
+  * https://github.com/solsson/kubernetes-kafka
+  * https://hub.docker.com/r/solsson/kafka-persistent/
+* https://github.com/kubernetes/kubernetes/issues/5017 Example: Kafka/Zookeeper
+* https://github.com/kubernetes/kubernetes/issues/23794 Support Kafka in PetSet
+* https://github.com/kubernetes/charts/pull/144 Incubator chart for Kafka
 
 By Spring Cloud Dataflow:
 * http://docs.spring.io/spring-cloud-dataflow-server-kubernetes/docs/current-SNAPSHOT/reference/htmlsingle/#_deploying_streams_on_kubernetes
@@ -213,3 +226,4 @@ By Spring Cloud Dataflow:
 ZooKeeper @GKE:
 * https://kubernetes.io/docs/tutorials/stateful-application/zookeeper/
 * https://cloudplatform.googleblog.com/2016/04/taming-the-herd-using-Zookeeper-and-Exhibitor-on-Google-Container-Engine.html
+* https://github.com/kubernetes/charts/tree/master/incubator/zookeeper

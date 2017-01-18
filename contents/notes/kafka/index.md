@@ -13,7 +13,7 @@ template: article.jade
 [Documentation]: http://kafka.apache.org/documentation/
 [quckstart]: http://kafka.apache.org/quickstart
 
-**Advice**: don't use root ZooKeeper path: '--zookeeper localhost:2181/kafka` works.
+**Advice**: don't use root ZooKeeper path: `--zookeeper localhost:2181/kafka` works.
 
 TBD: what if we have ZK cluster? Probably the syntax is
 `--zookeeper localhost:2181,localhost:2182/kafka`
@@ -60,8 +60,9 @@ The Kafka REST Proxy can also be used.
 
 ## Random links
 
-* http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf 
+* http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf
 * https://github.com/vasilievip/jeeconf-kafka-camel-boot
 * http://docs.spring.io/spring-kafka
 * http://techblog.netflix.com/2016/04/kafka-inside-keystone-pipeline.html
 * http://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html
+* https://github.com/gerritjvv/kafka-fast
