@@ -89,6 +89,16 @@ OPTIONS=
 DOCKER_STORAGE_OPTIONS=
 ```
 
+## Find matching line, and extract the matching part
+
+There is `-o` switch in `grep` for that exactly.
+
+```
+$ amixer get Master | egrep -o '[0-9]{1,3}?%'
+100%
+100%
+```
+
 ## When you're too lazy to explain everything
 
 http://explainshell.com/
