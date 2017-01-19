@@ -314,6 +314,15 @@ KAFKA_OPTS='-Djava.security.auth.login.config=ssl/iv.jaas.conf' bin/kafka-consol
     --consumer.config ssl/client-sasl.properties
 ```
 
+Tools that work via broker will need the security configuration, too:
+
+```bash
+KAFKA_OPTS='-Djava.security.auth.login.config=ssl/iv.jaas.conf' bin/kafka-consumer-groups.sh \
+    --bootstrap-server SSL_SASL://localhost:19093 \
+    --command-config ssl/client-sasl.properties \
+    --list
+```
+
 ## What's left?
 
 Zookeeper of course. Securing a zookeeper installation is surely out of
