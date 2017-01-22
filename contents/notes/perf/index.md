@@ -38,7 +38,7 @@ personally interested me are mentioned.
 * 2.6.39: `perf top`, `perf evlist` (which events were recorded), `perf stat --filter`
 
 3.X series:
-* 3.0: `perf stat -d -d`, `--sync` (run sunc() before test)
+* 3.0: `perf stat -d -d`, `--sync` (run sync() before test)
 * 3.1: inverted call graph report (caller/callee, `-G`), CPU range
 * 3.2: `perf top`: zoom into tasks and libs
 * 3.3: --

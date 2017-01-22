@@ -35,7 +35,7 @@ most convenient way of writing.  Preferably using some neat markup, like
 markdown.
 
 I want to commit what's written to git. I'm fond of git. I'm a git
-junky. When I'm editing something, I simply need my doze of version
+junkie. When I'm editing something, I simply need my doze of version
 control to be productive.
 
 Then, I want to publish it nicely, with certain meta-information added
@@ -45,7 +45,7 @@ goes to production.
 ## How do I get there?
 
 First [github pages]. The tutorial is very straightforward, and I walked
-it throgh some time ago, leaving it with a simple `index.html` saying
+through it some time ago, leaving it with a simple `index.html` saying
 "Under construction".  The main outcome was: I can put some pages into
 the master branch of a particular repository, and then push it to
 `origin` -- and these pages immediately become my site,

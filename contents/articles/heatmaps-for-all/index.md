@@ -29,7 +29,7 @@ are warming.
 
 ## trace2heatmap.pl
 
-[Brendan Gregg] once created a very simpe, easy to use perl script
+[Brendan Gregg] once created a very simple, easy to use perl script
 to build heat maps from traces gathered with [various tools], most
 notably [perf][perf-bg], and made it available
 [on github](https://github.com/brendangregg/HeatMap).

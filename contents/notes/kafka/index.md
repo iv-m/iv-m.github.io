@@ -84,7 +84,7 @@ The reassignment is done in several steps:
 1. you collect the data -- how you want to do it;
 1. you generate the JSON that describes the change: for each
    partition, it should have a list of brokers that replicate
-   it, and the first one is the *preffered* one -- the one
+   it, and the first one is the *preferred* one -- the one
    you want to become a leader;
 1. you apply this change with `bin/kafka-reassign-partitions.sh --execute`;
 1. you wait for this change to complete, checking the progress with
