@@ -11,13 +11,13 @@
   </head>
   <body>
     <header>
-      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
     </header>
     <div id="content">
       <div class="content-wrap">
         <h1>(Linux) shell tips</h1>
         <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or&nbsp;linux-specific.</p>
-<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without&nbsp;docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running&nbsp;process</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without&nbsp;docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running&nbsp;process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching&nbsp;part</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
 <h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
 <p>Here’s a piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
@@ -72,6 +72,12 @@ NOTIFY_SOCKET=/run/systemd/notify
 OPTIONS=
 DOCKER_STORAGE_OPTIONS=
 </code></pre>
+<h2 id="find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching part <a class="header-anchor" href="#find-matching-line-and-extract-the-matching-part" aria-hidden="true">¶</a></h2>
+<p>There is <code>-o</code> switch in <code>grep</code> for that&nbsp;exactly.</p>
+<pre><code>$ amixer get Master | egrep -o '[0-9]{1,3}?%'
+100%
+100%
+</code></pre>
 <h2 id="when-youre-too-lazy-to-explain-everything">When you’re too lazy to explain everything <a class="header-anchor" href="#when-youre-too-lazy-to-explain-everything" aria-hidden="true">¶</a></h2>
 <p><a href="http://explainshell.com/">http://explainshell.com/</a></p>
 <hr class="footnotes-sep">
@@ -94,7 +100,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-13 18:05:28 +0400.
+            Last updated 2017-01-19 08:28:45 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
           </p>
         </div>

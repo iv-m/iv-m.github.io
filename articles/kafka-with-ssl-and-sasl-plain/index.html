@@ -11,7 +11,7 @@
   </head>
   <body>
     <header>
-      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
     </header>
     <div id="content">
       <div class="content-wrap">
@@ -245,6 +245,12 @@ ssl.truststore.password=chooruanguchi
     --topic <span class="built_in">test</span> --from-beginning \
     --consumer.config ssl/client-sasl.properties
 </code></pre>
+<p>Tools that work via broker will need the security configuration,&nbsp;too:</p>
+<pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-consumer-groups.sh \
+    --bootstrap-server SSL_SASL://localhost:19093 \
+    --command-config ssl/client-sasl.properties \
+    --list
+</code></pre>
 <h2 id="whats-left">What’s left? <a class="header-anchor" href="#whats-left" aria-hidden="true">¶</a></h2>
 <p>Zookeeper of course. Securing a zookeeper installation is surely out of
 scope of this article, and Kafka is merely a client to&nbsp;it.</p>
@@ -261,7 +267,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-18 19:13:34 +0400.
+            Last updated 2017-01-19 19:46:56 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-with-ssl-and-sasl-plain/index.md">articles/kafka-with-ssl-and-sasl-plain/index.md</a>.
           </p>
         </div>

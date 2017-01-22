@@ -11,12 +11,12 @@
   </head>
   <body>
     <header>
-      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/archive.html">articles by date</a></p>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
     </header>
     <div id="content">
       <div class="content-wrap">
         <h1>Apache Kafka notes</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started">Getting&nbsp;started</a></li><li><a href="#deployment-considerations">Deployment considerations</a><ul><li><a href="#kafka-and-zookeeper">Kafka and&nbsp;Zookeeper</a></li><li><a href="#offsets-replication-factor">Offsets replication&nbsp;factor</a></li></ul></li><li><a href="#monitoring-and-management-uis">Monitoring and management&nbsp;UIs</a></li><li><a href="#random-links">Random&nbsp;links</a></li></ul></div></p>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started">Getting&nbsp;started</a></li><li><a href="#deployment-considerations">Deployment considerations</a><ul><li><a href="#kafka-and-zookeeper">Kafka and&nbsp;Zookeeper</a></li><li><a href="#offsets-replication-factor">Offsets replication&nbsp;factor</a></li></ul></li><li><a href="#monitoring-and-management-uis">Monitoring and management&nbsp;UIs</a></li><li><a href="#operations-notes">Operations notes</a><ul><li><a href="#getting-the-list-of-active-brokers">Getting the list of active&nbsp;brokers</a></li><li><a href="#managing-partitions">Managing&nbsp;partitions</a></li></ul></li><li><a href="#random-links">Random&nbsp;links</a></li></ul></div></p>
 <h2 id="getting-started">Getting started <a class="header-anchor" href="#getting-started" aria-hidden="true">¶</a></h2>
 <p><a href="http://kafka.apache.org/documentation/">Documentation</a> is really awesome, <a href="http://kafka.apache.org/quickstart">quckstart</a>&nbsp;works.</p>
 <p><strong>Advice</strong>: don’t use root ZooKeeper path: <code>--zookeeper localhost:2181/kafka</code> works.</p>
@@ -45,9 +45,49 @@ manually increase the replication factor for this&nbsp;topic.</p>
 <p>Management:</p>
 <ul>
 <li><a href="http://www.landoop.com/blog/2016/08/kafka-topics-ui/">http://www.landoop.com/blog/2016/08/kafka-topics-ui/</a></li>
-<li><a href="https://github.com/yahoo/kafka-manager">https://github.com/yahoo/kafka-manager</a></li>
+<li><a href="https://github.com/yahoo/kafka-manager">https://github.com/yahoo/kafka-manager</a>
+<ul>
+<li><a href="https://github.com/yahoo/kafka-manager/pull/282">https://github.com/yahoo/kafka-manager/pull/282</a></li>
+<li><a href="https://hub.docker.com/r/sheepkiller/kafka-manager">https://hub.docker.com/r/sheepkiller/kafka-manager</a></li>
+</ul>
+</li>
 </ul>
 <p>The Kafka <span class="caps">REST</span> Proxy can also be&nbsp;used.</p>
+<h2 id="operations-notes">Operations notes <a class="header-anchor" href="#operations-notes" aria-hidden="true">¶</a></h2>
+<h3 id="getting-the-list-of-active-brokers">Getting the list of active brokers <a class="header-anchor" href="#getting-the-list-of-active-brokers" aria-hidden="true">¶</a></h3>
+<p>Somewhat ugly, but works when you need it, and you don’t have
+a way to compile Java code&nbsp;handy:</p>
+<pre><code class="hljs lang-bash">bin/zookeeper-shell.sh localhost:2181/kafka/<span class="built_in">local</span> ls /brokers/ids \
+    | tail -n1 | egrep -o <span class="string">'[[:digit:]]+'</span>
+</code></pre>
+<h3 id="managing-partitions">Managing partitions <a class="header-anchor" href="#managing-partitions" aria-hidden="true">¶</a></h3>
+<p>Partitions can be reassigned&nbsp;manually:</p>
+<ul>
+<li>if you need to change the replication factor of the existing&nbsp;topic;</li>
+<li>if, with brokers leaving and joining the cluster, we ended up
+with uneven load distribution on&nbsp;brokers;</li>
+<li>and&nbsp;more!</li>
+</ul>
+<p>The reassignment is done in several&nbsp;steps:</p>
+<ol>
+<li>you collect the data – how you want to do&nbsp;it;</li>
+<li>you generate the <span class="caps">JSON</span> that describes the change: for each
+partition, it should have a list of brokers that replicate
+it, and the first one is the <em>preferred</em> one – the one
+you want to become a&nbsp;leader;</li>
+<li>you apply this change with <code>bin/kafka-reassign-partitions.sh --execute</code>;</li>
+<li>you wait for this change to complete, checking the progress with
+<code>bin/kafka-reassign-partitions.sh --verify</code>;</li>
+<li>you ask the cluster to actually reassign the partition
+leaders with <code>bin/kafka-preferred-replica-election.sh</code></li>
+</ol>
+<p>A simple example of putting it all together is in
+<a href="https://gist.github.com/iv-m/9504a57e19bcd8e7d3f959bb2c473fb1">this gist</a>.
+It uses <code>bin/kafka-reassign-partitions.sh</code> to generate the plan.  If we
+need some special adjustments, or we want to change the replication
+factor (this is done by adding more brokers) — than we’ll have to edit
+this plan, either manually or with some kind of script, or just generate
+the plan with a script right&nbsp;away.</p>
 <h2 id="random-links">Random links <a class="header-anchor" href="#random-links" aria-hidden="true">¶</a></h2>
 <ul>
 <li><a href="http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf">http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf</a></li>
@@ -69,7 +109,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-18 19:09:09 +0400.
+            Last updated 2017-01-22 19:24:35 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/kafka/index.md">notes/kafka/index.md</a>.
           </p>
         </div>
