@@ -15,6 +15,14 @@ print to PDF from Chrome -- also, some cropping may be needed.
 
 [tried it]: https://github.com/iv-m/iv-m.github.io/tree/remark
 
+Animating remark (thanks to http://www.partage-it.com/animez-vos-presentations-remark-js/ --- in French):
+
+```css
+.remark-fading { z-index: 9; }
+.remark-slide-container {transition: opacity 0.5s ease-out;opacity: 0;}
+.remark-visible {transition: opacity 0.5s ease-out;opacity: 1;}
+```
+
 ## Diagrams with mermaid
 
 http://knsv.github.io/mermaid/

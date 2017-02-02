@@ -50,6 +50,7 @@ Offsets/consumers:
 
 * https://github.com/quantifind/KafkaOffsetMonitor
 * https://github.com/linkedin/Burrow
+* https://github.com/andreas-schroeder/kafka-health-check
 
 Management:
 
@@ -108,4 +109,5 @@ the plan with a script right away.
 * http://docs.spring.io/spring-kafka
 * http://techblog.netflix.com/2016/04/kafka-inside-keystone-pipeline.html
 * http://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html
+* http://docs.oracle.com/javase/6/docs/api/javax/security/auth/login/Configuration.html
 * https://github.com/gerritjvv/kafka-fast
