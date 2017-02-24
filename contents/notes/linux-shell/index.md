@@ -99,6 +99,31 @@ $ amixer get Master | egrep -o '[0-9]{1,3}?%'
 100%
 ```
 
+## Parsing comma-separated string into a bash array
+
+```bash
+parse_array () { local IFS=','; read -a "$1" < <(echo "$2"); }
+```
+
+This takes two arguments -- name and content, and sets global
+variable with the given name to an array parsed from comma-separated
+contents. For example:
+
+```bash
+keys="host,port,service name,comment"
+parse_array the_array "$keys"
+for x in "${the_array[@]}"; do
+    echo "$x"
+done
+```
+
+This prints:
+
+    host
+    port
+    service name
+    comment
+
 ## When you're too lazy to explain everything
 
 http://explainshell.com/

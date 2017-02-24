@@ -111,3 +111,4 @@ the plan with a script right away.
 * http://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html
 * http://docs.oracle.com/javase/6/docs/api/javax/security/auth/login/Configuration.html
 * https://github.com/gerritjvv/kafka-fast
+* https://www.confluent.io/blog/how-to-choose-the-number-of-topicspartitions-in-a-kafka-cluster/
