@@ -93,7 +93,6 @@ The reassignment is done in several steps:
 1. you ask the cluster to actually reassign the partition
    leaders with `bin/kafka-preferred-replica-election.sh`
 
-
 A simple example of putting it all together is in
 [this gist](https://gist.github.com/iv-m/9504a57e19bcd8e7d3f959bb2c473fb1).
 It uses `bin/kafka-reassign-partitions.sh` to generate the plan.  If we
@@ -112,3 +111,4 @@ the plan with a script right away.
 * http://docs.oracle.com/javase/6/docs/api/javax/security/auth/login/Configuration.html
 * https://github.com/gerritjvv/kafka-fast
 * https://www.confluent.io/blog/how-to-choose-the-number-of-topicspartitions-in-a-kafka-cluster/
+* Reactive Kafka [video](https://www.youtube.com/watch?v=-ioxYn9Vlao) [slides](http://www.slideshare.net/SpringCentral/reactive-kafka)
