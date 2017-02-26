@@ -17,7 +17,7 @@
       <div class="content-wrap">
         <h1>(Linux) shell tips</h1>
         <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or&nbsp;linux-specific.</p>
-<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without&nbsp;docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running&nbsp;process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching&nbsp;part</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without&nbsp;docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running&nbsp;process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching&nbsp;part</a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash&nbsp;array</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
 <h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
 <p>Here’s a piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
@@ -78,6 +78,24 @@ DOCKER_STORAGE_OPTIONS=
 100%
 100%
 </code></pre>
+<h2 id="parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash array <a class="header-anchor" href="#parsing-comma-separated-string-into-a-bash-array" aria-hidden="true">¶</a></h2>
+<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> <span class="_">-a</span> <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
+</code></pre>
+<p>This takes two arguments – name and content, and sets global
+variable with the given name to an array parsed from comma-separated
+contents. For&nbsp;example:</p>
+<pre><code class="hljs lang-bash">keys=<span class="string">"host,port,service name,comment"</span>
+parse_array the_array <span class="string">"<span class="variable">$keys</span>"</span>
+<span class="keyword">for</span> x <span class="keyword">in</span> <span class="string">"<span class="variable">${the_array[@]}</span>"</span>; <span class="keyword">do</span>
+    <span class="built_in">echo</span> <span class="string">"<span class="variable">$x</span>"</span>
+<span class="keyword">done</span>
+</code></pre>
+<p>This&nbsp;prints:</p>
+<pre><code>host
+port
+service name
+comment
+</code></pre>
 <h2 id="when-youre-too-lazy-to-explain-everything">When you’re too lazy to explain everything <a class="header-anchor" href="#when-youre-too-lazy-to-explain-everything" aria-hidden="true">¶</a></h2>
 <p><a href="http://explainshell.com/">http://explainshell.com/</a></p>
 <hr class="footnotes-sep">
@@ -100,7 +118,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-19 08:28:45 +0400.
+            Last updated 2017-02-24 15:09:39 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
           </p>
         </div>

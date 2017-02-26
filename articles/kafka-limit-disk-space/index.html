@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Apache Kafka: how limit the disk space - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Apache Kafka: how limit the disk space</h1>
+        <div class="content"><p>Sometimes it is desirable to put an upper bound on how much space
+<a href="http://kafka.apache.org">Apache Kafka</a> can use. But it turns out that this is not as trivial
+as one might imagine — for me, it took several iterations to find
+the correct settings. The details&nbsp;below.</p>
+<h2 id="step-zero-admit-you-have-a-problem">Step Zero: admit you have a problem <a class="header-anchor" href="#step-zero-admit-you-have-a-problem" aria-hidden="true">¶</a></h2>
+<p>All the messages Kafka broker receives are written to <em>commit logs</em> —
+essentially, files on the file&nbsp;system.</p>
+<p>What happens when logs fill all the available disk space? That’s simple
+and somewhat predictable: the broker exits immediately, and you
+see ‘No space left on device’ error in one of the last lines of its&nbsp;logs.</p>
+<p>In fact, this looks like the very right thing to do: other brokers
+(which hopefully have more space on their drives) will take the
+responsibilities of this one, and all the system will continue going
+without loosing any data. Of course, operator intervention is required
+to bring the broker back up, after making some space available to&nbsp;it.</p>
+<p>This became a problem for me when I was running some quick performance
+tests against a Kafka cluster. Kafka is <em>fast</em>, so I had to throw quite
+a lot of data into it to see how it behaves under the load — and it
+turned out that disk space of my test machines are rather&nbsp;limited.</p>
+<h2 id="step-one-naive-first-try">Step One: naive first try <a class="header-anchor" href="#step-one-naive-first-try" aria-hidden="true">¶</a></h2>
+<p>Kafka broker has two basic parameters that define the logs retention:
+time-based <code>log.retention.hours</code> and volume-based <code>log.retention.bytes</code>.
+When both are defined, they are combined on &quot;whichever comes first&quot;
+basis: the message can be deleted if they are older than
+<code>log.retention.hours</code> <strong><span class="caps">OR</span></strong> they are more than <code>log.retention.bytes</code>
+behind the last message. In other words, a message is safe from
+the purging if it’s <strong>both</strong> younger than  <code>log.retention.hours</code>
+and no more than <code>log.retention.bytes</code> behind the last&nbsp;message.</p>
+<p>So, can you just set <code>log.retention.bytes</code> (which is not set
+by default) and live happily ever&nbsp;after?</p>
+<p><span class="caps">NOT</span>&nbsp;REALLY.</p>
+<h2 id="how-it-really-works-segments">How it really works: segments <a class="header-anchor" href="#how-it-really-works-segments" aria-hidden="true">¶</a></h2>
+<p>In fact, Kafka splits log for each replica into segments: it writes new
+messages to the last of them, and when the current segment reaches the
+certain size, it creates the next one and starts writing incoming
+messages there. Kafka also does not delete messages one by one; instead,
+it removes the whole segment if it sees that all of the messages in it
+are not fresh enough to save&nbsp;them.</p>
+<p>From our disk-space-concerned point of view, this means that, in
+addition to the disk space for all the “fresh enough” messages, we also
+need disk space for at least one segment for every replica – before
+Kafka comes to delete the oldest segment, a whole new segment of the
+fresh messages will probably be written.  This additional space is
+considerable: the default segment size is 1GiB (2<sup>30</sup> bytes precisely),
+and each broker usually handles several replicas of several&nbsp;topics.</p>
+<p>What this gives? Under serious space constrains it may make sense for
+you to reduce the segment size (property <code>log.segment.bytes</code>, say,
+tenfold. For single topic with a few partitions (12 partitions totally,
+distributed evenly across 3 brokers) I did not notice any performance&nbsp;impact.</p>
+<p>So, can we go and set <code>log.segment.bytes</code> to, say, <code>107374182</code>, and then
+get back to what we were&nbsp;doing?</p>
+<p><span class="caps">NOT</span>&nbsp;REALLY.</p>
+<h2 id="how-it-really-really-works-periodic-check">How it really really works: periodic check <a class="header-anchor" href="#how-it-really-really-works-periodic-check" aria-hidden="true">¶</a></h2>
+<p>The segments are not deleted at the very moment the broker has a right
+to do it: it would be impractical and certainly hit the performance to
+check if there is anything to delete on every incoming message. Instead,
+broker runs a periodic task that looks for segments to delete every so&nbsp;often.</p>
+<p>The frequency of the check is controlled by server property named
+<code>log.retention.check.interval.ms</code>, which default value is 300000 – 5
+minutes. This more than enough (or, more precisely, small enough to be
+ok) for the usual settings when you are storing last 168 hours (7 days)
+of messages, but for my tests that was just too big, and I reduced the
+check period to 20 seconds. Did this finally work for&nbsp;me?</p>
+<p><span class="caps">NOT</span>&nbsp;REALLY.</p>
+<h2 id="how-it-really-really-really-works-delete-delay">How it really really really works: delete delay <a class="header-anchor" href="#how-it-really-really-really-works-delete-delay" aria-hidden="true">¶</a></h2>
+<p>Since December 2012 and <a href="https://issues.apache.org/jira/browse/KAFKA-636"><span class="caps">KAFKA</span>-636</a>, the periodic check does not really
+delete the segments: instead, it marks the segment for deletion by
+renaming the file (it adds <code>.deleted</code> suffix) and schedules the actual
+deletion to happen <code>log.segment.delete.delay.ms</code> milliseconds later (the
+default delay is 60 seconds). Why this is needed is not entirely clear
+for me, but it has to do with the fact that file deletion could happen
+concurrently with reading, which led to certain corner-case bugs; but it
+would be bad for performance to bring the deletion under the read&nbsp;lock.</p>
+<p>I’ve read through some code and decided that we have a very low chance
+of hitting these corner-case bug under Linux, where file deletion is
+actually and unlinking operation that removes the entry from the
+directory, and actual deletion will not happen until the last file
+descriptor to this file is closed – so I boldly reduced that delay from
+60 seconds to one. Did this do the job for&nbsp;me?</p>
+<p>Well, looks like&nbsp;it.</p>
+<h2 id="wrapping-up">Wrapping up <a class="header-anchor" href="#wrapping-up" aria-hidden="true">¶</a></h2>
+<p>I found it really interesting that despite the fact that I’ve read
+through the documentation, and the fact that the documentation is
+awesome, and the fact that the way Kafka code works makes a lot of sense
+when you understand it, I still had to take several iterations before I
+found all the relevant settings I had to alter. Here is the subset of
+the final configuration of my test&nbsp;cluster:</p>
+<pre><code class="hljs lang-jproperties">log.retention.hours=24
+log.retention.bytes=1073741824
+log.segment.bytes=107374182
+log.retention.check.interval.ms=20000
+log.segment.delete.delay.ms=1000
+</code></pre>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Last updated 2017-02-26 18:53:41 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-limit-disk-space/index.md">articles/kafka-limit-disk-space/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

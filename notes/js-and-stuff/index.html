@@ -21,6 +21,11 @@
 <p><a href="https://github.com/gnab/remark">https://github.com/gnab/remark</a></p>
 <p>I’ve <a href="https://github.com/iv-m/iv-m.github.io/tree/remark">tried it</a> and liked it. To convert slides to <span class="caps">PDF</span>, just
 print to PDF from Chrome – also, some cropping may be&nbsp;needed.</p>
+<p>Animating remark (thanks to <a href="http://www.partage-it.com/animez-vos-presentations-remark-js/">http://www.partage-it.com/animez-vos-presentations-remark-js/</a> — in&nbsp;French):</p>
+<pre><code class="hljs lang-css"><span class="selector-class">.remark-fading</span> { <span class="attribute">z-index</span>: <span class="number">9</span>; }
+<span class="selector-class">.remark-slide-container</span> {<span class="attribute">transition</span>: opacity <span class="number">0.5s</span> ease-out;<span class="attribute">opacity</span>: <span class="number">0</span>;}
+<span class="selector-class">.remark-visible</span> {<span class="attribute">transition</span>: opacity <span class="number">0.5s</span> ease-out;<span class="attribute">opacity</span>: <span class="number">1</span>;}
+</code></pre>
 <h2 id="diagrams-with-mermaid">Diagrams with mermaid <a class="header-anchor" href="#diagrams-with-mermaid" aria-hidden="true">¶</a></h2>
 <p><a href="http://knsv.github.io/mermaid/">http://knsv.github.io/mermaid/</a></p>
 <p>There is a <a href="https://github.com/JozoVilcek/gitbook-plugin-mermaid">gitbook plugin for mermaid</a> that renders them on server-side. So
@@ -46,7 +51,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-06 21:48:21 +0400.
+            Last updated 2017-02-02 14:31:45 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/js-and-stuff/index.md">notes/js-and-stuff/index.md</a>.
           </p>
         </div>
