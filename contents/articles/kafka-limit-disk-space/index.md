@@ -1,5 +1,5 @@
 ---
-title: 'Apache Kafka: how limit the disk space'
+title: 'Apache Kafka: how to limit the disk space'
 date: 2017-02-26 18:00
 template: article.jade
 ---
