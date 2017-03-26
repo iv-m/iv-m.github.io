@@ -1,6 +1,7 @@
 
 run = (require 'child_process').spawnSync
 path = require 'path'
+_ = require 'underscore'
 
 module.exports = (env, callback) ->
 
@@ -11,14 +12,14 @@ module.exports = (env, callback) ->
         return result.stdout.toString().trim()
 
     env.helpers.getPages = (contents, path) ->
-        pages = contents[path]._.directories.map (item) -> item.index
-        # skip pages that does not have a template associated
-        pages = pages.filter (item) -> item.template isnt 'none'
-        # also, skip drafts:
-        pages = pages.filter (item) -> item.template.indexOf('draft') < 0
         # sort pages by date
-        pages.sort (a, b) -> b.date - a.date
-        return pages
+        return env.helpers.getPagesSortedBy contents, path, (p) -> p.date
+
+    env.helpers.getPagesSortedBy = (contents, path, sortBy) ->
+        pages = contents[path]._.directories.map (item) -> item.index
+            .filter (item) -> item.template isnt 'none'  # template should be there
+            .filter (item) -> item.template.indexOf('draft') < 0  # no drafts please
+        return _.sortBy pages, sortBy
+            .reverse()
 
     callback()
-

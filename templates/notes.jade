@@ -4,6 +4,9 @@ extends layout
 block prepend title
   | Pale of notes - 
 
+block append vars
+  - var lut = function (page) { return env.helpers.getLastUpdateTime(page.filepath.relative); }
+
 block content
   h1 Pale of notes
   p I'm often making notes while learning stuff. Most of the notes are
@@ -13,6 +16,7 @@ block content
     seeing quite a mess here.
   h2 Notes, in order of appearance
   ul
-    each note in env.helpers.getPages(contents, 'notes')
+    each note in env.helpers.getPagesSortedBy(contents, 'notes', lut)
       li
         a(href=note.url)= note.title
+        small &nbsp;(updated on #{ env.helpers.getLastUpdateTime(note.filepath.relative) })
