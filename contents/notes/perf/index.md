@@ -69,7 +69,8 @@ personally interested me are mentioned.
 * 4.6: `perf top --hierarchy`, improved Java support (TBD), `perf stat --per-core/--per-socket`
 * 4.7: `perf trace` call stack, tracepoints with BPF, hist triggers, perf_event_max_stack, `perf record --switch-output`, `perf script --max-stack=N`
 * 4.8: `perf stat --topdown`, `--stdio-color`
-* 4.9: ???
+* 4.9: --
+* 4.10: `perf c2c` (cache-to-cache: NUMA and false sharing), `perf shed timehist`, `perf trace --delay`
 
 
 ## Setup
