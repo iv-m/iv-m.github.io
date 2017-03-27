@@ -46,15 +46,21 @@ topic.
 
 ## Monitoring and management UIs
 
-Offsets/consumers:
+### Offsets/consumers
 
-* https://github.com/quantifind/KafkaOffsetMonitor
 * https://github.com/linkedin/Burrow
+    * monitors offsets only
+    * very mature
+    * SSL/SASL support -- not checked
+    * has UI: https://github.com/tulios/burrow-stats
+* https://github.com/quantifind/KafkaOffsetMonitor
+    * mostly UI
 * https://github.com/andreas-schroeder/kafka-health-check
 
-Management:
+### Management
 
 * http://www.landoop.com/blog/2016/08/kafka-topics-ui/
+  * requires Kafka REST Proxy
 * https://github.com/yahoo/kafka-manager
   * https://github.com/yahoo/kafka-manager/pull/282
   * https://hub.docker.com/r/sheepkiller/kafka-manager
@@ -100,6 +106,7 @@ need some special adjustments, or we want to change the replication
 factor (this is done by adding more brokers) --- than we'll have to edit
 this plan, either manually or with some kind of script, or just generate
 the plan with a script right away.
+
 
 ## Random links
 

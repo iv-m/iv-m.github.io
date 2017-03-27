@@ -16,9 +16,10 @@ http://zgrossbart.github.io/busfactor/
 ```
 [alias]
     hist = log --pretty=format:\"%C(auto)%h %ad %s%d [%an]\" --graph --date=short
+    root = rev-parse --show-toplevel
 ```
 
-Basicaly the same, if you're not the machine owner:
+Basicaly the same as `git hist`, if you're not the machine owner:
 
 ```
 $ git log --all --oneline --graph --decorate=short
@@ -72,16 +73,9 @@ like that.
 Mainly because they're seldom needed?
 
     git clean -fxd
-
     git config merge.log 9000
-
     git instaweb
-
     git notes
-
     git rerere
-
     git whatchanged
-
     git gc --aggressive
-
