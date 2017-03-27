@@ -16,7 +16,7 @@
     <div id="content">
       <div class="content-wrap">
         <h1>Apache Kafka notes</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started">Getting&nbsp;started</a></li><li><a href="#deployment-considerations">Deployment considerations</a><ul><li><a href="#kafka-and-zookeeper">Kafka and&nbsp;Zookeeper</a></li><li><a href="#offsets-replication-factor">Offsets replication&nbsp;factor</a></li></ul></li><li><a href="#monitoring-and-management-uis">Monitoring and management&nbsp;UIs</a></li><li><a href="#operations-notes">Operations notes</a><ul><li><a href="#getting-the-list-of-active-brokers">Getting the list of active&nbsp;brokers</a></li><li><a href="#managing-partitions">Managing&nbsp;partitions</a></li></ul></li><li><a href="#random-links">Random&nbsp;links</a></li></ul></div></p>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started">Getting&nbsp;started</a></li><li><a href="#deployment-considerations">Deployment considerations</a><ul><li><a href="#kafka-and-zookeeper">Kafka and&nbsp;Zookeeper</a></li><li><a href="#offsets-replication-factor">Offsets replication&nbsp;factor</a></li></ul></li><li><a href="#monitoring-and-management-uis">Monitoring and management UIs</a><ul><li><a href="#offsetsconsumers">Offsets/consumers</a></li><li><a href="#management">Management</a></li></ul></li><li><a href="#operations-notes">Operations notes</a><ul><li><a href="#getting-the-list-of-active-brokers">Getting the list of active&nbsp;brokers</a></li><li><a href="#managing-partitions">Managing&nbsp;partitions</a></li></ul></li><li><a href="#random-links">Random&nbsp;links</a></li></ul></div></p>
 <h2 id="getting-started">Getting started <a class="header-anchor" href="#getting-started" aria-hidden="true">¶</a></h2>
 <p><a href="http://kafka.apache.org/documentation/">Documentation</a> is really awesome, <a href="http://kafka.apache.org/quickstart">quckstart</a>&nbsp;works.</p>
 <p><strong>Advice</strong>: don’t use root ZooKeeper path: <code>--zookeeper localhost:2181/kafka</code> works.</p>
@@ -37,15 +37,30 @@ is created (e.g. when the first consumer is connected)
 we have 3 alive brokers. Otherwise, we may need to
 manually increase the replication factor for this&nbsp;topic.</p>
 <h2 id="monitoring-and-management-uis">Monitoring and management UIs <a class="header-anchor" href="#monitoring-and-management-uis" aria-hidden="true">¶</a></h2>
-<p>Offsets/consumers:</p>
+<h3 id="offsetsconsumers">Offsets/consumers <a class="header-anchor" href="#offsetsconsumers" aria-hidden="true">¶</a></h3>
 <ul>
-<li><a href="https://github.com/quantifind/KafkaOffsetMonitor">https://github.com/quantifind/KafkaOffsetMonitor</a></li>
-<li><a href="https://github.com/linkedin/Burrow">https://github.com/linkedin/Burrow</a></li>
+<li><a href="https://github.com/linkedin/Burrow">https://github.com/linkedin/Burrow</a>
+<ul>
+<li>monitors offsets&nbsp;only</li>
+<li>very&nbsp;mature</li>
+<li><span class="caps">SSL</span>/SASL support – not&nbsp;checked</li>
+<li>has <span class="caps">UI</span>: <a href="https://github.com/tulios/burrow-stats">https://github.com/tulios/burrow-stats</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/quantifind/KafkaOffsetMonitor">https://github.com/quantifind/KafkaOffsetMonitor</a>
+<ul>
+<li>mostly&nbsp;<span class="caps">UI</span></li>
+</ul>
+</li>
 <li><a href="https://github.com/andreas-schroeder/kafka-health-check">https://github.com/andreas-schroeder/kafka-health-check</a></li>
 </ul>
-<p>Management:</p>
+<h3 id="management">Management <a class="header-anchor" href="#management" aria-hidden="true">¶</a></h3>
 <ul>
-<li><a href="http://www.landoop.com/blog/2016/08/kafka-topics-ui/">http://www.landoop.com/blog/2016/08/kafka-topics-ui/</a></li>
+<li><a href="http://www.landoop.com/blog/2016/08/kafka-topics-ui/">http://www.landoop.com/blog/2016/08/kafka-topics-ui/</a>
+<ul>
+<li>requires Kafka <span class="caps">REST</span>&nbsp;Proxy</li>
+</ul>
+</li>
 <li><a href="https://github.com/yahoo/kafka-manager">https://github.com/yahoo/kafka-manager</a>
 <ul>
 <li><a href="https://github.com/yahoo/kafka-manager/pull/282">https://github.com/yahoo/kafka-manager/pull/282</a></li>
@@ -113,7 +128,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-02-26 18:53:41 +0400.
+            Last updated 2017-03-27 11:28:45 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/kafka/index.md">notes/kafka/index.md</a>.
           </p>
         </div>

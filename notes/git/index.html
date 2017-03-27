@@ -22,8 +22,9 @@
 <h2 id="useful-aliases">Useful aliases <a class="header-anchor" href="#useful-aliases" aria-hidden="true">¶</a></h2>
 <pre><code>[alias]
     hist = log --pretty=format:\&quot;%C(auto)%h %ad %s%d [%an]\&quot; --graph --date=short
+    root = rev-parse --show-toplevel
 </code></pre>
-<p>Basicaly the same, if you’re not the machine&nbsp;owner:</p>
+<p>Basicaly the same as <code>git hist</code>, if you’re not the machine&nbsp;owner:</p>
 <pre><code>$ git log --all --oneline --graph --decorate=short
 </code></pre>
 <h2 id="highlighting-differences-of-changed-lines">Highlighting differences of changed lines <a class="header-anchor" href="#highlighting-differences-of-changed-lines" aria-hidden="true">¶</a></h2>
@@ -59,17 +60,11 @@ like&nbsp;that.</p>
 <h2 id="seldom-known-commands-and-features">Seldom known commands and features <a class="header-anchor" href="#seldom-known-commands-and-features" aria-hidden="true">¶</a></h2>
 <p>Mainly because they’re seldom&nbsp;needed?</p>
 <pre><code>git clean -fxd
-
 git config merge.log 9000
-
 git instaweb
-
 git notes
-
 git rerere
-
 git whatchanged
-
 git gc --aggressive
 </code></pre>
 </div>
@@ -84,7 +79,7 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-01-07 10:38:34 +0400.
+            Last updated 2017-03-27 11:28:45 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/git/index.md">notes/git/index.md</a>.
           </p>
         </div>
