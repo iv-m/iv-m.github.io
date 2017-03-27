@@ -16,7 +16,7 @@
     <div id="content">
       <div class="content-wrap">
         <h1>git tips</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#bus-factor">Bus&nbsp;factor</a></li><li><a href="#useful-aliases">Useful&nbsp;aliases</a></li><li><a href="#highlighting-differences-of-changed-lines">Highlighting differences of changed&nbsp;lines</a></li><li><a href="#http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed&nbsp;certificates</a></li><li><a href="#git-grep-configuration">git grep&nbsp;configuration</a></li><li><a href="#seldom-known-commands-and-features">Seldom known commands and&nbsp;features</a></li></ul></div></p>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#bus-factor">Bus factor</a></li><li><a href="#useful-aliases">Useful aliases</a></li><li><a href="#highlighting-differences-of-changed-lines">Highlighting differences of changed<span class="widont">&nbsp;</span>lines</a></li><li><a href="#http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed<span class="widont">&nbsp;</span>certificates</a></li><li><a href="#git-grep-configuration">git grep configuration</a></li><li><a href="#seldom-known-commands-and-features">Seldom known commands and<span class="widont">&nbsp;</span>features</a></li></ul></div></p>
 <h2 id="bus-factor">Bus factor <a class="header-anchor" href="#bus-factor" aria-hidden="true">¶</a></h2>
 <p><a href="http://zgrossbart.github.io/busfactor/">http://zgrossbart.github.io/busfactor/</a></p>
 <h2 id="useful-aliases">Useful aliases <a class="header-anchor" href="#useful-aliases" aria-hidden="true">¶</a></h2>
@@ -24,7 +24,7 @@
     hist = log --pretty=format:\&quot;%C(auto)%h %ad %s%d [%an]\&quot; --graph --date=short
     root = rev-parse --show-toplevel
 </code></pre>
-<p>Basicaly the same as <code>git hist</code>, if you’re not the machine&nbsp;owner:</p>
+<p>Basicaly the same as <code>git hist</code>, if you’re not the machine<span class="widont">&nbsp;</span>owner:</p>
 <pre><code>$ git log --all --oneline --graph --decorate=short
 </code></pre>
 <h2 id="highlighting-differences-of-changed-lines">Highlighting differences of changed lines <a class="header-anchor" href="#highlighting-differences-of-changed-lines" aria-hidden="true">¶</a></h2>
@@ -39,7 +39,7 @@ To use it, add the following to your <code>~/.gitconfig</code>:</p>
 <p>Result:</p>
 <p><img src="diff-highlight.png" alt=""></p>
 <p>Of course, you can always use <code>git-diff --color-words=.</code> or something
-like&nbsp;that.</p>
+like<span class="widont">&nbsp;</span>that.</p>
 <h2 id="http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed certificates <a class="header-anchor" href="#http-proxy-and-self-signed-certificates" aria-hidden="true">¶</a></h2>
 <pre><code>[http]
         sslVerify = true
@@ -58,7 +58,7 @@ like&nbsp;that.</p>
 	function = yellow
 </code></pre>
 <h2 id="seldom-known-commands-and-features">Seldom known commands and features <a class="header-anchor" href="#seldom-known-commands-and-features" aria-hidden="true">¶</a></h2>
-<p>Mainly because they’re seldom&nbsp;needed?</p>
+<p>Mainly because they’re seldom<span class="widont">&nbsp;</span>needed?</p>
 <pre><code>git clean -fxd
 git config merge.log 9000
 git instaweb

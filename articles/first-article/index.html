@@ -16,10 +16,10 @@
     <div id="content">
       <div class="content-wrap">
         <h1>First article, or how this site started</h1>
-        <div class="content"><p>Hi&nbsp;there!</p>
+        <div class="content"><p>Hi there!</p>
 <p>Now, when I ductaped together quite a bit of infrastructure,
 it’s time to write something <strong>for real</strong>. I’d also like to describe
-how and what was done, and how I feel about&nbsp;it.</p>
+how and what was done, and how I feel about<span class="widont">&nbsp;</span>it.</p>
 <h2 id="so-do-you-want-a-blog">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog" aria-hidden="true">¶</a></h2>
 <p>They say that most of programmers are optimistic, and also tend to
 search for technical solutions for non-technical problems. So here I am,
@@ -27,20 +27,20 @@ thinking: “Maybe if tooling around my blog is awesome and convenient
 enough, I’ll finally start writing stuff.” Well, maybe. It did not work
 for last two or three attempts, but that’s certainly not because I just
 was lazy and could not come up with something interesting to write –
-that was because <em>the tooling was not awesome enough</em>. 100% sure it was&nbsp;that.</p>
-<p>So, let’s build something&nbsp;neat.</p>
+that was because <em>the tooling was not awesome enough</em>. 100% sure it was<span class="widont">&nbsp;</span>that.</p>
+<p>So, let’s build something<span class="widont">&nbsp;</span>neat.</p>
 <h2 id="so-do-you-want-a-blog-2">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog-2" aria-hidden="true">¶</a></h2>
 <p>Well, not exactly. It should be more like a place to dump some stuff I’d
-like to share, then come back and fix, then come back and&nbsp;rewrite…</p>
+like to share, then come back and fix, then come back and<span class="widont">&nbsp;</span>rewrite…</p>
 <h2 id="so-do-you-want-a-blog-3">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog-3" aria-hidden="true">¶</a></h2>
 <p>Let’s see. I want to write some stuff. Locally, in my Vim, as it’s the
-most convenient way of writing.  Preferably using some neat markup, like&nbsp;markdown.</p>
+most convenient way of writing.  Preferably using some neat markup, like<span class="widont">&nbsp;</span>markdown.</p>
 <p>I want to commit what’s written to git. I’m fond of git. I’m a git
 junkie. When I’m editing something, I simply need my doze of version
-control to be&nbsp;productive.</p>
+control to be<span class="widont">&nbsp;</span>productive.</p>
 <p>Then, I want to publish it nicely, with certain meta-information added
 for me by, say, robots. But I want to manually check stuff before it
-goes to&nbsp;production.</p>
+goes to<span class="widont">&nbsp;</span>production.</p>
 <h2 id="how-do-i-get-there">How do I get there? <a class="header-anchor" href="#how-do-i-get-there" aria-hidden="true">¶</a></h2>
 <p>First <a href="https://pages.github.com/">github pages</a>. The tutorial is very straightforward, and I walked
 through it some time ago, leaving it with a simple <code>index.html</code> saying
@@ -54,19 +54,19 @@ customizable, so I think I’ll stick to it for some time. It uses
 <a href="http://jade-lang.com">jade</a> (whcih was <a href="https://github.com/pugjs/pug/issues/2184">renamed to pugs</a>, but renamed version is
 in beta) as the default template engine, which I find interesting.
 I’ve always liked haml-like markup (pythonist in me?), but
-never dared to use it in non-toy projects. Well, we’ll&nbsp;see.</p>
+never dared to use it in non-toy projects. Well, we’ll<span class="widont">&nbsp;</span>see.</p>
 <p>Why Wintersmith? Frontend all gone <code>node</code> now, so I need something
 node-based if I want to use all the cool stuff. Also,
 I don’t feel like building my own static site generator
 from separate components (like markdown renderer and templating
 engine) using a general-purpose build system. Other than that,
 the choice of Wintersmith out of all the node-base static site
-generators was almost&nbsp;arbitrary.</p>
+generators was almost<span class="widont">&nbsp;</span>arbitrary.</p>
 <h2 id="commands-and-details">Commands and details <a class="header-anchor" href="#commands-and-details" aria-hidden="true">¶</a></h2>
 <p>I’d like to use a separate git branch for sources – let’s name it
 <code>src</code>. Then, I can commit one of the build results to <code>master</code> and
-push it to publish the&nbsp;update.</p>
-<p>Let’s create the&nbsp;branch:</p>
+push it to publish the<span class="widont">&nbsp;</span>update.</p>
+<p>Let’s create the<span class="widont">&nbsp;</span>branch:</p>
 <pre><code class="hljs lang-bash">git checkout --orphan src
 vim .gitignore
 vim README.md
@@ -77,7 +77,7 @@ git push --set-upstream origin src
 <p>Then let’s create new <code>npm</code> project:</p>
 <pre><code class="hljs lang-bash">npm init
 </code></pre>
-<p>After answering all the questions, let’s add Wintersmith to our&nbsp;dependencies:</p>
+<p>After answering all the questions, let’s add Wintersmith to our<span class="widont">&nbsp;</span>dependencies:</p>
 <pre><code class="hljs lang-bash">npm install --save wintersmith
 </code></pre>
 <p>Also, let’s add an <code>npm</code> script for the “enhanced bash” to
@@ -88,17 +88,17 @@ git push --set-upstream origin src
   },
 
 </code></pre>
-<p>Now, it’s time to init the Wintersmith&nbsp;blog:</p>
+<p>Now, it’s time to init the Wintersmith<span class="widont">&nbsp;</span>blog:</p>
 <pre><code class="hljs lang-bash">npm run bash
 <span class="comment"># and, in that enhanced bash:</span>
 wintersmith new tmp
 </code></pre>
 <p>Why so hard? I don’t want to install things globally with <code>npm</code>.
-My system is <span class="caps">RPM</span>-based, so I stick to RPM when it’s about global
+My system is <span class="caps">RPM</span>-based, so I stick to <span class="caps">RPM</span> when it’s about global
 packages. With this setup, I can copy the generated files and
 merge my <code>project.json</code> with the generated one in less than a minute,
 and then surprise – I don’t need the global <code>wintersmith</code> any more,
-it’ll live in <code>node_modules</code> happily ever&nbsp;after.</p>
+it’ll live in <code>node_modules</code> happily ever<span class="widont">&nbsp;</span>after.</p>
 <p>Ok, now it’s time to clean the stuff up.  One thing I did not expect is
 how complex default Wintersmith template actually is. It really has a
 lot of features; I had to be really cruel to it’s <span class="caps">CSS</span> and markup,
@@ -107,40 +107,40 @@ I’ve got something more or less usable, and, what’s more important, it’s
 totally <strong>mine</strong>.</p>
 <p>The last bit to setup is publishing. I already have <code>build</code>
 directory (where Wintersmith puts the generated site) in my
-<code>.gitignore</code>, so I’ll just go and use it for some git&nbsp;magic:</p>
+<code>.gitignore</code>, so I’ll just go and use it for some git<span class="widont">&nbsp;</span>magic:</p>
 <pre><code class="hljs lang-bash">rm -rf ./build
 git worktree add build master
 </code></pre>
 <p>Now I have <code>mater</code> branch checked out in the <code>build</code> directory. If
 I run <code>wintersmith build</code>, wintersmith will update the files
-<em>right there</em>. Like&nbsp;this:</p>
+<em>right there</em>. Like this:</p>
 <pre><code class="hljs lang-bash">rm -rf ./build/*  <span class="comment"># keeps .git there</span>
 wintersmith build
 </code></pre>
-<p>I even have an npm script for&nbsp;that.</p>
+<p>I even have an npm script for<span class="widont">&nbsp;</span>that.</p>
 <p>I can use <code>git diff</code>  to check the effect of my changes – that is, to
 check how the generated HTMLs have changed – and when I commit and push
 <em>in that directory</em>, I actually update the <code>master</code> branch – and my
-site, thanks to the Github&nbsp;magic.</p>
+site, thanks to the Github<span class="widont">&nbsp;</span>magic.</p>
 <p>Now I have a small script for committing there, which includes
 shortlog of the commit of <code>src</code> branch into the commit message.
-But that’s beyond the basic&nbsp;setup.</p>
+But that’s beyond the basic<span class="widont">&nbsp;</span>setup.</p>
 <h2 id="kind-of-conclusion">Kind of conclusion <a class="header-anchor" href="#kind-of-conclusion" aria-hidden="true">¶</a></h2>
 <p>If you’re reading this, it seems to work – at least, I
 have something I’m not terribly ashamed of, and I can build up
-from&nbsp;here:</p>
+from<span class="widont">&nbsp;</span>here:</p>
 <ul>
 <li>mess with [wintersmith-tag plugin] to see if it suits me better
 then the default paginator – probably learn from both of them
-and make something of my&nbsp;own;</li>
+and make something of my<span class="widont">&nbsp;</span>own;</li>
 <li>switch to <span class="caps">CSS</span> preprocessor (probably <a href="http://sass-lang.com/">SaaS</a>);</li>
-<li>get how code syntax highliting really works, select another&nbsp;theme;</li>
+<li>get how code syntax highliting really works, select another<span class="widont">&nbsp;</span>theme;</li>
 <li>generally, just play with technologies I’m not usually working
-with (npm, SaaS, CoffeeScript, pugsjs and what&nbsp;not).</li>
-<li>see if I can employ github for&nbsp;comments.</li>
+with (npm, SaaS, CoffeeScript, pugsjs and what<span class="widont">&nbsp;</span>not).</li>
+<li>see if I can employ github for<span class="widont">&nbsp;</span>comments.</li>
 </ul>
 <p>There is still an open question if it’ll work for me, but that only time
-will&nbsp;show.</p>
+will<span class="widont">&nbsp;</span>show.</p>
 </div>
       </div>
     </div>

@@ -16,8 +16,8 @@
     <div id="content">
       <div class="content-wrap">
         <h1>(Linux) shell tips</h1>
-        <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or&nbsp;linux-specific.</p>
-<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping&nbsp;mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +&nbsp;systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without&nbsp;docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running&nbsp;process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching&nbsp;part</a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash&nbsp;array</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain&nbsp;everything</a></li></ul></div></p>
+        <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or<span class="widont">&nbsp;</span>linux-specific.</p>
+<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +<span class="widont">&nbsp;</span>systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without<span class="widont">&nbsp;</span>docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running<span class="widont">&nbsp;</span>process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching<span class="widont">&nbsp;</span>part</a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash<span class="widont">&nbsp;</span>array</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain<span class="widont">&nbsp;</span>everything</a></li></ul></div></p>
 <h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
 <p>Here’s a piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
@@ -45,13 +45,13 @@ in my <code>~/bin</code>.</p>
 <p>Explaining this command would make a nice article <code>;)</code><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p>
 <h2 id="entering-docker-container-without-docker">Entering docker container without docker <a class="header-anchor" href="#entering-docker-container-without-docker" aria-hidden="true">¶</a></h2>
 <p><code>docker exec</code> executes command within the container cgroup;
-if this cgroup has hard <span class="caps">CPU</span> and/or RAM limitations, this
+if this cgroup has hard <span class="caps">CPU</span> and/or <span class="caps">RAM</span> limitations, this
 may affect your production code. If you have root access
 to the box, you can use <code>nsenter</code> instead:</p>
 <pre><code class="hljs lang-bash">nsenter --target <span class="variable">$<span class="caps">PID</span></span> --mount --uts --ipc --net --pid
 </code></pre>
 <p><code>$PID</code> here is the process <span class="caps">ID</span> of one of the processes running
-in the container, as seen from the&nbsp;host.</p>
+in the container, as seen from the<span class="widont">&nbsp;</span>host.</p>
 <p>Example:</p>
 <pre><code>$ sudo nsenter --target 10372  --mount --uts --ipc --net --pid cat /proc/self/cgroup | head -n3
 11:cpu,cpuacct:/
@@ -64,7 +64,7 @@ in the container, as seen from the&nbsp;host.</p>
 9:memory:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
 </code></pre>
 <h2 id="environment-variables-of-a-running-process">Environment variables of a running process <a class="header-anchor" href="#environment-variables-of-a-running-process" aria-hidden="true">¶</a></h2>
-<p>You can get them from <code>/proc/$PID/environ</code>. Variables are <span class="caps">NULL</span>-separated. For&nbsp;example:</p>
+<p>You can get them from <code>/proc/$PID/environ</code>. Variables are <span class="caps">NULL</span>-separated. For<span class="widont">&nbsp;</span>example:</p>
 <pre><code># cat /proc/`pgrep dockerd`/environ | xargs -0L1
 LANG=ru_RU.UTF-8
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -73,7 +73,7 @@ OPTIONS=
 DOCKER_STORAGE_OPTIONS=
 </code></pre>
 <h2 id="find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching part <a class="header-anchor" href="#find-matching-line-and-extract-the-matching-part" aria-hidden="true">¶</a></h2>
-<p>There is <code>-o</code> switch in <code>grep</code> for that&nbsp;exactly.</p>
+<p>There is <code>-o</code> switch in <code>grep</code> for that<span class="widont">&nbsp;</span>exactly.</p>
 <pre><code>$ amixer get Master | egrep -o '[0-9]{1,3}?%'
 100%
 100%
@@ -83,14 +83,14 @@ DOCKER_STORAGE_OPTIONS=
 </code></pre>
 <p>This takes two arguments – name and content, and sets global
 variable with the given name to an array parsed from comma-separated
-contents. For&nbsp;example:</p>
+contents. For<span class="widont">&nbsp;</span>example:</p>
 <pre><code class="hljs lang-bash">keys=<span class="string">"host,port,service name,comment"</span>
 parse_array the_array <span class="string">"<span class="variable">$keys</span>"</span>
 <span class="keyword">for</span> x <span class="keyword">in</span> <span class="string">"<span class="variable">${the_array[@]}</span>"</span>; <span class="keyword">do</span>
     <span class="built_in">echo</span> <span class="string">"<span class="variable">$x</span>"</span>
 <span class="keyword">done</span>
 </code></pre>
-<p>This&nbsp;prints:</p>
+<p>This prints:</p>
 <pre><code>host
 port
 service name

@@ -27,64 +27,64 @@
         <div class="content"><p>In this article, we’ll take a quick look onto configuring
 a more secured installation of Apache Kafka: we’ll
 enable the network communication encryption with <span class="caps">SSL</span>
-and simple authentication with SASL/PLAIN. We’ll use
-Kafka 0.10.1.0 build with Scala&nbsp;2.11.</p>
+and simple authentication with <span class="caps">SASL</span>/<span class="caps">PLAIN</span>. We’ll use
+Kafka 0.10.1.0 build with Scala<span class="widont">&nbsp;</span>2.11.</p>
 <h2 id="ssl"><span class="caps">SSL</span> <a class="header-anchor" href="#ssl" aria-hidden="true">¶</a></h2>
 <p>The <a href="http://kafka.apache.org/documentation/#security_ssl">kafka documentation</a> has a good and comprehensive section
 about configuring the <span class="caps">SSL</span>. The only problem is that I want
 everything more automated – I don’t want to be prompted
 for passwords (let the passwords be generated!) or certificate
-DNAME&nbsp;details.</p>
+<span class="caps">DNAME</span><span class="widont">&nbsp;</span>details.</p>
 <p>So, we need to go through the same steps while adding enough
-options to each command so that the process is not&nbsp;interactive.</p>
+options to each command so that the process is not<span class="widont">&nbsp;</span>interactive.</p>
 <h3 id="creating-ssl-authority">Creating <span class="caps">SSL</span> authority <a class="header-anchor" href="#creating-ssl-authority" aria-hidden="true">¶</a></h3>
 <p>To make a self-signed certificate (and that’s what we’re about
-to do) we need an <span class="caps">SSL</span> authority certificate and key to sign&nbsp;it.</p>
+to do) we need an <span class="caps">SSL</span> authority certificate and key to sign<span class="widont">&nbsp;</span>it.</p>
 <pre><code class="hljs lang-bash">openssl req -new -x509 \
     -keyout cakey.pem -out ca.pem -days 3650 \
     -passout pass:ougieceiphego \
-    -subj <span class="string">"/C=<span class="caps">US</span>/O=My Awesome Organization/OU=Middleware Team/CN=My Cool Authority"</span>
+    -subj <span class="string">"/C=<span class="caps">US</span>/O=My Awesome Organization/<span class="caps">OU</span>=Middleware Team/<span class="caps">CN</span>=My Cool Authority"</span>
 </code></pre>
-<p>There are 3 parameters you will not want to&nbsp;hardcode:</p>
+<p>There are 3 parameters you will not want to<span class="widont">&nbsp;</span>hardcode:</p>
 <ul>
 <li>subject base (<code>/C=US/O=My Awesome Organization/OU=Middleware Team</code>)
 is the first thing you will want to change — you probably
 don’t work for My Awesome Organization in its Middleware Team;
-you may hardcode it in your scripts&nbsp;though;</li>
+you may hardcode it in your scripts<span class="widont">&nbsp;</span>though;</li>
 <li>password: I have it generated and saved to file, so actually password
 argument looks like <code>-passout &quot;pass:$(cat CApassword.txt)&quot;</code>;</li>
-<li>subject <span class="caps">CN</span> – in fact, in my scripts, this is the script&nbsp;parameter.</li>
+<li>subject <span class="caps">CN</span> – in fact, in my scripts, this is the script<span class="widont">&nbsp;</span>parameter.</li>
 </ul>
 <p>I doubt that subject actually affects anything – that’s your
 private <span class="caps">CA</span>, so you can write almost anything here. But I prefer
 to give it good names anyway, in the same spirit in which I give
-descriptive names to my&nbsp;variables.</p>
-<p>As the result, you’ll have the&nbsp;following:</p>
+descriptive names to my<span class="widont">&nbsp;</span>variables.</p>
+<p>As the result, you’ll have the<span class="widont">&nbsp;</span>following:</p>
 <ul>
 <li><code>ca.pem</code> — the Certificate Authority certificate. Publish it
-the way you want, there is nothing secret in&nbsp;it;</li>
+the way you want, there is nothing secret in<span class="widont">&nbsp;</span>it;</li>
 <li><code>cakey.pem</code> – the certificate key. It is needed only to sign
 the certificates. You should keep it secure it you don’t want
 everybody to be able to sign certificates with your freshly
-generated&nbsp;authority.</li>
+generated<span class="widont">&nbsp;</span>authority.</li>
 <li>you’ll also have the most security sensitive thing: the password
 for the key. You can’t use a key without a password. So,
 <ul>
-<li>don’t loose the&nbsp;password;</li>
-<li>store it&nbsp;securely.</li>
+<li>don’t loose the<span class="widont">&nbsp;</span>password;</li>
+<li>store it securely.</li>
 </ul>
 </li>
 </ul>
 <h3 id="trust-store">Trust store <a class="header-anchor" href="#trust-store" aria-hidden="true">¶</a></h3>
 <p>When authority certificates is generated, we can create a trust store
-— a keystore Java programs will use to validate our&nbsp;certificates.</p>
+— a keystore Java programs will use to validate our<span class="widont">&nbsp;</span>certificates.</p>
 <pre><code class="hljs lang-bash">keytool -keystore truststore.jks -alias CARoot -noprompt \
     -import -file ca.pem -storepass chooruanguchi
 </code></pre>
 <p>As the result you’ll have a Java keystore file named
 <code>truststore.jks</code>, which will be used by both servers
 and clients that will have to validate the certificates
-signed by our&nbsp;authority.</p>
+signed by our<span class="widont">&nbsp;</span>authority.</p>
 <p>Again, we have a password here — the value of the <code>-storepass</code>
 option. It will be required to open the keystore. And again,
 it’s better to generate the password and save it to a file.
@@ -92,10 +92,10 @@ On tmpfs. In a secure location of your file system. While
 no one is looking into your monitor. <s>In a basement with
 a heavy steel door, locked from the inside.</s></p>
 <h3 id="creating-the-server-key">Creating the server key <a class="header-anchor" href="#creating-the-server-key" aria-hidden="true">¶</a></h3>
-<p>The same precautions regarding the passwords apply&nbsp;here.</p>
-<p>First, we need to generate the&nbsp;key:</p>
+<p>The same precautions regarding the passwords apply<span class="widont">&nbsp;</span>here.</p>
+<p>First, we need to generate the<span class="widont">&nbsp;</span>key:</p>
 <pre><code class="hljs lang-bash">keytool -genkey -noprompt \
-    -dname <span class="string">'<span class="caps">CN</span>="my.broker.host.name", OU="Middleware Tam", O="My Awesome Organization", C=US'</span> \
+    -dname <span class="string">'<span class="caps">CN</span>="my.broker.host.name", <span class="caps">OU</span>="Middleware Tam", O="My Awesome Organization", C=<span class="caps">US</span>'</span> \
     -alias broker \
     -keystore broker.jks \
     -storepass ierayaekoinot \
@@ -104,13 +104,13 @@ a heavy steel door, locked from the inside.</s></p>
     -keyalg <span class="caps">RSA</span>
 </code></pre>
 <p>As the result, you’ll have a keystore file named <code>broker.jks</code>,
-with a freshly-generated but unsigned&nbsp;keys.</p>
+with a freshly-generated but unsigned<span class="widont">&nbsp;</span>keys.</p>
 <p>The notes about <code>-subj</code> above also apply to <code>-dname</code> here, as this
-is almost the same thing, only the format is&nbsp;different.</p>
+is almost the same thing, only the format is<span class="widont">&nbsp;</span>different.</p>
 <p>You may note that I’m reusing password fo <code>-storepass</code> and <code>-keypass</code>.
 Well, we’ll have only one key in this keystore, so I see no need
-in additional security different passwords may&nbsp;provide.</p>
-<p>Now, we can sign the key with our&nbsp;authority:</p>
+in additional security different passwords may<span class="widont">&nbsp;</span>provide.</p>
+<p>Now, we can sign the key with our<span class="widont">&nbsp;</span>authority:</p>
 <pre><code class="hljs lang-bash"><span class="comment"># import authority key into our keystore:</span>
 keytool -keystore broker.jks -alias CARoot -noprompt -import -file ca.pem -storepass ierayaekoinot
 
@@ -128,16 +128,16 @@ keytool -keystore broker.jks -alias broker -import -file ./broker.signed -storep
 </code></pre>
 <p>As the result, you’ll have two new files, <code>broker.reg</code> with the signing
 request, and <code>broker.signed</code> with the signed certificate. For our
-purposes, these files are temporary; you can safely delete&nbsp;them.</p>
+purposes, these files are temporary; you can safely delete<span class="widont">&nbsp;</span>them.</p>
 <h3 id="configuring-the-broker">Configuring the broker <a class="header-anchor" href="#configuring-the-broker" aria-hidden="true">¶</a></h3>
 <p>Let’s say you have the simple single-node Kafka installation,
 like the one described in <a href="http://kafka.apache.org/quickstart">Kafka quckstart</a>. Let’s upgrade
-it to use&nbsp;<span class="caps">SSL</span>!</p>
-<p>First, shut your producers, consumers and brokers&nbsp;down.</p>
-<p>Edit your ‘server.properties’. Modify a line describing&nbsp;listeners:</p>
+it to use<span class="widont">&nbsp;</span><span class="caps">SSL</span>!</p>
+<p>First, shut your producers, consumers and brokers<span class="widont">&nbsp;</span>down.</p>
+<p>Edit your ‘server.properties’. Modify a line describing<span class="widont">&nbsp;</span>listeners:</p>
 <pre><code class="hljs lang-jproperties">listeners=SSL://:9093
 </code></pre>
-<p>Also, add the following lines – e.g. at the&nbsp;end:</p>
+<p>Also, add the following lines – e.g. at the<span class="widont">&nbsp;</span>end:</p>
 <pre><code class="hljs lang-jproperties"># keystore location and password
 ssl.keystore.location=/path/to/broker.jks
 ssl.keystore.password=ierayaekoinot
@@ -158,41 +158,41 @@ ssl.client.auth=none
 # to the 'listeners' line above
 security.inter.broker.protocol=SSL
 </code></pre>
-<p>That’s it! You can start the broker with&nbsp;usual</p>
+<p>That’s it! You can start the broker with<span class="widont">&nbsp;</span>usual</p>
 <pre><code class="hljs lang-bash">bin/kafka-server-start.sh config/server-ssl.properties
 </code></pre>
 <h3 id="configuring-the-console-clients">Configuring the console clients <a class="header-anchor" href="#configuring-the-console-clients" aria-hidden="true">¶</a></h3>
 <p>The simplest way to test this broker is with the console producer
 and consumer. To pass the additional properties into the <code>Producer</code>
 and <code>Consumer</code> constructor, you can put them into a property file.
-Here is the minimum of what we need to connect to our&nbsp;broker:</p>
+Here is the minimum of what we need to connect to our<span class="widont">&nbsp;</span>broker:</p>
 <pre><code class="hljs lang-jproperties">security.protocol=SSL
 ssl.truststore.location=/path/to/truststore.jks
 ssl.truststore.password=chooruanguchi
 </code></pre>
-<p>Then, you can start the console&nbsp;producer:</p>
+<p>Then, you can start the console<span class="widont">&nbsp;</span>producer:</p>
 <pre><code class="hljs lang-bash">bin/kafka-console-producer.sh --broker-list  SSL://localhost:9093 --topic <span class="built_in">test</span> \
     --producer.config ssl/client-ssl.properties
 </code></pre>
-<p>and&nbsp;consumer:</p>
+<p>and consumer:</p>
 <pre><code class="hljs lang-bash">bin/kafka-console-consumer.sh --bootstrap-server SSL://localhost:9093 \
     --topic <span class="built_in">test</span> --from-beginning \
     --consumer.config ssl/client-ssl.properties
 </code></pre>
-<p>And… it&nbsp;works!</p>
+<p>And… it works!</p>
 <h2 id="sasl"><span class="caps">SASL</span> <a class="header-anchor" href="#sasl" aria-hidden="true">¶</a></h2>
-<p>Comparing to <span class="caps">SSL</span>, SASL is pretty simple. One thing to know is that
-PLAIN mechanism passes the passwords in plain text, so it can be
-securely used only over SSL. Well, that’s how we were planning
+<p>Comparing to <span class="caps">SSL</span>, <span class="caps">SASL</span> is pretty simple. One thing to know is that
+<span class="caps">PLAIN</span> mechanism passes the passwords in plain text, so it can be
+securely used only over <span class="caps">SSL</span>. Well, that’s how we were planning
 to do it <code>;)</code>.</p>
 <h3 id="jaas-configuration"><span class="caps">JAAS</span> configuration <a class="header-anchor" href="#jaas-configuration" aria-hidden="true">¶</a></h3>
 <p><span class="caps">SASL</span> is implemented via <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/jaas/JAASRefGuide.html"><span class="caps">JAAS</span></a>, and <span class="caps">JAAS</span> configuration is specified
 in system properties — <code>-Djava.security.auth.login.config=/path/to/jaas.conf</code>.
 To add this property to either Kafka server or the console
-producer and consumer, we can use <code>KAFKA_OPTS</code> variable, like&nbsp;this:</p>
+producer and consumer, we can use <code>KAFKA_OPTS</code> variable, like<span class="widont">&nbsp;</span>this:</p>
 <pre><code>KAFKA_OPTS='-Djava.security.auth.login.config=/path/to/jaas.conf' bin/kafka_start_server.sh ...
 </code></pre>
-<p>The <span class="caps">JAAS</span> configuration themselves are also simple. For&nbsp;server:</p>
+<p>The <span class="caps">JAAS</span> configuration themselves are also simple. For<span class="widont">&nbsp;</span>server:</p>
 <pre><code>KafkaServer {
     org.apache.kafka.common.security.plain.PlainLoginModule required
     username=&quot;admin&quot;
@@ -203,7 +203,7 @@ producer and consumer, we can use <code>KAFKA_OPTS</code> variable, like&nbsp;th
 </code></pre>
 <p>This creates two users, <code>admin</code> and <code>iv</code>, and configures the broker
 to use <code>admin</code> user.</p>
-<p>For client, it’s even&nbsp;simpler:</p>
+<p>For client, it’s even<span class="widont">&nbsp;</span>simpler:</p>
 <pre><code>KafkaClient {
     org.apache.kafka.common.security.plain.PlainLoginModule required
     username=&quot;iv&quot;
@@ -212,40 +212,40 @@ to use <code>admin</code> user.</p>
 </code></pre>
 <p>Just configure client to use <code>iv</code> user.</p>
 <h3 id="adjusting-broker-settings">Adjusting broker settings <a class="header-anchor" href="#adjusting-broker-settings" aria-hidden="true">¶</a></h3>
-<p>Again, we have to change the listeners&nbsp;line:</p>
+<p>Again, we have to change the listeners<span class="widont">&nbsp;</span>line:</p>
 <pre><code class="hljs lang-jproperties">listeners=SASL_SSL://:9093
 </code></pre>
 <p>Also, we need to configure <span class="caps">SSL</span> in the same way it was configured
 above. We need to change <code>security.inter.broker.protocol</code> and
-add three more&nbsp;lines:</p>
+add three more<span class="widont">&nbsp;</span>lines:</p>
 <pre><code class="hljs lang-jproperties">sasl.enabled.mechanisms=PLAIN
 sasl.mechanism=PLAIN
 
 security.inter.broker.protocol=SASL_SSL
 sasl.mechanism.inter.broker.protocol=PLAIN
 </code></pre>
-<p>When you’re done, you can start the&nbsp;broker:</p>
+<p>When you’re done, you can start the<span class="widont">&nbsp;</span>broker:</p>
 <pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/server.jaas.conf'</span> bin/kafka-server-start.sh config/server-sasl.properties
 </code></pre>
 <h3 id="console-clients-settings">Console clients settings <a class="header-anchor" href="#console-clients-settings" aria-hidden="true">¶</a></h3>
 <p>Wen need <span class="caps">JAAS</span> configuration from the above; also, you need to
-update the property&nbsp;file:</p>
+update the property<span class="widont">&nbsp;</span>file:</p>
 <pre><code class="hljs lang-jproperties">security.protocol=SASL_SSL
 sasl.mechanism=PLAIN
 ssl.truststore.location=/path/to/truststore.jks
 ssl.truststore.password=chooruanguchi
 </code></pre>
-<p>Now, it’s easy to start the&nbsp;producer:</p>
+<p>Now, it’s easy to start the<span class="widont">&nbsp;</span>producer:</p>
 <pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-console-producer.sh \
     --broker-list  <span class="caps">SSL</span>://localhost:9093 --topic <span class="built_in">test</span> --producer.config ssl/client-sasl.properties
 </code></pre>
-<p>and the&nbsp;consumer:</p>
+<p>and the consumer:</p>
 <pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-console-consumer.sh \
     --bootstrap-server SASL_SSL://localhost:9093 \
     --topic <span class="built_in">test</span> --from-beginning \
     --consumer.config ssl/client-sasl.properties
 </code></pre>
-<p>Tools that work via broker will need the security configuration,&nbsp;too:</p>
+<p>Tools that work via broker will need the security configuration,<span class="widont">&nbsp;</span>too:</p>
 <pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-consumer-groups.sh \
     --bootstrap-server SSL_SASL://localhost:19093 \
     --command-config ssl/client-sasl.properties \
@@ -253,8 +253,8 @@ ssl.truststore.password=chooruanguchi
 </code></pre>
 <h2 id="whats-left">What’s left? <a class="header-anchor" href="#whats-left" aria-hidden="true">¶</a></h2>
 <p>Zookeeper of course. Securing a zookeeper installation is surely out of
-scope of this article, and Kafka is merely a client to&nbsp;it.</p>
-<p><span class="caps">TODO</span>: Play ACLs&nbsp;FTW?</p>
+scope of this article, and Kafka is merely a client to<span class="widont">&nbsp;</span>it.</p>
+<p><span class="caps">TODO</span>: Play ACLs<span class="widont">&nbsp;</span><span class="caps">FTW</span>?</p>
 </div>
       </div>
     </div>

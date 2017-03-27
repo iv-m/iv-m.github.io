@@ -17,36 +17,36 @@
       <div class="content-wrap">
         <h1>Switching to markdown-it</h1>
         <div class="content"><p>I’ve switched from <a href="https://github.com/chjj/marked">marked</a> to <a href="https://github.com/markdown-it/markdown-it">markdown-it</a> for this site.
-Here are some hows and&nbsp;whys.</p>
+Here are some hows and<span class="widont">&nbsp;</span>whys.</p>
 <h2 id="what-again">What, again? <a class="header-anchor" href="#what-again" aria-hidden="true">¶</a></h2>
 <p>Yes, the second officially published article is about configuring this
 site, and yes, I do feel that I spend to much time for the
 configuration. But listen, it’s the New Year Holidays here, so consider
 this my approach to rest. Also, I felt like I really need a table of
-contents for some of my <a href="/notes.html">pales of notes</a>.</p>
+contents for some of my <a href="/notes.html">pales of<span class="widont">&nbsp;</span>notes</a>.</p>
 <h2 id="getting-started">Getting started <a class="header-anchor" href="#getting-started" aria-hidden="true">¶</a></h2>
-<p>The switching itself is as straightforward as it can&nbsp;be:</p>
+<p>The switching itself is as straightforward as it can<span class="widont">&nbsp;</span>be:</p>
 <ol>
 <li>Install the plugin with <code>npm</code>:</li>
 </ol>
 <pre><code class="hljs lang-bash">  npm install --save wintersmith-markdown-it
 </code></pre>
 <ol start="2">
-<li>Configure wintersmith to use&nbsp;it:</li>
+<li>Configure wintersmith to use<span class="widont">&nbsp;</span>it:</li>
 </ol>
 <pre><code class="hljs lang-diff">   "plugins": [
 <span class="addition">+    "./node_modules/wintersmith-markdown-it/",</span>
      "./plugins/hacks.coffee"
    ],
 </code></pre>
-<p>Then, the fun&nbsp;begins.</p>
+<p>Then, the fun<span class="widont">&nbsp;</span>begins.</p>
 <h2 id="getting-back-some-useful-features">Getting back some useful features <a class="header-anchor" href="#getting-back-some-useful-features" aria-hidden="true">¶</a></h2>
 <p>One interesting consequence of the fact that I’m using github
 pages with Wintersmith is that I have the build results
 versioned, too (in the <code>master</code> branch), so I can use <code>git diff</code>
 to see how exactly the rendering changed. When experimenting
 with markup, templates or, like in this case, rendering
-pipeline, this becomes really&nbsp;handy.</p>
+pipeline, this becomes really<span class="widont">&nbsp;</span>handy.</p>
 <p>After enabling markdown-it plugin, I noticed some
 minor differences in <span class="caps">HTML</span> markup, but I mostly liked them.
 There were also a few features missing. I was able
@@ -63,8 +63,8 @@ options in <code>config.json</code>:</p>
 <ul>
 <li><code>html</code> allows direct html insertions into markdown – I use it already
 in one of the drafts to insert <span class="caps">SVG</span> with an <code>&lt;object&gt;</code> tag;</li>
-<li><code>linkify</code> detects links in texts and converts them to <span class="caps">HTML</span>&nbsp;links;</li>
-<li><code>typographer</code> inserts nice dashes and quotes, seems&nbsp;useful;</li>
+<li><code>linkify</code> detects links in texts and converts them to <span class="caps">HTML</span><span class="widont">&nbsp;</span>links;</li>
+<li><code>typographer</code> inserts nice dashes and quotes, seems<span class="widont">&nbsp;</span>useful;</li>
 </ul>
 <p>Also, links like <code>[about page](../about.md)</code> are not converted to point to the
 corresponding generated <span class="caps">HTML</span> anymore. That’s sad, but I can live with it —
@@ -72,17 +72,17 @@ so far, I’m ok with  writing <code>about.html</code> directly.</p>
 <p>One more thing is that markdown-it does not add <code>id</code> attribute to headers
 out-of-the-box. Luckily, there is an awesome plugin for that:
 <a href="https://github.com/valeriangalliat/markdown-it-anchor">markdown-it-anchor</a>. It can also add an anchor link to every header,
-which I find nice to have (hint: hover a header to see what I&nbsp;mean).</p>
+which I find nice to have (hint: hover a header to see what I<span class="widont">&nbsp;</span>mean).</p>
 <h2 id="neat-stuff">Neat stuff <a class="header-anchor" href="#neat-stuff" aria-hidden="true">¶</a></h2>
 <p>Markdown-it has tons of plugins. Some provide text effects: <s>Strike through</s>,
 <sub>sub</sub>scripts, <sup>super</sup>scripts, <abbr title="abbreviations with &lt;abbr&gt; tag">abbrs</abbr>, unicode emoji like 😄 or
 ✅, and more. There are also footnotes<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>.
 I’ve also added the <a href="https://github.com/Oktavilla/markdown-it-table-of-contents">markdown-it-table-of-contents</a> plugin, which
 integrates nicely with <a href="https://github.com/valeriangalliat/markdown-it-anchor">markdown-it-anchor</a> and can put a table
-of contents into the&nbsp;document:</p>
-<p><div class="table-of-contents"><ul><li><a href="#what-again">What,&nbsp;again?</a></li><li><a href="#getting-started">Getting&nbsp;started</a></li><li><a href="#getting-back-some-useful-features">Getting back some useful&nbsp;features</a></li><li><a href="#neat-stuff">Neat stuff</a><ul><li><a href="#thats-it">That&#8217;s&nbsp;it!</a></li></ul></li></ul></div></p>
+of contents into the<span class="widont">&nbsp;</span>document:</p>
+<p><div class="table-of-contents"><ul><li><a href="#what-again">What, again?</a></li><li><a href="#getting-started">Getting started</a></li><li><a href="#getting-back-some-useful-features">Getting back some useful<span class="widont">&nbsp;</span>features</a></li><li><a href="#neat-stuff">Neat stuff</a><ul><li><a href="#thats-it">That&#8217;s it!</a></li></ul></li></ul></div></p>
 <p>Oh yeah, <span class="caps">TOC</span> in the end. I feel like rebel. Let’s also conclude the
-article with&nbsp;header:</p>
+article with<span class="widont">&nbsp;</span>header:</p>
 <h3 id="thats-it">That’s it! <a class="header-anchor" href="#thats-it" aria-hidden="true">¶</a></h3>
 <hr class="footnotes-sep">
 <section class="footnotes">

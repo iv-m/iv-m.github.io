@@ -18,29 +18,29 @@
         <h1>Heatmaps for all!</h1>
         <div class="content"><p>Heatmaps are awesome: in many cases, using color to represent an extra
 dimension allows to get good insights on what’s really happening. But
-how to draw them?  Below, I’ll take a quick look onto a couple of&nbsp;ways.</p>
+how to draw them?  Below, I’ll take a quick look onto a couple of<span class="widont">&nbsp;</span>ways.</p>
 <h2 id="the-experiment">The Experiment <a class="header-anchor" href="#the-experiment" aria-hidden="true">¶</a></h2>
 <p>Currently, I work on a Solr-based search service for one of the <span class="caps">US</span>
 e-retailers, and of course I’m interested in its performance. I can
 easiliy gather the response times from the service – from various
 testbeds, or production – in form of the application logs, where a
-relevant message may look like&nbsp;this:</p>
+relevant message may look like<span class="widont">&nbsp;</span>this:</p>
 <pre><code>2017-01-01 13:42:33,559 INFO [..skip..] - Client request: /search?keyword=denim%20shirt, response time: 57 ms, found=73, stage=1
 </code></pre>
 <p>Let’s extract the repsonse times and build some heatmaps! For the
 experiment, I’m taking response times for the few minutes after the
 application startup, with all the cache warming disabled. This way,
 we’ll be able to see how response time changes as <span class="caps">JVM</span> and Solr caches
-are&nbsp;warming.</p>
+are<span class="widont">&nbsp;</span>warming.</p>
 <h2 id="trace2heatmappl"><a href="http://trace2heatmap.pl">trace2heatmap.pl</a> <a class="header-anchor" href="#trace2heatmappl" aria-hidden="true">¶</a></h2>
 <p><a href="http://www.brendangregg.com">Brendan Gregg</a> once created a very simple, easy to use perl script
 to build heat maps from traces gathered with <a href="http://www.brendangregg.com/HeatMaps/latency.html">various tools</a>, most
 notably <a href="http://www.brendangregg.com/blog/2014-07-01/perf-heat-maps.html">perf</a>, and made it available
-<a href="https://github.com/brendangregg/HeatMap">on github</a>.</p>
+<a href="https://github.com/brendangregg/HeatMap">on<span class="widont">&nbsp;</span>github</a>.</p>
 <p>While this tool is usually associated with some hardcore data
 sources like <code>perf</code> or <code>iosnoop</code>, it’s in fact quite generic.
 The input format is simple: just two space-separated numbers per
-line, the timestamp and the latency (or whatever you want to&nbsp;map):</p>
+line, the timestamp and the latency (or whatever you want to<span class="widont">&nbsp;</span>map):</p>
 <pre><code>$ tail -n 5 ~/tmp/responses.dat
 1483264686092 108
 1483264686142 48
@@ -51,25 +51,25 @@ line, the timestamp and the latency (or whatever you want to&nbsp;map):</p>
 <p>To parse the dates from logs and convert them to unix time, I had to
 write some ugly python code I won’t dare to show here. In just a couple of
 minutes of coding, and dozen more minutes for playing with
-<code>trace2heatmap.pl</code> parameters, I came up with the following&nbsp;command:</p>
+<code>trace2heatmap.pl</code> parameters, I came up with the following<span class="widont">&nbsp;</span>command:</p>
 <pre><code>$ trace2heatmap.pl --grid --unitstime ms --unitslatency ms \
     --stepsec 5 --rows 100 --maxlat 1500 --boxsize 4 \
     --title 'Search response time -- warmup' \
     ~/tmp/responses.dat &gt; heatmap-warmup.svg
 </code></pre>
-<p>It procuced the following&nbsp;<span class="caps">SVG</span>:</p>
+<p>It procuced the following<span class="widont">&nbsp;</span><span class="caps">SVG</span>:</p>
 <p><object data="heatmap-warmup.svg" type="image/svg+xml"></object></p>
 <p>The cool feature of this heatmap is that it is interactive even in
 browser: it shows some metadata for the cell under the mouse pointer
 in the status line below the map. For that, the <span class="caps">SVG</span> should be
-included not as image, but as&nbsp;object:</p>
+included not as image, but as<span class="widont">&nbsp;</span>object:</p>
 <pre><code class="hljs lang-html"><span class="tag">&lt;<span class="name">object</span> <span class="attr">data</span>=<span class="string">"heatmap-warmup.svg"</span> <span class="attr">type</span>=<span class="string">"image/svg+xml"</span>&gt;</span><span class="tag">&lt;/<span class="name">object</span>&gt;</span>
 </code></pre>
 <h2 id="numpy-matplotlib">numpy + matplotlib <a class="header-anchor" href="#numpy-matplotlib" aria-hidden="true">¶</a></h2>
-<p><a href="http://matplotlib.org/">matplotlib</a> is a python 2D plotting library known in the scientific&nbsp;community.</p>
+<p><a href="http://matplotlib.org/">matplotlib</a> is a python 2D plotting library known in the scientific<span class="widont">&nbsp;</span>community.</p>
 <p>Creating heatmap with it is totally googleable, but the simplest option
 — <code>plt.hist2d(...)</code> —  did not work for me: it displayed the picture
-flipped upside down. So, I had to come up with a bit more elaborate&nbsp;script:</p>
+flipped upside down. So, I had to come up with a bit more elaborate<span class="widont">&nbsp;</span>script:</p>
 <pre><code class="hljs lang-python"><span class="keyword">import</span> numpy <span class="keyword">as</span> np
 <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
 
@@ -98,32 +98,32 @@ cbar.ax.set_ylabel(<span class="string">'Counts'</span>)
 <span class="comment"># save the image</span>
 plt.savefig(<span class="string">'plt-heatmap.png'</span>, bbox_inches=<span class="string">'tight'</span>)
 </code></pre>
-<p>And, here is the&nbsp;result:</p>
+<p>And, here is the<span class="widont">&nbsp;</span>result:</p>
 <p><img src="plt-heatmap.png" alt="simple heatmap drawn with matplotlib.pyplot"></p>
 <p>Maybe it’s not very impressive but, with certain dedication, time and
 help of google (or stackoverflow) it is possible to create really nice
 and professionally-looking images. <code>matplotlib</code> is very flexible. For
-example, it’s easy to switch to logarithmic scale for the&nbsp;latency:</p>
+example, it’s easy to switch to logarithmic scale for the<span class="widont">&nbsp;</span>latency:</p>
 <p><img src="plt-heatmap-log.png" alt="same heatmap with logarithmic Y"></p>
 <p>You can change the colors – define your own palette, or use
-one of the&nbsp;predefined:</p>
+one of the<span class="widont">&nbsp;</span>predefined:</p>
 <p><img src="plt-heatmap-log-palette.png" alt="same heatmap in afmhot palette"></p>
-<p>Color scale can be logarithmic,&nbsp;too:</p>
+<p>Color scale can be logarithmic,<span class="widont">&nbsp;</span>too:</p>
 <p><img src="plt-heatmap-log-palette-log.png" alt="same heatmap with log color scale"></p>
 <p>The script used to create the last image is
 <a href="https://gist.github.com/iv-m/3c9f3187002e4d9ee49175c13fdf1b71">here</a>.</p>
 <p>You can even combine the heatmap with other visualizations (e.g. add a
-graph of the average latency on top of the heatmap). Maybe, I did not&nbsp;try.</p>
+graph of the average latency on top of the heatmap). Maybe, I did not<span class="widont">&nbsp;</span>try.</p>
 <p>There are downsides, too. For one, <code>matplotlib</code> + <code>numpy</code> are rather
 big from dependencies perspective, compared to simple perl script.
 Also, the interactive <span class="caps">UI</span> is rather slow, and making it to show enough
-data for the point under cursor is somewhat&nbsp;tricky.</p>
+data for the point under cursor is somewhat<span class="widont">&nbsp;</span>tricky.</p>
 <p>In fact, everything is kind of tricky. There are just so
-may knobs and&nbsp;buttons…</p>
+may knobs and<span class="widont">&nbsp;</span>buttons…</p>
 <h2 id="gnuplot">gnuplot <a class="header-anchor" href="#gnuplot" aria-hidden="true">¶</a></h2>
 <p>A few years ago I was using <code>gnuplot</code> every day: no other plotting tool
 could handle a few thousand data points with that ease and speed. Since
-that&nbsp;time</p>
+that<span class="widont">&nbsp;</span>time</p>
 <p>For heatmaps, <code>gnuplot</code> will not prepare the data for you: you need to
 define your buckets and transform individual events into the matrix
 summary yourself. There are couple of possible formats, shown in
@@ -144,7 +144,7 @@ a newline when <code>x</code> changes:</p>
 </code></pre>
 <p>Grouping the data this way with a few simple loops is not that
 hard, but I’ve already used <code>numpy</code>, so I used it to make the code
-even&nbsp;simpler:</p>
+even<span class="widont">&nbsp;</span>simpler:</p>
 <pre><code class="hljs lang-python"><span class="keyword">import</span> numpy <span class="keyword">as</span> np
 
 <span class="function"><span class="keyword">def</span> <span class="title">tick</span><span class="params">(array, idx)</span>:</span>
@@ -175,7 +175,7 @@ transform(<span class="string">'responses.dat'</span>, <span class="string">'his
 <pre><code class="hljs lang-gnuplot">plot 'hist2d.dat' with image
 </code></pre>
 <p>This will show the interactive window. To save the output to <span class="caps">PNG</span> and
-make it look a bit nicer, we need a few more&nbsp;commands:</p>
+make it look a bit nicer, we need a few more<span class="widont">&nbsp;</span>commands:</p>
 <pre><code class="hljs lang-gnuplot">set term png size 700,320 crop
 set output 'gnuplot-heatmap.png'
 set xrange [0:900]
@@ -188,31 +188,31 @@ set grid front linetype 0  # 0 means dashed
 unset border
 plot 'hist2d.dat' with image notitle
 </code></pre>
-<p>Just save this to file and run <code>gnuplot -p heatmap.gnuplot</code>. Here’s the&nbsp;image:</p>
+<p>Just save this to file and run <code>gnuplot -p heatmap.gnuplot</code>. Here’s the<span class="widont">&nbsp;</span>image:</p>
 <p><img src="gnuplot-heatmap.png" alt="heatmap from gnuplot"></p>
 <p>Gnuplot has pretty much  the same amount of flexibility
 <code>matplotlib</code> has, and it feels more solid. It’s also much faster
 — with 100x100 map it’s very noticeable, and <code>gnuplot</code> can
-easily deal with much larger grids, like&nbsp;2000x2000.</p>
+easily deal with much larger grids, like<span class="widont">&nbsp;</span>2000x2000.</p>
 <p>On other side, there is an additional step of preparing the data,
 which makes the whole process more cumbersome. Also, while I find
 <code>gnuplot</code> easy to use when you’ve learned it, it always takes a lot of
-time to go through the docs and examples and get things&nbsp;going.</p>
-<p>Here are couple of <code>gnuplot</code>-related links, for future&nbsp;reading:</p>
+time to go through the docs and examples and get things<span class="widont">&nbsp;</span>going.</p>
+<p>Here are couple of <code>gnuplot</code>-related links, for future<span class="widont">&nbsp;</span>reading:</p>
 <ul>
 <li>Official site – <a href="http://gnuplot.sourceforge.net/">http://gnuplot.sourceforge.net/</a></li>
 <li><a href="http://www.gnuplotting.org/">http://www.gnuplotting.org/</a></li>
-<li><a href="http://lowrank.net/gnuplot/index-e.html">Gnuplot tips — not so Frequently Asked&nbsp;Questions</a></li>
-<li><a href="http://psy.swansea.ac.uk/staff/carter/gnuplot/">gnuplot Examples from Neil&nbsp;Carter</a></li>
+<li><a href="http://lowrank.net/gnuplot/index-e.html">Gnuplot tips — not so Frequently Asked<span class="widont">&nbsp;</span>Questions</a></li>
+<li><a href="http://psy.swansea.ac.uk/staff/carter/gnuplot/">gnuplot Examples from Neil<span class="widont">&nbsp;</span>Carter</a></li>
 </ul>
 <h2 id="concluding-remarks">Concluding remarks <a class="header-anchor" href="#concluding-remarks" aria-hidden="true">¶</a></h2>
 <p>I’ve not covered many other options, most notably <code>R</code>, which seems
 to become <em>the</em> tool for data manipulation and analysis, and has
-excellent visualization options; but I don’t feel like diving there&nbsp;now.</p>
+excellent visualization options; but I don’t feel like diving there<span class="widont">&nbsp;</span>now.</p>
 <p>As for the tools covered, <code>trace2heatmap.pl</code> is very good for the initial
 analysis. If a more beautiful picture is needed, I’d use <code>gnuplot</code>;
 I hope to find some time and make my data transformation code and
-the plotting script more&nbsp;reusable.</p>
+the plotting script more<span class="widont">&nbsp;</span>reusable.</p>
 </div>
       </div>
     </div>

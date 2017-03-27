@@ -16,14 +16,14 @@
     <div id="content">
       <div class="content-wrap">
         <h1>Kafka in minkube</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started-with-k8s">Getting started with&nbsp;k8s</a></li><li><a href="#various-commands">Various&nbsp;commands</a></li><li><a href="#deploying-kafka-fist-try">Deploying kafka: fist try</a><ul><li><a href="#zookeeper">ZooKeeper</a></li><li><a href="#kafka">Kafka</a></li><li><a href="#first-testing">First&nbsp;testing</a></li></ul></li><li><a href="#environment-variables-for-services">Environment variables for services</a><ul><li><a href="#wat"><span class="caps">WAT</span>?</a></li></ul></li><li><a href="#when-youre-done-with-it">When you&#8217;re done with&nbsp;it</a></li><li><a href="#random-links">Random&nbsp;links</a></li></ul></div></p>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started-with-k8s">Getting started with<span class="widont">&nbsp;</span>k8s</a></li><li><a href="#various-commands">Various commands</a></li><li><a href="#deploying-kafka-fist-try">Deploying kafka: fist try</a><ul><li><a href="#zookeeper">ZooKeeper</a></li><li><a href="#kafka">Kafka</a></li><li><a href="#first-testing">First testing</a></li></ul></li><li><a href="#environment-variables-for-services">Environment variables for services</a><ul><li><a href="#wat"><span class="caps">WAT</span>?</a></li></ul></li><li><a href="#when-youre-done-with-it">When you&#8217;re done with<span class="widont">&nbsp;</span>it</a></li><li><a href="#random-links">Random links</a></li></ul></div></p>
 <h2 id="getting-started-with-k8s">Getting started with k8s <a class="header-anchor" href="#getting-started-with-k8s" aria-hidden="true">¶</a></h2>
 <p>In the older times, there were <a href="https://github.com/kubernetes/community/blob/master/contributors/devel/local-cluster/docker.md">hypercube and docker-based solution</a>,
 but no one does that anymore. Also, <code>minikube</code> uses <code>localkube</code>
-internally, so there must be a&nbsp;way.</p>
+internally, so there must be a<span class="widont">&nbsp;</span>way.</p>
 <p>So, we’re going with <code>minikube</code>:</p>
 <ul>
-<li>update VirtualBox (kvm driver does not work on my machine&nbsp;(yet❓))</li>
+<li>update VirtualBox (kvm driver does not work on my machine<span class="widont">&nbsp;</span>(yet❓))</li>
 <li>install <a href="https://github.com/kubernetes/minikube/releases">minikube</a></li>
 </ul>
 <pre><code>curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.14.0/minikube-linux-amd64 \
@@ -33,13 +33,13 @@ internally, so there must be a&nbsp;way.</p>
 <li>
 <p>install <code>kubectl</code></p>
 <ul>
-<li>I’ve chosen to start with <a href="https://cloud.google.com/sdk/docs/quickstart-linux">Google Cloud&nbsp;<span class="caps">SDK</span></a></li>
+<li>I’ve chosen to start with <a href="https://cloud.google.com/sdk/docs/quickstart-linux">Google Cloud<span class="widont">&nbsp;</span><span class="caps">SDK</span></a></li>
 <li><code>gcloud components install kubectl</code></li>
 <li>create symlinks in <code>~/bin</code></li>
 </ul>
 </li>
 <li>
-<p>test the&nbsp;installation</p>
+<p>test the installation</p>
 </li>
 </ul>
 <pre><code class="hljs lang-bash">kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
@@ -50,14 +50,14 @@ curl $(minikube service hello-minikube --url)
 kubectl delete deployment hello-minikube
 </code></pre>
 <h2 id="various-commands">Various commands <a class="header-anchor" href="#various-commands" aria-hidden="true">¶</a></h2>
-<p>Just tried them&nbsp;out:</p>
+<p>Just tried them<span class="widont">&nbsp;</span>out:</p>
 <pre><code class="hljs lang-bash">minikube ssh
 kubectl get pods
 kubectl get svc
 vboxmanage list vms
 vboxmanage showvminfo minikube | less
 </code></pre>
-<p>Switch to mikube context after using gcloud context for a&nbsp;while:</p>
+<p>Switch to mikube context after using gcloud context for a<span class="widont">&nbsp;</span>while:</p>
 <pre><code>kubectl config use-context minikube
 </code></pre>
 <h2 id="deploying-kafka-fist-try">Deploying kafka: fist try <a class="header-anchor" href="#deploying-kafka-fist-try" aria-hidden="true">¶</a></h2>
@@ -70,7 +70,7 @@ kubectl create <span class="_">-f</span> zoo-rc.yaml
 <span class="comment"># Expose the service for testing</span>
 kubectl expose svc kafka-zoo-svc --port=2181 --type=NodePort --name kafka-zoo-svc-ext
 
-<span class="comment"># Get the exposed <span class="caps">ZK</span> URL</span>
+<span class="comment"># Get the exposed <span class="caps">ZK</span> <span class="caps">URL</span></span>
 minikube service --format=<span class="string">"{{.<span class="caps">IP</span>}}:{{.Port}}"</span> kafka-zoo-svc-ext
 
 <span class="comment"># Test with the shell script from Kafka distribution</span>
@@ -78,27 +78,27 @@ rlwrap bin/zookeeper-shell.sh $(minikube service --format=<span class="string">"
 </code></pre>
 <p>There is property <code>spec.ports[*].nodePort</code> of the service,
 but <span class="caps">IDK</span> how to get it from <code>kubectl get -o template</code>. It is
-visible via <code>kubectl get -o yaml</code> though. For&nbsp;example:</p>
+visible via <code>kubectl get -o yaml</code> though. For<span class="widont">&nbsp;</span>example:</p>
 <pre><code>$ kubectl get -o yaml svc | grep nodePort
     - nodePort: 31189
 </code></pre>
 <h3 id="kafka">Kafka <a class="header-anchor" href="#kafka" aria-hidden="true">¶</a></h3>
-<p>Change to&nbsp;chroot:</p>
+<p>Change to chroot:</p>
 <pre><code class="hljs lang-diff">           - name: KAFKA_ZOOKEEPER_CONNECT
 <span class="deletion">-            value: kafka-zoo-svc:2181</span>
 <span class="addition">+            value: kafka-zoo-svc:2181/kafka1</span>
            - name: KAFKA_CREATE_TOPICS
 </code></pre>
-<p>Because I love <span class="caps">ZK</span> chroots! With the image I use, if you do THAT, you’ll have
-to create the corresponding ZK node. For example, type this into ZK&nbsp;shell:</p>
+<p>Because I love <span class="caps">ZK</span> chroots! With the image I use, if you do <span class="caps">THAT</span>, you’ll have
+to create the corresponding <span class="caps">ZK</span> node. For example, type this into <span class="caps">ZK</span><span class="widont">&nbsp;</span>shell:</p>
 <pre><code>create kafka1 ''
 </code></pre>
-<p>Start&nbsp;everything:</p>
+<p>Start everything:</p>
 <pre><code class="hljs lang-bash">kubectl create <span class="_">-f</span> kafka-service.yam
 kubectl create <span class="_">-f</span> kafka-rc.yaml
 </code></pre>
 <h3 id="first-testing">First testing <a class="header-anchor" href="#first-testing" aria-hidden="true">¶</a></h3>
-<p>Pretend we’re in docker: run the following on two tabs of your&nbsp;terminal:</p>
+<p>Pretend we’re in docker: run the following on two tabs of your<span class="widont">&nbsp;</span>terminal:</p>
 <pre><code class="hljs lang-bash"><span class="built_in">eval</span> $(minikube docker-env)
 docker ps
 docker <span class="built_in">exec</span> -ti \
@@ -107,26 +107,26 @@ docker <span class="built_in">exec</span> -ti \
 <span class="comment"># in the container</span>
 <span class="built_in">cd</span> /opt/kafka*
 </code></pre>
-<p>On the first one, run consumer (we use old image for testing, new consumer does not work&nbsp;there):</p>
+<p>On the first one, run consumer (we use old image for testing, new consumer does not work<span class="widont">&nbsp;</span>there):</p>
 <pre><code>bin/kafka-console-consumer.sh --zookeeper kafka-zoo-svc:2181/kafka1 --topic demo-topic --from-beginning
 </code></pre>
-<p>For the new consumer, you’ll need to specify bootstrap severs&nbsp;instead:</p>
+<p>For the new consumer, you’ll need to specify bootstrap severs<span class="widont">&nbsp;</span>instead:</p>
 <pre><code>bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --from-beginning --topic demo-topic
 </code></pre>
-<p>On the second one, run&nbsp;producer:</p>
+<p>On the second one, run<span class="widont">&nbsp;</span>producer:</p>
 <pre><code>bin/kafka-console-producer.sh --broker-list kafka:9092 --topic demo-topic --sync
 </code></pre>
-<p>Just type some messages (each line is a message) — they will appear on the&nbsp;consumer.</p>
-<p>You can work with&nbsp;topics:</p>
+<p>Just type some messages (each line is a message) — they will appear on the<span class="widont">&nbsp;</span>consumer.</p>
+<p>You can work with<span class="widont">&nbsp;</span>topics:</p>
 <pre><code>bin/kafka-topics.sh --zookeeper kafka-zoo-svc:2181/kafka1 --list
 bin/kafka-topics.sh --zookeeper kafka-zoo-svc:2181/kafka1 --describe --topic demo-topic
 </code></pre>
-<p>Test with a separate deployed&nbsp;image:</p>
+<p>Test with a separate deployed<span class="widont">&nbsp;</span>image:</p>
 <pre><code>kubectl run -i -t test2 --image=cloudtrackinc/kubernetes-kafka:latest --command -- tail -f /dev/null
 </code></pre>
-<p><code>tailf</code> does not work – there is no such command in most of the&nbsp;images.</p>
+<p><code>tailf</code> does not work – there is no such command in most of the<span class="widont">&nbsp;</span>images.</p>
 <h2 id="environment-variables-for-services">Environment variables for services <a class="header-anchor" href="#environment-variables-for-services" aria-hidden="true">¶</a></h2>
-<p>Kubernetes includes service location information into environment&nbsp;variables:</p>
+<p>Kubernetes includes service location information into environment<span class="widont">&nbsp;</span>variables:</p>
 <pre><code>$ kubectl exec kafka-broker-msggm -- sh -c set | grep SERVICE
 KAFKA_SERVICE_HOST='10.0.0.2'
 KAFKA_SERVICE_PORT='9092'
@@ -144,9 +144,9 @@ KUBERNETES_SERVICE_PORT_HTTPS='443'
 </code></pre>
 <p>See <a href="https://kubernetes.io/docs/user-guide/connecting-applications/#accessing-the-service">https://kubernetes.io/docs/user-guide/connecting-applications/#accessing-the-service</a></p>
 <p>If you need more information about the service, you can get it from the
-Kubernetes service. K8s kindly injects the <span class="caps">API</span> key and the CA of the
+Kubernetes service. K8s kindly injects the <span class="caps">API</span> key and the <span class="caps">CA</span> of the
 service into every container. For example, this is how to get
-an external IP and port of <code>kafka-service</code> service in the <code>default</code>
+an external <span class="caps">IP</span> and port of <code>kafka-service</code> service in the <code>default</code>
 namesapce:</p>
 <pre><code class="hljs lang-bash">curl <span class="_">-s</span>S \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
@@ -155,7 +155,7 @@ namesapce:</p>
     | jq  -r <span class="string">'.| .status.loadBalancer.ingress[].ip + ":" + (.spec.ports[].nodePort | tostring)'</span>
 </code></pre>
 <p>The default namespace to be used for namespaced <span class="caps">API</span> operations is placed in a file
-at <code>/var/run/secrets/kubernetes.io/serviceaccount/namespace</code> in each&nbsp;container.</p>
+at <code>/var/run/secrets/kubernetes.io/serviceaccount/namespace</code> in each<span class="widont">&nbsp;</span>container.</p>
 <h3 id="wat"><span class="caps">WAT</span>? <a class="header-anchor" href="#wat" aria-hidden="true">¶</a></h3>
 <pre><code class="hljs lang-bash">curl <span class="_">-s</span>S \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
@@ -175,16 +175,16 @@ vboxmanage list runningvms  # oh it's gone...
 <li><a href="https://hub.docker.com/r/solsson/kafka-persistent/">https://hub.docker.com/r/solsson/kafka-persistent/</a></li>
 </ul>
 </li>
-<li><a href="https://github.com/kubernetes/kubernetes/issues/5017">https://github.com/kubernetes/kubernetes/issues/5017</a> Example:&nbsp;Kafka/Zookeeper</li>
-<li><a href="https://github.com/kubernetes/kubernetes/issues/23794">https://github.com/kubernetes/kubernetes/issues/23794</a> Support Kafka in&nbsp;PetSet</li>
-<li><a href="https://github.com/kubernetes/charts/pull/144">https://github.com/kubernetes/charts/pull/144</a> Incubator chart for&nbsp;Kafka</li>
+<li><a href="https://github.com/kubernetes/kubernetes/issues/5017">https://github.com/kubernetes/kubernetes/issues/5017</a> Example: Kafka/Zookeeper</li>
+<li><a href="https://github.com/kubernetes/kubernetes/issues/23794">https://github.com/kubernetes/kubernetes/issues/23794</a> Support Kafka in<span class="widont">&nbsp;</span>PetSet</li>
+<li><a href="https://github.com/kubernetes/charts/pull/144">https://github.com/kubernetes/charts/pull/144</a> Incubator chart for<span class="widont">&nbsp;</span>Kafka</li>
 </ul>
-<p>By Spring Cloud&nbsp;Dataflow:</p>
+<p>By Spring Cloud<span class="widont">&nbsp;</span>Dataflow:</p>
 <ul>
 <li><a href="http://docs.spring.io/spring-cloud-dataflow-server-kubernetes/docs/current-SNAPSHOT/reference/htmlsingle/#_deploying_streams_on_kubernetes">http://docs.spring.io/spring-cloud-dataflow-server-kubernetes/docs/current-<span class="caps">SNAPSHOT</span>/reference/htmlsingle/#_deploying_streams_on_kubernetes</a></li>
 <li><a href="https://github.com/spring-cloud/spring-cloud-dataflow-server-kubernetes">https://github.com/spring-cloud/spring-cloud-dataflow-server-kubernetes</a></li>
 </ul>
-<p>ZooKeeper&nbsp;@<span class="caps">GKE</span>:</p>
+<p>ZooKeeper @<span class="caps">GKE</span>:</p>
 <ul>
 <li><a href="https://kubernetes.io/docs/tutorials/stateful-application/zookeeper/">https://kubernetes.io/docs/tutorials/stateful-application/zookeeper/</a></li>
 <li><a href="https://cloudplatform.googleblog.com/2016/04/taming-the-herd-using-Zookeeper-and-Exhibitor-on-Google-Container-Engine.html">https://cloudplatform.googleblog.com/2016/04/taming-the-herd-using-Zookeeper-and-Exhibitor-on-Google-Container-Engine.html</a></li>

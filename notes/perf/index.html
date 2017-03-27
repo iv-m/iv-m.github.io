@@ -16,16 +16,16 @@
     <div id="content">
       <div class="content-wrap">
         <h1>perf_events notes</h1>
-        <div class="content"><p>Some useful commands and links related to using <code>perf</code> utility (<span class="caps">AKA</span>&nbsp;perf_events).</p>
-<p><div class="table-of-contents"><ul><li><a href="#links">Links</a></li><li><a href="#history">History</a></li><li><a href="#setup">Setup</a><ul><li><a href="#run-perf-as-regular-user">Run perf as regular&nbsp;user</a></li><li><a href="#increasing-stack-size-limit">Increasing stack size&nbsp;limit</a></li><li><a href="#a-couple-of-checks">A couple of&nbsp;checks:</a></li><li><a href="#kernel-configuration">Kernel&nbsp;configuration</a></li></ul></li><li><a href="#some-commands">Some&nbsp;commands</a></li><li><a href="#java-and-node">Java and Node</a><ul><li><a href="#netflix-way">Netflix&nbsp;way</a></li><li><a href="#from-the-kernel-source">From the kernel&nbsp;source</a></li><li><a href="#same-but-for-node">Same, but for&nbsp;node</a></li><li><a href="#node-older-way">Node, older&nbsp;way</a></li></ul></li><li><a href="#profiling-with-in-kernel-summaries">Profiling with in-kernel&nbsp;summaries</a></li></ul></div></p>
+        <div class="content"><p>Some useful commands and links related to using <code>perf</code> utility (<span class="caps">AKA</span><span class="widont">&nbsp;</span>perf_events).</p>
+<p><div class="table-of-contents"><ul><li><a href="#links">Links</a></li><li><a href="#history">History</a></li><li><a href="#setup">Setup</a><ul><li><a href="#run-perf-as-regular-user">Run perf as regular<span class="widont">&nbsp;</span>user</a></li><li><a href="#increasing-stack-size-limit">Increasing stack size<span class="widont">&nbsp;</span>limit</a></li><li><a href="#a-couple-of-checks">A couple of<span class="widont">&nbsp;</span>checks:</a></li><li><a href="#kernel-configuration">Kernel configuration</a></li></ul></li><li><a href="#some-commands">Some commands</a></li><li><a href="#java-and-node">Java and Node</a><ul><li><a href="#netflix-way">Netflix way</a></li><li><a href="#from-the-kernel-source">From the kernel<span class="widont">&nbsp;</span>source</a></li><li><a href="#same-but-for-node">Same, but for<span class="widont">&nbsp;</span>node</a></li><li><a href="#node-older-way">Node, older way</a></li></ul></li><li><a href="#profiling-with-in-kernel-summaries">Profiling with in-kernel<span class="widont">&nbsp;</span>summaries</a></li></ul></div></p>
 <h2 id="links">Links <a class="header-anchor" href="#links" aria-hidden="true">¶</a></h2>
-<p>Getting&nbsp;started:</p>
+<p>Getting started:</p>
 <ul>
 <li><a href="http://www.brendangregg.com/perf.html">http://www.brendangregg.com/perf.html</a></li>
 <li><a href="https://perf.wiki.kernel.org/index.php/Tutorial">https://perf.wiki.kernel.org/index.php/Tutorial</a></li>
 <li>more internals: <a href="http://web.eece.maine.edu/~vweaver/projects/perf_events/">http://web.eece.maine.edu/~vweaver/projects/perf_events/</a></li>
 </ul>
-<p>Flame&nbsp;graphs:</p>
+<p>Flame graphs:</p>
 <ul>
 <li><a href="http://www.brendangregg.com/flamegraphs.html">http://www.brendangregg.com/flamegraphs.html</a></li>
 <li>python example <a href="https://github.com/nylas/nylas-perftools/blob/master/stacksampler.py">https://github.com/nylas/nylas-perftools/blob/master/stacksampler.py</a></li>
@@ -33,122 +33,122 @@
 </ul>
 <h2 id="history">History <a class="header-anchor" href="#history" aria-hidden="true">¶</a></h2>
 <p>Highlights of <code>perf</code> features by kernel releases; only features that
-personally interested me are&nbsp;mentioned.</p>
-<p>2.6&nbsp;series:</p>
+personally interested me are<span class="widont">&nbsp;</span>mentioned.</p>
+<p>2.6 series:</p>
 <ul>
-<li>2.6.31: <code>perf</code> was created as a way to work with performance&nbsp;counters</li>
-<li>2.6.32: <code>perf shed</code>, <code>perf timechart</code>, static tracepoints&nbsp;support</li>
+<li>2.6.31: <code>perf</code> was created as a way to work with performance<span class="widont">&nbsp;</span>counters</li>
+<li>2.6.32: <code>perf shed</code>, <code>perf timechart</code>, static tracepoints<span class="widont">&nbsp;</span>support</li>
 <li>2.6.33: dynamic probes – <code>perf probe</code>, <code>perf diff</code>, <code>--filter</code></li>
-<li>2.6.34: buildid cache, <code>perf lock</code>, python&nbsp;scripting</li>
-<li>2.6.35: <code>perf trace</code> (but <span class="caps">NOT</span> strace), <code>perf kvm</code>, newt&nbsp;<span class="caps">TUI</span></li>
+<li>2.6.34: buildid cache, <code>perf lock</code>, python scripting</li>
+<li>2.6.35: <code>perf trace</code> (but <span class="caps">NOT</span> strace), <code>perf kvm</code>, newt <span class="caps">TUI</span></li>
 <li>2.6.36: <code>perf report --sort cpu,comm</code></li>
-<li>2.6.37:&nbsp;–</li>
-<li>2.6.38: <code>perf record --nodelay</code> (live recording), <code>perf stat -a -A</code> (per-<span class="caps">CPU</span>&nbsp;stats)</li>
+<li>2.6.37: –</li>
+<li>2.6.38: <code>perf record --nodelay</code> (live recording), <code>perf stat -a -A</code> (per-<span class="caps">CPU</span> stats)</li>
 <li>2.6.39: <code>perf top</code>, <code>perf evlist</code> (which events were recorded), <code>perf stat --filter</code></li>
 </ul>
-<p>3.X&nbsp;series:</p>
+<p>3.X series:</p>
 <ul>
-<li>3.0: <code>perf stat -d -d</code>, <code>--sync</code> (run sync() before&nbsp;test)</li>
-<li>3.1: inverted call graph report (caller/callee, <code>-G</code>), <span class="caps">CPU</span>&nbsp;range</li>
-<li>3.2: <code>perf top</code>: zoom into tasks and&nbsp;libs</li>
-<li>3.3:&nbsp;–</li>
-<li>3.4: <code>perf report --gtk</code>, hardware branch profiling (<code>perf record -b</code>), user and thread&nbsp;filtering</li>
-<li>3.5: userspace&nbsp;probes</li>
-<li>3.6: sort by source&nbsp;line</li>
+<li>3.0: <code>perf stat -d -d</code>, <code>--sync</code> (run sync() before<span class="widont">&nbsp;</span>test)</li>
+<li>3.1: inverted call graph report (caller/callee, <code>-G</code>), <span class="caps">CPU</span> range</li>
+<li>3.2: <code>perf top</code>: zoom into tasks and<span class="widont">&nbsp;</span>libs</li>
+<li>3.3: –</li>
+<li>3.4: <code>perf report --gtk</code>, hardware branch profiling (<code>perf record -b</code>), user and thread<span class="widont">&nbsp;</span>filtering</li>
+<li>3.5: userspace probes</li>
+<li>3.6: sort by source<span class="widont">&nbsp;</span>line</li>
 <li>3.7: <code>perf trace</code> (strace)</li>
-<li>3.8: scripts integration into report <span class="caps">TUI</span> (try ‘r’),&nbsp;/sys/devices/cpu/events/</li>
-<li>3.9: <code>--group</code> for evlist and report; wildcards in tracepoint system&nbsp;names</li>
-<li>3.10: <code>perf mem</code>, weighted&nbsp;sampling</li>
+<li>3.8: scripts integration into report <span class="caps">TUI</span> (try ‘r’),<span class="widont">&nbsp;</span>/sys/devices/cpu/events/</li>
+<li>3.9: <code>--group</code> for evlist and report; wildcards in tracepoint system<span class="widont">&nbsp;</span>names</li>
+<li>3.10: <code>perf mem</code>, weighted sampling</li>
 <li>3.11: <code>perf report --percent-limit</code></li>
 <li>3.12: <code>perf stat --initial-delay</code></li>
-<li>3.13: <code>--max-stack</code> for report and&nbsp;top</li>
+<li>3.13: <code>--max-stack</code> for report and<span class="widont">&nbsp;</span>top</li>
 <li>3.14: <code>perf record --delay</code></li>
-<li>3.15:&nbsp;–</li>
+<li>3.15: –</li>
 <li>3.16: <code>perf report --children</code></li>
 <li>3.17: pagefault tracing in <code>perf trace</code>, <span class="caps">IO</span> mode for <code>perf timechart</code></li>
-<li>3.18:&nbsp;–</li>
-<li>3.19:&nbsp;–</li>
+<li>3.18: –</li>
+<li>3.19: –</li>
 </ul>
-<p>4.x&nbsp;series:</p>
+<p>4.x series:</p>
 <ul>
-<li>4.0:&nbsp;–</li>
+<li>4.0: –</li>
 <li>4.1: <code>tracefs</code> (/sys/kernel/tracing), <code>perf trace --events foo:bar --no-syscalls</code>, <code>perf trace --filter-pids [...]</code></li>
-<li>4.2:&nbsp;–</li>
-<li>4.3: <code>perf record --exclude-perf</code>, <code>perf trace</code> syscall groups, Intel&nbsp;<span class="caps">PT</span></li>
-<li>4.4: eBPF&nbsp;integration</li>
+<li>4.2: –</li>
+<li>4.3: <code>perf record --exclude-perf</code>, <code>perf trace</code> syscall groups, Intel<span class="widont">&nbsp;</span><span class="caps">PT</span></li>
+<li>4.4: eBPF integration</li>
 <li>4.5: <code>perf stat record/report</code>, <code>perf report --call-graph</code></li>
 <li>4.6: <code>perf top --hierarchy</code>, improved Java support (<span class="caps">TBD</span>), <code>perf stat --per-core/--per-socket</code></li>
 <li>4.7: <code>perf trace</code> call stack, tracepoints with <span class="caps">BPF</span>, hist triggers, perf_event_max_stack, <code>perf record --switch-output</code>, <code>perf script --max-stack=N</code></li>
 <li>4.8: <code>perf stat --topdown</code>, <code>--stdio-color</code></li>
-<li>4.9:&nbsp;–</li>
+<li>4.9: –</li>
 <li>4.10: <code>perf c2c</code> (cache-to-cache: <span class="caps">NUMA</span> and false sharing), <code>perf shed timehist</code>, <code>perf trace --delay</code></li>
 </ul>
 <h2 id="setup">Setup <a class="header-anchor" href="#setup" aria-hidden="true">¶</a></h2>
 <h3 id="run-perf-as-regular-user">Run perf as regular user <a class="header-anchor" href="#run-perf-as-regular-user" aria-hidden="true">¶</a></h3>
 <p>You’ll probably end up running it as root anyway, here are couple of things
-to try before&nbsp;that.</p>
-<p>Allow regular users to read kernel mapping&nbsp;data:</p>
+to try before<span class="widont">&nbsp;</span>that.</p>
+<p>Allow regular users to read kernel mapping<span class="widont">&nbsp;</span>data:</p>
 <pre><code># echo 0 &gt; /proc/sys/kernel/kptr_restrict
 </code></pre>
-<p>Or, in other&nbsp;words:</p>
+<p>Or, in other<span class="widont">&nbsp;</span>words:</p>
 <pre><code class="hljs lang-bash">sudo sysctl -w kernel.kptr_restrict=0
 sudo sysctl -w kernel.perf_event_paranoid=0 <span class="comment"># or -1, if not on prod</span>
 </code></pre>
-<p>Paranoia levels for&nbsp;perf:</p>
+<p>Paranoia levels for<span class="widont">&nbsp;</span>perf:</p>
 <pre><code> -1: Allow use of (almost) all events by all users
 &gt;=0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
 &gt;=1: Disallow CPU event access by users without CAP_SYS_ADMIN
 &gt;=2: Disallow kernel profiling by users without CAP_SYS_ADMIN
 </code></pre>
-<p>Check out this <a href="http://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar">stackexchange question</a>.</p>
+<p>Check out this <a href="http://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar">stackexchange<span class="widont">&nbsp;</span>question</a>.</p>
 <h3 id="increasing-stack-size-limit">Increasing stack size limit <a class="header-anchor" href="#increasing-stack-size-limit" aria-hidden="true">¶</a></h3>
-<p>Requires linux <em>and</em> linux-tools&nbsp;4.7+</p>
+<p>Requires linux <em>and</em> linux-tools<span class="widont">&nbsp;</span>4.7+</p>
 <p>The default stack size limit is 127, which is definitely not enough for
 most of the Java frameworks and servlet containers – for example, on our
 Spring Boot + Jetty + Emedded Solr app I’ve seen the stacks of length
-169, which is, in fact, quite&nbsp;moderate.</p>
-<p>Increasing the limit in&nbsp;kernel:</p>
+169, which is, in fact, quite<span class="widont">&nbsp;</span>moderate.</p>
+<p>Increasing the limit in<span class="widont">&nbsp;</span>kernel:</p>
 <pre><code>sysctl -w kernel.perf_event_max_stack=1024
 </code></pre>
-<p><code>perf script</code> will often need this limit to be set&nbsp;explicitly:</p>
+<p><code>perf script</code> will often need this limit to be set<span class="widont">&nbsp;</span>explicitly:</p>
 <pre><code>perf script --max-stack=1024 [...]
 </code></pre>
 <p>This will increase the size of some in-kernel buffers and <code>perf</code> utility
 memory usage, so it’s good idea to be carefull with it in
-memory-constraint&nbsp;environments.</p>
+memory-constraint<span class="widont">&nbsp;</span>environments.</p>
 <h3 id="a-couple-of-checks">A couple of checks: <a class="header-anchor" href="#a-couple-of-checks" aria-hidden="true">¶</a></h3>
 <pre><code>less /sys/kernel/debug/tracing/available_events
 papi_native_avail
 perf list
 </code></pre>
 <h3 id="kernel-configuration">Kernel configuration <a class="header-anchor" href="#kernel-configuration" aria-hidden="true">¶</a></h3>
-<p>Relevant kernel options&nbsp;include:</p>
+<p>Relevant kernel options<span class="widont">&nbsp;</span>include:</p>
 <ul>
-<li>CONFIG_DEBUG_INFO for in-kernel stack&nbsp;traces;</li>
+<li>CONFIG_DEBUG_INFO for in-kernel stack<span class="widont">&nbsp;</span>traces;</li>
 <li>CONFIG_PERF_EVENTS;</li>
 <li>CONFIG_TRACEPOINTS:
 <ul>
-<li>CONFIG_FTRACE and&nbsp;CONFIG_FUNCTION_TRACER;</li>
-<li>CONFIG_FTRACE and&nbsp;CONFIG_ENABLE_DEFAULT_TRACERS;</li>
+<li>CONFIG_FTRACE and CONFIG_FUNCTION_TRACER;</li>
+<li>CONFIG_FTRACE and CONFIG_ENABLE_DEFAULT_TRACERS;</li>
 <li>CONFIG_KPROBE_EVENT</li>
 <li>CONFIG_FTRACE_SYSCALLS – enables <code>syscalls:*</code> tracepoints, which are
 convenient sometimes, are rumored to incur runtime overhead, so are
 disabled in some distributions by default; this can be worked via
-<code>raw_syscalls:*</code>, sometimes with <code>perf trace</code>, sometimes with&nbsp;filters.</li>
+<code>raw_syscalls:*</code>, sometimes with <code>perf trace</code>, sometimes with<span class="widont">&nbsp;</span>filters.</li>
 </ul>
 </li>
 </ul>
 <h2 id="some-commands">Some commands <a class="header-anchor" href="#some-commands" aria-hidden="true">¶</a></h2>
 <p>I don’t want to repeat <a href="http://www.brendangregg.com/perf.html#OneLiners">http://www.brendangregg.com/perf.html#OneLiners</a>,
-but commands I keep forgetting just have to be&nbsp;here.</p>
-<p>Trigger on every n-th data cache&nbsp;miss:</p>
+but commands I keep forgetting just have to be<span class="widont">&nbsp;</span>here.</p>
+<p>Trigger on every n-th data cache<span class="widont">&nbsp;</span>miss:</p>
 <pre><code class="hljs lang-bash">perf record –e L1-dcache-load-miss -c <span class="variable">$n</span> <span class="variable">$command</span>
 </code></pre>
-<p>Profiler, correct&nbsp;direction:</p>
+<p>Profiler, correct direction:</p>
 <pre><code class="hljs lang-bash">perf record -g <span class="variable">$command</span>
 perf report -g <span class="string">'graph,0.5,caller'</span>
 </code></pre>
-<p>Don’t forget max-stack if you redefined&nbsp;it:</p>
+<p>Don’t forget max-stack if you redefined<span class="widont">&nbsp;</span>it:</p>
 <pre><code> sudo perf script --max-stack=1024
 </code></pre>
 <h2 id="java-and-node">Java and Node <a class="header-anchor" href="#java-and-node" aria-hidden="true">¶</a></h2>
@@ -156,15 +156,15 @@ perf report -g <span class="string">'graph,0.5,caller'</span>
 <p>Start here: <a href="http://techblog.netflix.com/2015/07/java-in-flames.html">http://techblog.netflix.com/2015/07/java-in-flames.html</a></p>
 <p>1.8u60+ + <code>-XX:+PreserveFramePointer</code></p>
 <p><code>-XX:InlineSmallCode=500</code> can help if you are totally lost, and disabling
-inlining is too&nbsp;brutal.</p>
+inlining is too<span class="widont">&nbsp;</span>brutal.</p>
 <h3 id="from-the-kernel-source">From the kernel source <a class="header-anchor" href="#from-the-kernel-source" aria-hidden="true">¶</a></h3>
-<p>Initial&nbsp;patches:</p>
+<p>Initial patches:</p>
 <ul>
 <li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b07e27f88b9cd785cdb23f9a2231c12521dda94</a></li>
 <li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=209045adc2bbdb2b315fa5539cec54d01cd3e7db</a></li>
 <li><a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e">https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=598b7c6919c7bbcc1243009721a01bc12275ff3e</a></li>
 </ul>
-<p>There is <span class="caps">JMTI</span> agent for Java in the kernel&nbsp;source.</p>
+<p>There is <span class="caps">JMTI</span> agent for Java in the kernel<span class="widont">&nbsp;</span>source.</p>
 <h3 id="same-but-for-node">Same, but for node <a class="header-anchor" href="#same-but-for-node" aria-hidden="true">¶</a></h3>
 <p>V8 support: <a href="https://chromium.googlesource.com/v8/v8/+/82e95f597b3563e3c1947d760ba138f67d45bf6a">https://chromium.googlesource.com/v8/v8/+/82e95f597b3563e3c1947d760ba138f67d45bf6a</a></p>
 <pre><code class="hljs lang-bash">sudo perf record -k mono -F99 -g node --perf-prof <span class="variable">$script</span>
@@ -173,7 +173,7 @@ sudo perf script --max-stack=1024 -i perf.data.jitted \
    | stackcollapse-perf.pl | flamegraph.pl --colors js &gt; flamegraph.svg
 </code></pre>
 <p>Note that <code>perf inject</code> creates a ton of small elf files in the local
-directory (one per compiled&nbsp;function).</p>
+directory (one per compiled<span class="widont">&nbsp;</span>function).</p>
 <pre><code>$ ls -lh jitted* | head -n 4
 -rw-r--r-- 2 root root 1008 янв  6 21:15 jitted-21146-0.so
 -rw-r--r-- 2 root root  768 янв  6 21:15 jitted-21146-10000.so
@@ -183,7 +183,7 @@ $ ls -l jitted* | wc -l
 15231
 </code></pre>
 <p>Also, <code>perf.data.jitted</code> is much bigger than <code>perf.data</code> (maybe that’s because
-I’ve got not so many&nbsp;samples):</p>
+I’ve got not so many<span class="widont">&nbsp;</span>samples):</p>
 <pre><code>-rw------- 1 root root 471K янв  6 21:14 perf.data
 -rw------- 1 root root 4,2M янв  6 21:15 perf.data.jitted
 </code></pre>
@@ -193,11 +193,11 @@ I’ve got not so many&nbsp;samples):</p>
 perf report --objdump=$HOME/src/chr/v8/tools/objdump-v8
 </code></pre>
 <h2 id="profiling-with-in-kernel-summaries">Profiling with in-kernel summaries <a class="header-anchor" href="#profiling-with-in-kernel-summaries" aria-hidden="true">¶</a></h2>
-<p>One day I’d like to try this out. Maybe when our production will get closer to 4.9&nbsp;kernels.</p>
-<p><a href="https://github.com/iovisor/bcc"><span class="caps">BPF</span> Compiler Collection</a> includes the following&nbsp;tools:</p>
+<p>One day I’d like to try this out. Maybe when our production will get closer to 4.9<span class="widont">&nbsp;</span>kernels.</p>
+<p><a href="https://github.com/iovisor/bcc"><span class="caps">BPF</span> Compiler Collection</a> includes the following<span class="widont">&nbsp;</span>tools:</p>
 <ul>
-<li><code>tools/profile.py</code> for Linux&nbsp;4.9+</li>
-<li><code>tools/old/profile.py</code> for Linux&nbsp;4.6-4.8</li>
+<li><code>tools/profile.py</code> for Linux<span class="widont">&nbsp;</span>4.9+</li>
+<li><code>tools/old/profile.py</code> for Linux<span class="widont">&nbsp;</span>4.6-4.8</li>
 </ul>
 </div>
       </div>
