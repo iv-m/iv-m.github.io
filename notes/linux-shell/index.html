@@ -17,7 +17,7 @@
       <div class="content-wrap">
         <h1>(Linux) shell tips</h1>
         <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or<span class="widont">&nbsp;</span>linux-specific.</p>
-<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +<span class="widont">&nbsp;</span>systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without<span class="widont">&nbsp;</span>docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running<span class="widont">&nbsp;</span>process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching<span class="widont">&nbsp;</span>part</a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash<span class="widont">&nbsp;</span>array</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain<span class="widont">&nbsp;</span>everything</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +<span class="widont">&nbsp;</span>systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without<span class="widont">&nbsp;</span>docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running<span class="widont">&nbsp;</span>process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching<span class="widont">&nbsp;</span>part</a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash<span class="widont">&nbsp;</span>array</a></li><li><a href="#extracting-a-single-file-from-the-rpm-package">Extracting a single file from the <span class="caps">RPM</span><span class="widont">&nbsp;</span>package</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain<span class="widont">&nbsp;</span>everything</a></li></ul></div></p>
 <h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
 <p>Here’s a piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
@@ -38,7 +38,7 @@ To overcome this, I’ve created the following one-line script
 in my <code>~/bin</code>.</p>
 <pre><code class="hljs lang-bash"><span class="meta">#!/bin/sh
 </span>
-<span class="built_in">exec</span> urxvt <span class="_">-e</span> mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
+<span class="built_in">exec</span> urxvt -e mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
     --server=<span class="string">'systemd-run --scope --user mosh-server new'</span> \
     -- tmux att
 </code></pre>
@@ -79,7 +79,7 @@ DOCKER_STORAGE_OPTIONS=
 100%
 </code></pre>
 <h2 id="parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash array <a class="header-anchor" href="#parsing-comma-separated-string-into-a-bash-array" aria-hidden="true">¶</a></h2>
-<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> <span class="_">-a</span> <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
+<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> -a <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
 </code></pre>
 <p>This takes two arguments – name and content, and sets global
 variable with the given name to an array parsed from comma-separated
@@ -95,6 +95,10 @@ parse_array the_array <span class="string">"<span class="variable">$keys</span>"
 port
 service name
 comment
+</code></pre>
+<h2 id="extracting-a-single-file-from-the-rpm-package">Extracting a single file from the <span class="caps">RPM</span> package <a class="header-anchor" href="#extracting-a-single-file-from-the-rpm-package" aria-hidden="true">¶</a></h2>
+<p>Beware of the traces of nasty hacks in the example<span class="widont">&nbsp;</span>below:</p>
+<pre><code class="hljs lang-bash">rpm2cpio net-tools-1.60-114.el6.x86_64.rpm | cpio -iv --to-stdout  ./sbin/ifconfig &gt; /sbin/ifconfig-compat
 </code></pre>
 <h2 id="when-youre-too-lazy-to-explain-everything">When you’re too lazy to explain everything <a class="header-anchor" href="#when-youre-too-lazy-to-explain-everything" aria-hidden="true">¶</a></h2>
 <p><a href="http://explainshell.com/">http://explainshell.com/</a></p>
@@ -118,7 +122,8 @@ of a site because it seemed like a good idea.</p>
         </div>
         <div class="last-update">
           <p>
-            Last updated 2017-02-24 15:09:39 +0400.
+            Published on 2017-01-04.
+            Last updated 2017-06-23 10:37:05 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
           </p>
         </div>

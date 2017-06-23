@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Kafka metrics: what does 'rate' mean - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <div class="warn">
+          <h3>This is a DRAFT ARTICLE</h3>
+          <p>
+            It is probably incomplete, wrong, and broken in
+            many respects. Please hesitate from reading this until
+            this work is complete; or just consider yourself warned.
+          </p>
+        </div>
+        <h1>Kafka metrics: what does 'rate' mean</h1>
+        <div class="content"><p>Both Kafka servers and clients expose a number of <a href="http://kafka.apache.org/documentation.html#monitoring">metrics</a> that are
+indispensable for monitoring. But when you see a metric like ‘average request
+size’, or ‘request rate’, what does that really mean? Let’s<span class="widont">&nbsp;</span>explore.</p>
+<h2 id="a-question-of-frameworks">A question of frameworks <a class="header-anchor" href="#a-question-of-frameworks" aria-hidden="true">¶</a></h2>
+<p>Kafka brokers use two frameworks for metrics reporting: Yammer
+metrics (which are now <a href="http://metrics.dropwizard.io/">Code Hale metrics</a>, but Kafka still
+uses the older version of the artifact), and Kafka’s own
+metrics framework, which lives in <code>org.apache.kafka.common.metrics</code>
+package. Clients (at least, the new producer and new consumer)
+use the latter<span class="widont">&nbsp;</span>only.</p>
+<p>Here we’ll look onto the Kafka<span class="widont">&nbsp;</span>Metrics.</p>
+<p><span class="caps">TBD</span>:</p>
+<ul>
+<li>we are interested in<span class="widont">&nbsp;</span>clients</li>
+<li>note that to some of the metrics this is not applicable<span class="widont">&nbsp;</span>(which?)</li>
+</ul>
+<p><span class="caps">TBD</span>: it all begins with <code>Metrics</code> class.</p>
+<h2 id="metrics-measurables-and-all-the-rest">Metrics, Measurables and all the rest <a class="header-anchor" href="#metrics-measurables-and-all-the-rest" aria-hidden="true">¶</a></h2>
+<p>The Kafka metrics framework, just as expected, provides an entity named
+<a href="TBD">Metric</a>. Metric is <em>“a named, numerical measurement”</em> – which is
+expressed in the code as clear as possible<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>:</p>
+<pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Metric</span> </span>{
+    <span class="function"><span class="keyword">public</span> MetricName <span class="title">metricName</span><span class="params">()</span></span>;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">value</span><span class="params">()</span></span>;
+}
+</code></pre>
+<p><code>Metric</code> is the public interface for the world: <code>MetricsReporter</code>
+(the pluggable reporting interface I already mentioned) works with
+<code>KafkaMetric</code>, which is <em>the</em> <code>Metric</code> implementation; both <code>Producer</code>
+and <code>Consumer</code> have a method that allows to grab all their<span class="widont">&nbsp;</span>metrics:</p>
+<pre><code class="hljs lang-java"><span class="keyword">public</span> Map&lt;MetricName, ? extends Metric&gt; metrics() { ... }
+</code></pre>
+<p>Internally the things look somewhat different. The metrics
+framework is build around <a href="TBD">Measurable</a> – just <em>“a measurable
+quantity”</em>, with even simpler<span class="widont">&nbsp;</span>interface:</p>
+<pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Measurable</span> </span>{
+    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measure</span><span class="params">(MetricConfig config, <span class="keyword">long</span> now)</span></span>; 
+}
+</code></pre>
+<p>If you have a <code>Measurable</code>, you can get its value, and that’s it;
+for that, <code>Measurable</code> is given a <code>MetricConfig</code> (we’ll take a look
+at it later) and the current timestamp – so that the
+<code>Measurable</code> does not have to refer to the system clock in case
+needs it, which saves a few <span class="caps">CPU</span><span class="widont">&nbsp;</span>cycles.</p>
+<p>The <code>Measurable</code>s are sometimes used directly, to transform any
+getter into a metric. Here is, for example, how <code>ConsumerCoordinator</code>
+exports the number of partitions assigned to<span class="widont">&nbsp;</span>it:</p>
+<pre><code class="hljs lang-java">Measurable numParts =
+    <span class="keyword">new</span> Measurable() {
+        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measure</span><span class="params">(MetricConfig config, <span class="keyword">long</span> now)</span> </span>{
+            <span class="keyword">return</span> subscriptions.assignedPartitions().size();
+        }
+    };
+</code></pre>
+<p>But more often <code>Measurable</code> is paired with another simple interface,
+<code>Stat</code> – a quantity <em>“that is computed off the stream of updates”</em>:</p>
+<pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Stat</span> </span>{
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">record</span><span class="params">(MetricConfig config, <span class="keyword">double</span> value, <span class="keyword">long</span> timeMs)</span></span>;
+}
+</code></pre>
+<p>There are two kinds of <code>Stat</code>:</p>
+<ul>
+<li><code>MeasurableStat</code> – a simple value that implements both
+<code>Stat</code> and <code>Measurable</code>;</li>
+<li><code>CompoundStat</code>  that encloses several <code>Measurable</code>s,
+like a histogram with various<span class="widont">&nbsp;</span>percentiles.</li>
+</ul>
+<p>The stats are are associated with <a href="TBD">Sensors</a>, which is <em>“a handle to
+record numerical measurements as they occur”</em>. That is, you <code>add</code> one or
+more stats to a <code>Sensor</code>, and then use one of its overloaded <code>record</code>
+methods to write the value when it’s measured. The canonical example
+from the javadocs shows a sensor that records the message size, and two
+metrics, which measure maximal and average size of the<span class="widont">&nbsp;</span>message:</p>
+<pre><code class="hljs lang-java">    <span class="comment">// on initialization, associate the metrics with the sensor</span>
+    sensor.add(<span class="keyword">new</span> MetricName(...), <span class="keyword">new</span> Max());
+    sensor.add(<span class="keyword">new</span> MetricName(...), <span class="keyword">new</span> Avg());
+
+    <span class="comment">// later, every time a message is received:</span>
+    sensor.record(messageSize);
+</code></pre>
+<p>Wow, that was a lot of things! Let’s go through it once<span class="widont">&nbsp;</span>again:</p>
+<ul>
+<li>there are sensors – when you have a value, you record it
+into a<span class="widont">&nbsp;</span>sensor;</li>
+<li>sensors are associated with stats – when a value is recorded
+into a sensor, the sensor records it to all the stats it<span class="widont">&nbsp;</span>knows;</li>
+<li>stats do some magic, and convert this series of recorded
+values into a single value (rate, average,<span class="widont">&nbsp;</span>maximum…);</li>
+<li>that value is exposed as a <code>Measurable</code>;</li>
+<li>the <code>Measurable</code> is wrapped into <code>KafkaMetric</code>, with
+the metric name and some other<span class="widont">&nbsp;</span>metadata;</li>
+<li>the metric is exposed:
+<ul>
+<li>from <code>Producer</code> and <code>Consumer</code> to the client<span class="widont">&nbsp;</span>code;</li>
+<li>via <span class="caps">JMX</span> to anyone who wants to read<span class="widont">&nbsp;</span>it;</li>
+<li>to <code>MetricReporter</code>s, so that they could report it;
+in various<span class="widont">&nbsp;</span>way;</li>
+</ul>
+</li>
+<li>all this is managed by <code>Metrics</code> class.</li>
+</ul>
+<p>I do hope now it’s clear<span class="widont">&nbsp;</span>enough.</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>Here and below, for sake of
+brevity, I&#8217;m stripping the javadocs from the interfaces. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Published on 2017-06-20.
+            Last updated 2017-06-23 18:00:21 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-metrics-what-rate-means/index.md">articles/kafka-metrics-what-rate-means/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
