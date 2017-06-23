@@ -124,6 +124,14 @@ This prints:
     service name
     comment
 
+## Extracting a single file from the RPM package
+
+Beware of the traces of nasty hacks in the example below:
+
+```bash
+rpm2cpio net-tools-1.60-114.el6.x86_64.rpm | cpio -iv --to-stdout  ./sbin/ifconfig > /sbin/ifconfig-compat
+```
+
 ## When you're too lazy to explain everything
 
 http://explainshell.com/
