@@ -21,7 +21,8 @@ use the latter only.
 
 [Code Hale metrics]: http://metrics.dropwizard.io/
 
-Here we'll look onto the Kafka Metrics.
+Here we'll look onto the Kafka Metrics -- they are more interesting
+less known, and ...
 
 TBD:
 * we are interested in clients
@@ -29,12 +30,35 @@ TBD:
 
 TBD: it all begins with `Metrics` class.
 
-## Metrics, Measurables and all the rest
+## Metrics, Measurables and Stats
 
-The Kafka metrics framework, just as expected, provides an entity named
-[Metric]. Metric is *"a named, numerical measurement"* -- which is
-expressed in the code as clear as possible^[Here and below, for sake of
-brevity, I'm stripping the javadocs from the interfaces.]:
+Let say we want to measure, for example, various message size metrics:
+average, maximum size, and so on. Here is high-level overview of what
+should happen:
+
+* we need a *sensor*; for every message, we will *record* its 
+  size to the sensor;
+* sensors are associated with *stats* (such as `Avg` or `Max`) --
+  when a value is recorded into a sensor, the sensor records it to all
+  the stats it knows;
+* stats do some magic and convert this series of recorded
+  values into a single value (rate, average, maximum...);
+* that value is exposed as a *measurable*;
+* the *measurable* is wrapped into a *metric*, with
+  the metric name and some other metadata;
+* the metrics are exposed:
+    * from `Producer` and `Consumer` to the client code;
+    * via JMX to anyone who wants to read it;
+    * to pluggable *metric reporters*, so that they could report
+      them in various ways.
+
+Let's take a look at this at a bit more detail.
+
+When you read the metrics, you deal with an entity that
+is named, quite expectedly, [Metric]. Metric is *"a named, numerical
+measurement"* -- which is expressed in the code as clear as
+possible^[Here and below, for sake of brevity, I'm stripping the
+javadocs from the interfaces.]:
 
 ```java
 public interface Metric {
@@ -54,13 +78,13 @@ and `Consumer` have a method that allows to grab all their metrics:
 public Map<MetricName, ? extends Metric> metrics() { ... }
 ```
 
-Internally the things look somewhat different. The metrics
-framework is build around [Measurable] -- just *"a measurable
-quantity"*, with even simpler interface:
+If you want to expose values, things look somewhat different. At the
+core, there is a thing that's even simpler thing than `Metric`
+-- [Measurable]:
 
 ```java
 public interface Measurable {
-    public double measure(MetricConfig config, long now); 
+    public double measure(MetricConfig config, long now);
 }
 ```
 
@@ -68,11 +92,11 @@ public interface Measurable {
 
 If you have a `Measurable`, you can get its value, and that's it;
 for that, `Measurable` is given a `MetricConfig` (we'll take a look
-at it later) and the current timestamp -- so that the 
-`Measurable` does not have to refer to the system clock in case 
+at it later) and the current timestamp -- so that the
+`Measurable` does not have to refer to the system clock in case
 needs it, which saves a few CPU cycles.
 
-The `Measurable`s are sometimes used directly, to transform any
+The `Measurable` is sometimes used directly, to transform any
 getter into a metric. Here is, for example, how `ConsumerCoordinator`
 exports the number of partitions assigned to it:
 
@@ -95,10 +119,11 @@ public interface Stat {
 ```
 
 There are two kinds of `Stat`:
-* `MeasurableStat` -- a simple value that implements both 
-  `Stat` and `Measurable`;
-* `CompoundStat`  that encloses several `Measurable`s,
-   like a histogram with various percentiles.
+* `MeasurableStat` -- a simple combination of `Measurable` and `Stat`
+  that calculates one value based on the series that is recorded into
+  it; `Avg` and `Max` are probably most common examples of such stats.
+* `CompoundStat` that exposes several `Measurable`s, like a histogram
+  with various percentiles.
 
 The stats are are associated with [Sensors], which is *"a handle to
 record numerical measurements as they occur"*. That is, you `add` one or
@@ -118,21 +143,66 @@ metrics, which measure maximal and average size of the message:
 
 [Sensors]: TBD
 
-Wow, that was a lot of things! Let's go through it once again:
-* there are sensors -- when you have a value, you record it
-  into a sensor;
-* sensors are associated with stats -- when a value is recorded
-  into a sensor, the sensor records it to all the stats it knows;
-* stats do some magic, and convert this series of recorded
-  values into a single value (rate, average, maximum...);
-* that value is exposed as a `Measurable`;
-* the `Measurable` is wrapped into `KafkaMetric`, with
-  the metric name and some other metadata;
-* the metric is exposed:
-    * from `Producer` and `Consumer` to the client code;
-    * via JMX to anyone who wants to read it;
-    * to `MetricReporter`s, so that they could report it;
-      in various way;
-* all this is managed by `Metrics` class.
+## Stats and their magic
 
-I do hope now it's clear enough.
+When I was giving a quick overview, I told that stats are doing
+some magic to convert the series into a single value. It's time
+to dispel some of it.
+
+Probably the simplest `MeasurableStat` is `Total` that calculates
+the sum of the values that are recorded into it:
+
+```java
+public class Total implements MeasurableStat {
+    private double total = 0.0;
+
+    public void record(MetricConfig config, double value, long now) {
+        this.total += value;
+    }
+
+    public double measure(MetricConfig config, long now) {
+        return this.total;
+    }
+}
+```
+
+The actual [Total] is a bit more elaborate, but essentially the same.
+
+[Total]: TBD
+
+If on every event you record `1.0` instead of the actual value,
+the `Total`, obviously, provides the count of the events.
+
+But there is another way to achieve this: let's create a new
+`MeasurableStat` that ignores the value and adds `1.0` every time 
+its `record` method is called:
+
+```java
+public class TotalCount implements MeasurableStat {
+    private long count = 0;
+
+    public void record(MetricConfig config, double value, long now) {
+        ++this.count;
+    }
+
+    public double measure(MetricConfig config, long now) {
+        return (double) this.count;
+    }
+}
+```
+
+With this, we can add both of them into a single sensor, decoupling
+the fact that we are calculating both total value and total count
+from the code that records the event:
+
+```java
+    // at the initialization:
+    Sensor sensor = metrics.sensor(...)
+    sensor.add(new MetricName(...), new Total());
+    sensor.add(new MetricName(...), new TotalCount());
+```
+
+```java
+    // when message is handeled:
+    sensor.record(message.size());
+```
