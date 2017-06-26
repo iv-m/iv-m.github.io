@@ -21,23 +21,19 @@ use the latter only.
 
 [Code Hale metrics]: http://metrics.dropwizard.io/
 
-Here we'll look onto the Kafka Metrics -- they are more interesting
-less known, and ...
+Here we'll look onto the Kafka Metrics -- they are more interesting,
+less known, and clients use Kafka metrics only. But please be aware
+some of the things written below are not applicable to *all* of
+the broker metrics.
 
-TBD:
-* we are interested in clients
-* note that to some of the metrics this is not applicable (which?)
-
-TBD: it all begins with `Metrics` class.
-
-## Metrics, Measurables and Stats
+## Quick overview
 
 Let say we want to measure, for example, various message size metrics:
-average, maximum size, and so on. Here is high-level overview of what
-should happen:
+average, maximum size, and so on. For that,
 
-* we need a *sensor*; for every message, we will *record* its 
-  size to the sensor;
+* we need an instance of `Metrics` class that will manage everything;
+* from `Metrics` we'll get a *sensor*; for every message, we will 
+  *record* its size to the sensor;
 * sensors are associated with *stats* (such as `Avg` or `Max`) --
   when a value is recorded into a sensor, the sensor records it to all
   the stats it knows;
@@ -50,9 +46,11 @@ should happen:
     * from `Producer` and `Consumer` to the client code;
     * via JMX to anyone who wants to read it;
     * to pluggable *metric reporters*, so that they could report
-      them in various ways.
+      them in various ways;
 
 Let's take a look at this at a bit more detail.
+
+## Metrics, Measurables and Stats
 
 When you read the metrics, you deal with an entity that
 is named, quite expectedly, [Metric]. Metric is *"a named, numerical
@@ -69,17 +67,18 @@ public interface Metric {
 
 [Metric]: TBD
 
-`Metric` is the public interface for the world: `MetricsReporter`
-(the pluggable reporting interface I already mentioned) works with
-`KafkaMetric`, which is *the* `Metric` implementation; both `Producer`
-and `Consumer` have a method that allows to grab all their metrics:
+`Metric` is the public interface for those who *consume* the metrics:
+`MetricsReporter` (the pluggable reporting interface I already
+mentioned) works with `KafkaMetric`, which is *the* `Metric`
+implementation; both `Producer` and `Consumer` have a method that allows
+to grab all their metrics:
 
 ```java
 public Map<MetricName, ? extends Metric> metrics() { ... }
 ```
 
-If you want to expose values, things look somewhat different. At the
-core, there is a thing that's even simpler thing than `Metric`
+If you want to *expose( values, things look somewhat different. At
+the core, there is a thing that's even simpler thing than `Metric` 
 -- [Measurable]:
 
 ```java
@@ -125,31 +124,7 @@ There are two kinds of `Stat`:
 * `CompoundStat` that exposes several `Measurable`s, like a histogram
   with various percentiles.
 
-The stats are are associated with [Sensors], which is *"a handle to
-record numerical measurements as they occur"*. That is, you `add` one or
-more stats to a `Sensor`, and then use one of its overloaded `record`
-methods to write the value when it's measured. The canonical example
-from the javadocs shows a sensor that records the message size, and two
-metrics, which measure maximal and average size of the message:
-
-```java
-    // on initialization, associate the metrics with the sensor
-    sensor.add(new MetricName(...), new Max());
-    sensor.add(new MetricName(...), new Avg());
-
-    // later, every time a message is received:
-    sensor.record(messageSize);
-```
-
-[Sensors]: TBD
-
-## Stats and their magic
-
-When I was giving a quick overview, I told that stats are doing
-some magic to convert the series into a single value. It's time
-to dispel some of it.
-
-Probably the simplest `MeasurableStat` is `Total` that calculates
+Probably the simplest `MeasurableStat` is `Total`, which calculates
 the sum of the values that are recorded into it:
 
 ```java
@@ -172,7 +147,6 @@ The actual [Total] is a bit more elaborate, but essentially the same.
 
 If on every event you record `1.0` instead of the actual value,
 the `Total`, obviously, provides the count of the events.
-
 But there is another way to achieve this: let's create a new
 `MeasurableStat` that ignores the value and adds `1.0` every time 
 its `record` method is called:
@@ -191,18 +165,46 @@ public class TotalCount implements MeasurableStat {
 }
 ```
 
-With this, we can add both of them into a single sensor, decoupling
+With this, we can add both of them into a single *sensor*, decoupling
 the fact that we are calculating both total value and total count
-from the code that records the event:
+from the code that records the event.
+
+[Sensor]: TBD-SENSOR
+
+[Sensor] is *"a handle to record numerical measurements as they occur"*.
+At the initialization time, you `add` one or more stats to a `Sensor`:
 
 ```java
-    // at the initialization:
-    Sensor sensor = metrics.sensor(...)
+    Sensor sensor = metrics.sensor(...);
     sensor.add(new MetricName(...), new Total());
     sensor.add(new MetricName(...), new TotalCount());
 ```
 
+Then, when a value is measured (e.g. when the message is handled) you
+use one of the sensor's overloaded `record` methods to write the value:
+
 ```java
-    // when message is handeled:
-    sensor.record(message.size());
+    sensor.record(messageSize);
 ```
+
+`Total` will add `messageSize` to its value every time `sensor::recrod`
+is called, while `TotalCount` will add `1`.
+
+# Sampling
+
+`Total` and `TotalCount` have a very interesting property: they
+accumulate the value for the entire lifetime of the process. This is
+hardly useful for more common kinds of metrics, like response time
+metrics or request rates: you are probably more interested in
+values that are "instantaneous" in some sense than in average
+values since the last service restart. And... here comes
+the `SampledStat`, and saves the day.
+
+
+
+>  A SampledStat records a single scalar value measured over one or more samples. Each sample is recorded over a
+>  configurable window. The window can be defined by number of events or elapsed time (or both, if both are given the
+>  window is complete when *either* the event count or elapsed time criterion is met).
+>
+>  All the samples are combined to produce the measurement. When a window is complete the oldest sample is cleared and
+>  recycled to begin recording the next sample.
