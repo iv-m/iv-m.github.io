@@ -5,7 +5,7 @@
     "owner": "Ivan A. Melnikov",
     "description": "Some stuff I'd like to share"
   },
-  "port": "18080",
+  "port": "8081",
   "plugins": [
     "./node_modules/wintersmith-markdown-it/",
     "./plugins/hacks.coffee"
