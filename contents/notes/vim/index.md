@@ -23,6 +23,7 @@ template: article.jade
 * https://github.com/ctrlpvim/ctrlp.vim with popup on `<Leader>e`
 * https://github.com/plasticboy/vim-markdown with additional configuration.
 * https://github.com/fatih/vim-go with most of the features turned off
+* https://github.com/leafgarland/typescript-vim
 
 Initializing `~/.vim/bundle` on a new machine:
 

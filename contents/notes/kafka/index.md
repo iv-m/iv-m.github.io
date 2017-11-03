@@ -64,6 +64,11 @@ topic.
 * https://github.com/yahoo/kafka-manager
   * https://github.com/yahoo/kafka-manager/pull/282
   * https://hub.docker.com/r/sheepkiller/kafka-manager
+* https://github.com/linkedin/cruise-control
+  * dynamic rebalance and self-healing!
+* https://github.com/linkedin/kafka-tools
+  * complex assigner in Python
+* https://github.com/linkedin/kafka-monitor
 
 The Kafka REST Proxy can also be used.
 

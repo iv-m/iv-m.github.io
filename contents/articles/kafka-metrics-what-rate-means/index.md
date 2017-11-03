@@ -192,13 +192,30 @@ is called, while `TotalCount` will add `1`.
 
 # Sampling
 
-`Total` and `TotalCount` have a very interesting property: they
+`Total` and `TotalCount` share one very interesting property: they
 accumulate the value for the entire lifetime of the process. This is
 hardly useful for more common kinds of metrics, like response time
 metrics or request rates: you are probably more interested in
 values that are "instantaneous" in some sense than in average
-values since the last service restart. And... here comes
-the `SampledStat`, and saves the day.
+values since the last service restart.
+
+Probably, the most straighforward solution would be to use a kind of
+sliding window, either time-based or event-based: store last N recorded
+values or recorded values for last N seconds, and evaluate metric based
+on these values. The problem with this approach is that it's hardly
+effective if you have thousands, or even millions of events every second
+-- and Kafka sometimes can show such messages rate.
+
+So, in Kafka metrics, this "sliding window" (virtually) moves across
+a series of *samples*, which group events together.
+
+When a value is recored, it
+is used to *update* an *intermediate* value in the *current sample*.
+
+When the current sample becomes too old, the oldest sample is
+discarded, and a new one is created and becomes current.
+
+In other words, the 
 
 
 
