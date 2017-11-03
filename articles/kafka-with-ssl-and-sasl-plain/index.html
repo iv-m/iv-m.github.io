@@ -78,7 +78,7 @@ for the key. You can’t use a key without a password. So,
 <h3 id="trust-store">Trust store <a class="header-anchor" href="#trust-store" aria-hidden="true">¶</a></h3>
 <p>When authority certificates is generated, we can create a trust store
 — a keystore Java programs will use to validate our<span class="widont">&nbsp;</span>certificates.</p>
-<pre><code class="hljs lang-bash">keytool -keystore truststore.jks -<span class="built_in">alias</span> CARoot -noprompt \
+<pre><code class="hljs lang-bash">keytool -keystore truststore.jks -alias CARoot -noprompt \
     -import -file ca.pem -storepass chooruanguchi
 </code></pre>
 <p>As the result you’ll have a Java keystore file named
@@ -96,7 +96,7 @@ a heavy steel door, locked from the inside.</s></p>
 <p>First, we need to generate the<span class="widont">&nbsp;</span>key:</p>
 <pre><code class="hljs lang-bash">keytool -genkey -noprompt \
     -dname <span class="string">'<span class="caps">CN</span>="my.broker.host.name", <span class="caps">OU</span>="Middleware Tam", O="My Awesome Organization", C=<span class="caps">US</span>'</span> \
-    -<span class="built_in">alias</span> broker \
+    -alias broker \
     -keystore broker.jks \
     -storepass ierayaekoinot \
     -keypass ierayaekoinot \
@@ -112,19 +112,19 @@ Well, we’ll have only one key in this keystore, so I see no need
 in additional security different passwords may<span class="widont">&nbsp;</span>provide.</p>
 <p>Now, we can sign the key with our<span class="widont">&nbsp;</span>authority:</p>
 <pre><code class="hljs lang-bash"><span class="comment"># import authority key into our keystore:</span>
-keytool -keystore broker.jks -<span class="built_in">alias</span> CARoot -noprompt -import -file ca.pem -storepass ierayaekoinot
+keytool -keystore broker.jks -alias CARoot -noprompt -import -file ca.pem -storepass ierayaekoinot
 
 <span class="comment"># create a certificate signing request:</span>
-keytool -keystore broker.jks -<span class="built_in">alias</span> broker -certreq -file ./broker.req -storepass ierayaekoinot
+keytool -keystore broker.jks -alias broker -certreq -file ./broker.req -storepass ierayaekoinot
 
 <span class="comment"># sign the request:</span>
 openssl x509 -req -CAcreateserial \
     -<span class="caps">CA</span> ca.pem -CAkey cakey.pem  -passin pass:ougieceiphego \
-    -<span class="keyword">in</span> ./broker.req -out ./broker.signed \
+    -in ./broker.req -out ./broker.signed \
     -days 3650
 
 <span class="comment"># import the signed certificate into our keystore:</span>
-keytool -keystore broker.jks -<span class="built_in">alias</span> broker -import -file ./broker.signed -storepass ierayaekoinot
+keytool -keystore broker.jks -alias broker -import -file ./broker.signed -storepass ierayaekoinot
 </code></pre>
 <p>As the result, you’ll have two new files, <code>broker.reg</code> with the signing
 request, and <code>broker.signed</code> with the signed certificate. For our
@@ -248,7 +248,7 @@ ssl.truststore.password=chooruanguchi
 <p>Tools that work via broker will need the security configuration,<span class="widont">&nbsp;</span>too:</p>
 <pre><code class="hljs lang-bash">KAFKA_OPTS=<span class="string">'-Djava.security.auth.login.config=ssl/iv.jaas.conf'</span> bin/kafka-consumer-groups.sh \
     --bootstrap-server SSL_SASL://localhost:19093 \
-    --<span class="built_in">command</span>-config ssl/client-sasl.properties \
+    --command-config ssl/client-sasl.properties \
     --list
 </code></pre>
 <h2 id="whats-left">What’s left? <a class="header-anchor" href="#whats-left" aria-hidden="true">¶</a></h2>

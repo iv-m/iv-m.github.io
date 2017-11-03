@@ -38,7 +38,7 @@ To overcome this, I’ve created the following one-line script
 in my <code>~/bin</code>.</p>
 <pre><code class="hljs lang-bash"><span class="meta">#!/bin/sh
 </span>
-<span class="built_in">exec</span> urxvt -e mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
+<span class="built_in">exec</span> urxvt <span class="_">-e</span> mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
     --server=<span class="string">'systemd-run --scope --user mosh-server new'</span> \
     -- tmux att
 </code></pre>
@@ -79,7 +79,7 @@ DOCKER_STORAGE_OPTIONS=
 100%
 </code></pre>
 <h2 id="parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash array <a class="header-anchor" href="#parsing-comma-separated-string-into-a-bash-array" aria-hidden="true">¶</a></h2>
-<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> -a <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
+<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> <span class="_">-a</span> <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
 </code></pre>
 <p>This takes two arguments – name and content, and sets global
 variable with the given name to an array parsed from comma-separated

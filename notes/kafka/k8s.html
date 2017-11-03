@@ -43,7 +43,7 @@ internally, so there must be a<span class="widont">&nbsp;</span>way.</p>
 </li>
 </ul>
 <pre><code class="hljs lang-bash">kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
-kubectl expose deployment hello-minikube --<span class="built_in">type</span>=NodePort
+kubectl expose deployment hello-minikube --type=NodePort
 kubectl get pod
 curl $(minikube service hello-minikube --url)
 <span class="comment"># check it out, then cleanup:</span>
@@ -64,11 +64,11 @@ vboxmanage showvminfo minikube | less
 <p>From <a href="https://github.com/CloudTrackInc/kubernetes-kafka">https://github.com/CloudTrackInc/kubernetes-kafka</a></p>
 <h3 id="zookeeper">ZooKeeper <a class="header-anchor" href="#zookeeper" aria-hidden="true">¶</a></h3>
 <pre><code class="hljs lang-bash"><span class="comment"># Create the service and the pod:</span>
-kubectl create -f zoo-service.yaml
-kubectl create -f zoo-rc.yaml
+kubectl create <span class="_">-f</span> zoo-service.yaml
+kubectl create <span class="_">-f</span> zoo-rc.yaml
 
 <span class="comment"># Expose the service for testing</span>
-kubectl expose svc kafka-zoo-svc --port=2181 --<span class="built_in">type</span>=NodePort --name kafka-zoo-svc-ext
+kubectl expose svc kafka-zoo-svc --port=2181 --type=NodePort --name kafka-zoo-svc-ext
 
 <span class="comment"># Get the exposed <span class="caps">ZK</span> <span class="caps">URL</span></span>
 minikube service --format=<span class="string">"{{.<span class="caps">IP</span>}}:{{.Port}}"</span> kafka-zoo-svc-ext
@@ -94,15 +94,15 @@ to create the corresponding <span class="caps">ZK</span> node. For example, type
 <pre><code>create kafka1 ''
 </code></pre>
 <p>Start everything:</p>
-<pre><code class="hljs lang-bash">kubectl create -f kafka-service.yam
-kubectl create -f kafka-rc.yaml
+<pre><code class="hljs lang-bash">kubectl create <span class="_">-f</span> kafka-service.yam
+kubectl create <span class="_">-f</span> kafka-rc.yaml
 </code></pre>
 <h3 id="first-testing">First testing <a class="header-anchor" href="#first-testing" aria-hidden="true">¶</a></h3>
 <p>Pretend we’re in docker: run the following on two tabs of your<span class="widont">&nbsp;</span>terminal:</p>
 <pre><code class="hljs lang-bash"><span class="built_in">eval</span> $(minikube docker-env)
 docker ps
 docker <span class="built_in">exec</span> -ti \
-    $(docker ps --no-trunc --format <span class="string">"{{.<span class="caps">ID</span>}}:{{.Command}}"</span> | grep kubernetes-start | head -n1 | cut -d: -f1) \
+    $(docker ps --no-trunc --format <span class="string">"{{.<span class="caps">ID</span>}}:{{.Command}}"</span> | grep kubernetes-start | head -n1 | cut <span class="_">-d</span>: <span class="_">-f</span>1) \
     bash -i
 <span class="comment"># in the container</span>
 <span class="built_in">cd</span> /opt/kafka*
@@ -148,7 +148,7 @@ Kubernetes service. K8s kindly injects the <span class="caps">API</span> key and
 service into every container. For example, this is how to get
 an external <span class="caps">IP</span> and port of <code>kafka-service</code> service in the <code>default</code>
 namesapce:</p>
-<pre><code class="hljs lang-bash">curl -sS \
+<pre><code class="hljs lang-bash">curl <span class="_">-s</span>S \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
     -H <span class="string">"Authorization: Bearer <span class="variable">$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)</span>"</span> \
     https://kubernetes/api/v1/namespaces/default/services/kafka-service \
@@ -157,11 +157,11 @@ namesapce:</p>
 <p>The default namespace to be used for namespaced <span class="caps">API</span> operations is placed in a file
 at <code>/var/run/secrets/kubernetes.io/serviceaccount/namespace</code> in each<span class="widont">&nbsp;</span>container.</p>
 <h3 id="wat"><span class="caps">WAT</span>? <a class="header-anchor" href="#wat" aria-hidden="true">¶</a></h3>
-<pre><code class="hljs lang-bash">curl -sS \
+<pre><code class="hljs lang-bash">curl <span class="_">-s</span>S \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
     -H <span class="string">"Authorization: Bearer <span class="variable">$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)</span>"</span> \
     <span class="string">"https://<span class="variable">$KUBERNETES_SERVICE_HOST</span>/api/v1/namespaces/manual-lle/secrets/tvs-mysql-mysqldb"</span> \
-    | jq -r <span class="string">'.data."mysql-root-password"'</span> | base64 -d
+    | jq -r <span class="string">'.data."mysql-root-password"'</span> | base64 <span class="_">-d</span>
 </code></pre>
 <h2 id="when-youre-done-with-it">When you’re done with it <a class="header-anchor" href="#when-youre-done-with-it" aria-hidden="true">¶</a></h2>
 <pre><code>minikube stop

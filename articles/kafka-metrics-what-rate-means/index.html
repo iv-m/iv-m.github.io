@@ -34,33 +34,57 @@ uses the older version of the artifact), and Kafka’s own
 metrics framework, which lives in <code>org.apache.kafka.common.metrics</code>
 package. Clients (at least, the new producer and new consumer)
 use the latter<span class="widont">&nbsp;</span>only.</p>
-<p>Here we’ll look onto the Kafka<span class="widont">&nbsp;</span>Metrics.</p>
-<p><span class="caps">TBD</span>:</p>
+<p>Here we’ll look onto the Kafka Metrics – they are more interesting,
+less known, and clients use Kafka metrics only. But please be aware
+some of the things written below are not applicable to <em>all</em> of
+the broker<span class="widont">&nbsp;</span>metrics.</p>
+<h2 id="quick-overview">Quick overview <a class="header-anchor" href="#quick-overview" aria-hidden="true">¶</a></h2>
+<p>Let say we want to measure, for example, various message size metrics:
+average, maximum size, and so on. For<span class="widont">&nbsp;</span>that,</p>
 <ul>
-<li>we are interested in<span class="widont">&nbsp;</span>clients</li>
-<li>note that to some of the metrics this is not applicable<span class="widont">&nbsp;</span>(which?)</li>
+<li>we need an instance of <code>Metrics</code> class that will manage<span class="widont">&nbsp;</span>everything;</li>
+<li>from <code>Metrics</code> we’ll get a <em>sensor</em>; for every message, we will
+<em>record</em> its size to the<span class="widont">&nbsp;</span>sensor;</li>
+<li>sensors are associated with <em>stats</em> (such as <code>Avg</code> or <code>Max</code>) –
+when a value is recorded into a sensor, the sensor records it to all
+the stats it<span class="widont">&nbsp;</span>knows;</li>
+<li>stats do some magic and convert this series of recorded
+values into a single value (rate, average,<span class="widont">&nbsp;</span>maximum…);</li>
+<li>that value is exposed as a <em>measurable</em>;</li>
+<li>the <em>measurable</em> is wrapped into a <em>metric</em>, with
+the metric name and some other<span class="widont">&nbsp;</span>metadata;</li>
+<li>the metrics are exposed:
+<ul>
+<li>from <code>Producer</code> and <code>Consumer</code> to the client<span class="widont">&nbsp;</span>code;</li>
+<li>via <span class="caps">JMX</span> to anyone who wants to read<span class="widont">&nbsp;</span>it;</li>
+<li>to pluggable <em>metric reporters</em>, so that they could report
+them in various<span class="widont">&nbsp;</span>ways;</li>
 </ul>
-<p><span class="caps">TBD</span>: it all begins with <code>Metrics</code> class.</p>
-<h2 id="metrics-measurables-and-all-the-rest">Metrics, Measurables and all the rest <a class="header-anchor" href="#metrics-measurables-and-all-the-rest" aria-hidden="true">¶</a></h2>
-<p>The Kafka metrics framework, just as expected, provides an entity named
-<a href="TBD">Metric</a>. Metric is <em>“a named, numerical measurement”</em> – which is
-expressed in the code as clear as possible<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>:</p>
+</li>
+</ul>
+<p>Let’s take a look at this at a bit more<span class="widont">&nbsp;</span>detail.</p>
+<h2 id="metrics-measurables-and-stats">Metrics, Measurables and Stats <a class="header-anchor" href="#metrics-measurables-and-stats" aria-hidden="true">¶</a></h2>
+<p>When you read the metrics, you deal with an entity that
+is named, quite expectedly, <a href="TBD">Metric</a>. Metric is <em>“a named, numerical
+measurement”</em> – which is expressed in the code as clear as
+possible<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>:</p>
 <pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Metric</span> </span>{
     <span class="function"><span class="keyword">public</span> MetricName <span class="title">metricName</span><span class="params">()</span></span>;
     <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">value</span><span class="params">()</span></span>;
 }
 </code></pre>
-<p><code>Metric</code> is the public interface for the world: <code>MetricsReporter</code>
-(the pluggable reporting interface I already mentioned) works with
-<code>KafkaMetric</code>, which is <em>the</em> <code>Metric</code> implementation; both <code>Producer</code>
-and <code>Consumer</code> have a method that allows to grab all their<span class="widont">&nbsp;</span>metrics:</p>
+<p><code>Metric</code> is the public interface for those who <em>consume</em> the metrics:
+<code>MetricsReporter</code> (the pluggable reporting interface I already
+mentioned) works with <code>KafkaMetric</code>, which is <em>the</em> <code>Metric</code>
+implementation; both <code>Producer</code> and <code>Consumer</code> have a method that allows
+to grab all their<span class="widont">&nbsp;</span>metrics:</p>
 <pre><code class="hljs lang-java"><span class="keyword">public</span> Map&lt;MetricName, ? extends Metric&gt; metrics() { ... }
 </code></pre>
-<p>Internally the things look somewhat different. The metrics
-framework is build around <a href="TBD">Measurable</a> – just <em>“a measurable
-quantity”</em>, with even simpler<span class="widont">&nbsp;</span>interface:</p>
+<p>If you want to *expose( values, things look somewhat different. At
+the core, there is a thing that’s even simpler thing than <code>Metric</code>
+– <a href="TBD">Measurable</a>:</p>
 <pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Measurable</span> </span>{
-    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measure</span><span class="params">(MetricConfig config, <span class="keyword">long</span> now)</span></span>; 
+    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measure</span><span class="params">(MetricConfig config, <span class="keyword">long</span> now)</span></span>;
 }
 </code></pre>
 <p>If you have a <code>Measurable</code>, you can get its value, and that’s it;
@@ -68,7 +92,7 @@ for that, <code>Measurable</code> is given a <code>MetricConfig</code> (we’ll 
 at it later) and the current timestamp – so that the
 <code>Measurable</code> does not have to refer to the system clock in case
 needs it, which saves a few <span class="caps">CPU</span><span class="widont">&nbsp;</span>cycles.</p>
-<p>The <code>Measurable</code>s are sometimes used directly, to transform any
+<p>The <code>Measurable</code> is sometimes used directly, to transform any
 getter into a metric. Here is, for example, how <code>ConsumerCoordinator</code>
 exports the number of partitions assigned to<span class="widont">&nbsp;</span>it:</p>
 <pre><code class="hljs lang-java">Measurable numParts =
@@ -86,51 +110,91 @@ exports the number of partitions assigned to<span class="widont">&nbsp;</span>it
 </code></pre>
 <p>There are two kinds of <code>Stat</code>:</p>
 <ul>
-<li><code>MeasurableStat</code> – a simple value that implements both
-<code>Stat</code> and <code>Measurable</code>;</li>
-<li><code>CompoundStat</code>  that encloses several <code>Measurable</code>s,
-like a histogram with various<span class="widont">&nbsp;</span>percentiles.</li>
+<li><code>MeasurableStat</code> – a simple combination of <code>Measurable</code> and <code>Stat</code>
+that calculates one value based on the series that is recorded into
+it; <code>Avg</code> and <code>Max</code> are probably most common examples of such<span class="widont">&nbsp;</span>stats.</li>
+<li><code>CompoundStat</code> that exposes several <code>Measurable</code>s, like a histogram
+with various<span class="widont">&nbsp;</span>percentiles.</li>
 </ul>
-<p>The stats are are associated with <a href="TBD">Sensors</a>, which is <em>“a handle to
-record numerical measurements as they occur”</em>. That is, you <code>add</code> one or
-more stats to a <code>Sensor</code>, and then use one of its overloaded <code>record</code>
-methods to write the value when it’s measured. The canonical example
-from the javadocs shows a sensor that records the message size, and two
-metrics, which measure maximal and average size of the<span class="widont">&nbsp;</span>message:</p>
-<pre><code class="hljs lang-java">    <span class="comment">// on initialization, associate the metrics with the sensor</span>
-    sensor.add(<span class="keyword">new</span> MetricName(...), <span class="keyword">new</span> Max());
-    sensor.add(<span class="keyword">new</span> MetricName(...), <span class="keyword">new</span> Avg());
+<p>Probably the simplest <code>MeasurableStat</code> is <code>Total</code>, which calculates
+the sum of the values that are recorded into<span class="widont">&nbsp;</span>it:</p>
+<pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Total</span> <span class="keyword">implements</span> <span class="title">MeasurableStat</span> </span>{
+    <span class="keyword">private</span> <span class="keyword">double</span> total = <span class="number">0.0</span>;
 
-    <span class="comment">// later, every time a message is received:</span>
-    sensor.record(messageSize);
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">record</span><span class="params">(MetricConfig config, <span class="keyword">double</span> value, <span class="keyword">long</span> now)</span> </span>{
+        <span class="keyword">this</span>.total += value;
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measure</span><span class="params">(MetricConfig config, <span class="keyword">long</span> now)</span> </span>{
+        <span class="keyword">return</span> <span class="keyword">this</span>.total;
+    }
+}
 </code></pre>
-<p>Wow, that was a lot of things! Let’s go through it once<span class="widont">&nbsp;</span>again:</p>
-<ul>
-<li>there are sensors – when you have a value, you record it
-into a<span class="widont">&nbsp;</span>sensor;</li>
-<li>sensors are associated with stats – when a value is recorded
-into a sensor, the sensor records it to all the stats it<span class="widont">&nbsp;</span>knows;</li>
-<li>stats do some magic, and convert this series of recorded
-values into a single value (rate, average,<span class="widont">&nbsp;</span>maximum…);</li>
-<li>that value is exposed as a <code>Measurable</code>;</li>
-<li>the <code>Measurable</code> is wrapped into <code>KafkaMetric</code>, with
-the metric name and some other<span class="widont">&nbsp;</span>metadata;</li>
-<li>the metric is exposed:
-<ul>
-<li>from <code>Producer</code> and <code>Consumer</code> to the client<span class="widont">&nbsp;</span>code;</li>
-<li>via <span class="caps">JMX</span> to anyone who wants to read<span class="widont">&nbsp;</span>it;</li>
-<li>to <code>MetricReporter</code>s, so that they could report it;
-in various<span class="widont">&nbsp;</span>way;</li>
-</ul>
-</li>
-<li>all this is managed by <code>Metrics</code> class.</li>
-</ul>
-<p>I do hope now it’s clear<span class="widont">&nbsp;</span>enough.</p>
+<p>The actual <a href="TBD">Total</a> is a bit more elaborate, but essentially the<span class="widont">&nbsp;</span>same.</p>
+<p>If on every event you record <code>1.0</code> instead of the actual value,
+the <code>Total</code>, obviously, provides the count of the events.
+But there is another way to achieve this: let’s create a new
+<code>MeasurableStat</code> that ignores the value and adds <code>1.0</code> every time
+its <code>record</code> method is<span class="widont">&nbsp;</span>called:</p>
+<pre><code class="hljs lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TotalCount</span> <span class="keyword">implements</span> <span class="title">MeasurableStat</span> </span>{
+    <span class="keyword">private</span> <span class="keyword">long</span> count = <span class="number">0</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">record</span><span class="params">(MetricConfig config, <span class="keyword">double</span> value, <span class="keyword">long</span> now)</span> </span>{
+        ++<span class="keyword">this</span>.count;
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measure</span><span class="params">(MetricConfig config, <span class="keyword">long</span> now)</span> </span>{
+        <span class="keyword">return</span> (<span class="keyword">double</span>) <span class="keyword">this</span>.count;
+    }
+}
+</code></pre>
+<p>With this, we can add both of them into a single <em>sensor</em>, decoupling
+the fact that we are calculating both total value and total count
+from the code that records the<span class="widont">&nbsp;</span>event.</p>
+<p><a href="TBD-SENSOR">Sensor</a> is <em>“a handle to record numerical measurements as they occur”</em>.
+At the initialization time, you <code>add</code> one or more stats to a <code>Sensor</code>:</p>
+<pre><code class="hljs lang-java">    Sensor sensor = metrics.sensor(...);
+    sensor.add(<span class="keyword">new</span> MetricName(...), <span class="keyword">new</span> Total());
+    sensor.add(<span class="keyword">new</span> MetricName(...), <span class="keyword">new</span> TotalCount());
+</code></pre>
+<p>Then, when a value is measured (e.g. when the message is handled) you
+use one of the sensor’s overloaded <code>record</code> methods to write the<span class="widont">&nbsp;</span>value:</p>
+<pre><code class="hljs lang-java">    sensor.record(messageSize);
+</code></pre>
+<p><code>Total</code> will add <code>messageSize</code> to its value every time <code>sensor::recrod</code>
+is called, while <code>TotalCount</code> will add <code>1</code>.</p>
+<h1>Sampling</h1>
+<p><code>Total</code> and <code>TotalCount</code> share one very interesting property: they
+accumulate the value for the entire lifetime of the process. This is
+hardly useful for more common kinds of metrics, like response time
+metrics or request rates: you are probably more interested in
+values that are “instantaneous” in some sense than in average
+values since the last service<span class="widont">&nbsp;</span>restart.</p>
+<p>Probably, the most straighforward solution would be to use a kind of
+sliding window, either time-based or event-based: store last N recorded
+values or recorded values for last N seconds, and evaluate metric based
+on these values. The problem with this approach is that it’s hardly
+effective if you have thousands, or even millions of events every second
+– and Kafka sometimes can show such messages<span class="widont">&nbsp;</span>rate.</p>
+<p>So, in Kafka metrics, this “sliding window” (virtually) moves across
+a series of <em>samples</em>, which group events<span class="widont">&nbsp;</span>together.</p>
+<p>When a value is recored, it
+is used to <em>update</em> an <em>intermediate</em> value in the <em>current<span class="widont">&nbsp;</span>sample</em>.</p>
+<p>When the current sample becomes too old, the oldest sample is
+discarded, and a new one is created and becomes<span class="widont">&nbsp;</span>current.</p>
+<p>In other words,<span class="widont">&nbsp;</span>the</p>
+<blockquote>
+<p>A SampledStat records a single scalar value measured over one or more samples. Each sample is recorded over a
+configurable window. The window can be defined by number of events or elapsed time (or both, if both are given the
+window is complete when <em>either</em> the event count or elapsed time criterion is<span class="widont">&nbsp;</span>met).</p>
+<p>All the samples are combined to produce the measurement. When a window is complete the oldest sample is cleared and
+recycled to begin recording the next<span class="widont">&nbsp;</span>sample.</p>
+</blockquote>
 <hr class="footnotes-sep">
 <section class="footnotes">
 <ol class="footnotes-list">
-<li id="fn1" class="footnote-item"><p>Here and below, for sake of
-brevity, I&#8217;m stripping the javadocs from the interfaces. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+<li id="fn1" class="footnote-item"><p>Here and below, for sake of brevity, I&#8217;m stripping the
+javadocs from the interfaces. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
 </li>
 </ol>
 </section>
@@ -147,7 +211,7 @@ of a site because it seemed like a good idea.</p>
         <div class="last-update">
           <p>
             Published on 2017-06-20.
-            Last updated 2017-06-23 18:00:21 +0400.
+            Last updated 2017-11-03 09:57:29 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-metrics-what-rate-means/index.md">articles/kafka-metrics-what-rate-means/index.md</a>.
           </p>
         </div>
