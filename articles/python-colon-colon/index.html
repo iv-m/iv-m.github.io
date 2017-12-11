@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Colon colon: just when you thought you knew Python - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Colon colon: just when you thought you knew Python</h1>
+        <div class="content"><p>For a simple scripting language Python bears more then enough brain-exploding
+magic, like metaclasses and descriptors. But what if a simple language
+construct, in a simple code, just makes you stop and say <em>“<span class="caps">WAT</span>?”</em>.
+That’s exactly what happened to me when I saw this: <code>x = x[::-1]</code>.
+What does <em>that</em> mean? Let’s take a quick<span class="widont">&nbsp;</span>look.</p>
+<h2 id="the-docs">The Docs <a class="header-anchor" href="#the-docs" aria-hidden="true">¶</a></h2>
+<p>The “official” definition how subscriptions work in Python can, with certain
+luck, be found in <a href="https://docs.python.org/2.7/library/stdtypes.html#sequence-types-str-unicode-list-tuple-bytearray-buffer-xrange">Python docs</a>:</p>
+<blockquote>
+<p><code>s[i:j:k]</code>  slice of <code>s</code> from <code>i</code> to <code>j</code> with step <code>k</code></p>
+</blockquote>
+<p>And a note below<span class="widont">&nbsp;</span>says:</p>
+<blockquote>
+<p>If <code>i</code> or <code>j</code> are omitted or None, they become “end” values (which end
+depends on the sign of <code>k</code>).</p>
+</blockquote>
+<p>So, with <code>x[::-1]</code> we are taking the whole <code>x</code> (similarly to <code>x[:]</code>), but
+with step <code>-1</code> – which means, we are having <code>x</code> reversed.</p>
+<h2 id="the-examples">The Examples <a class="header-anchor" href="#the-examples" aria-hidden="true">¶</a></h2>
+<p>Let’s try it:</p>
+<pre><code class="hljs lang-python"><span class="meta">&gt;&gt;&gt; </span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>][::<span class="number">-1</span>]
+[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]
+<span class="meta">&gt;&gt;&gt; </span>(<span class="string">'answer'</span>, <span class="number">42</span>)[::<span class="number">-1</span>]
+(<span class="number">42</span>, <span class="string">'answer'</span>)
+<span class="meta">&gt;&gt;&gt; </span><span class="string">'foo bar'</span>[::<span class="number">-1</span>]
+<span class="string">'rab oof'</span>
+</code></pre>
+<p>What I also have to notice is that this construct (unlike, e.g., [reversed]
+builtin) preserves the type of its argument: for tuple, you get tuple,
+and for string, you get string. This is often<span class="widont">&nbsp;</span>convenient.</p>
+<h2 id="the-end">The End <a class="header-anchor" href="#the-end" aria-hidden="true">¶</a></h2>
+<p>Well, the more you<span class="widont">&nbsp;</span>learn…</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Published on 2017-12-11.
+            Last updated 2017-12-11 13:52:36 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-colon-colon/index.md">articles/python-colon-colon/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
