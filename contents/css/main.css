@@ -3,7 +3,8 @@ body {
   font-family: serif;
   font-size: 16px;
   background-color: #f8f8f8;
-  text-color: #171717
+  text-color: #171717;
+  line-height: 1.5;
 }
 
 .content-wrap {
@@ -32,10 +33,15 @@ pre {
   background: #fff;
   border: 1px solid #d2d2d2;
   border-radius: 5px;
-  margin-left: 1.5em;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 5px 0px 5px 2em;
   padding: 3px;
+}
+
+blockquote {
+  background: #ddd;
+  padding-left: 20px;
+  margin: 5px 0px 5px 2em;
+  border-left: solid 3px #777;
 }
 
 header .logo > a {
@@ -96,6 +102,11 @@ header {
 footer {
   border-top: solid 1px #aaa;
   color: #555;
+}
+
+footer p {
+  margin: 3px 0 3px 0;
+  text-align: center;
 }
 
 .warn {
@@ -177,7 +188,7 @@ code {
 
 pre code {
   display: block;
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
 p code {
