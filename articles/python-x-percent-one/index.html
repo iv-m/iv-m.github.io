@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Division by 1: just when you thought you knew Python - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Division by 1: just when you thought you knew Python</h1>
+        <div class="content"><p>To the hard people that came from ruthless land of C, many things in
+Python look like craziness. But years passed, and I’m at home
+here you just see… <code>x % 1</code>.</p>
+<p>Why would anyone do that? In production<span class="widont">&nbsp;</span>code?</p>
+<h2 id="the-docs">The Docs <a class="header-anchor" href="#the-docs" aria-hidden="true">¶</a></h2>
+<p>The <a href="https://docs.python.org/2/reference/expressions.html#binary-arithmetic-operations">Python documentation</a> gives a bit of clue regarding possible uses
+of such<span class="widont">&nbsp;</span>expression:</p>
+<blockquote>
+<p>The arguments may be floating point numbers, e.g., <code>3.14 % 0.7</code> equals
+<code>0.34</code> (since <code>3.14</code> equals <code>4 * 0.7 + 0.34</code>.)</p>
+</blockquote>
+<p>And later on:</p>
+<blockquote>
+<p>the absolute value of the result is strictly smaller than the absolute
+value of the second<span class="widont">&nbsp;</span>operand.</p>
+</blockquote>
+<p>So, contrary to my C-fostered intuition, the dividend does not have to be
+integer. The modulo operator for <code>x % y</code> in this case returns such number that
+<code>x = r * y + (x % y)</code> for the largest possible <em>integer</em> <code>r</code> (well, for
+negative numbers it’s a bit more complicated, but the idea is the<span class="widont">&nbsp;</span>same).</p>
+<p>This means that when you take modulo by <code>1</code> what you get is… right,
+the <em>fractional part</em> of <code>x</code>. And in much more concise way then usual
+<code>math.modf</code>.</p>
+<h2 id="the-examples">The Examples <a class="header-anchor" href="#the-examples" aria-hidden="true">¶</a></h2>
+<p>Let’s try this:</p>
+<pre><code class="hljs lang-python"><span class="meta">&gt;&gt;&gt; </span>x = <span class="number">3.14</span>
+<span class="meta">&gt;&gt;&gt; </span>x % <span class="number">.7</span>
+<span class="number">0.3400000000000003</span>
+<span class="meta">&gt;&gt;&gt; </span>x % <span class="number">1</span>
+<span class="number">0.14000000000000012</span>
+</code></pre>
+<p>As you see, this works <em>almost</em> as in docs. Well, that’s floating point
+arithmetic for you<span class="widont">&nbsp;</span>=).</p>
+<h2 id="the-end">The End <a class="header-anchor" href="#the-end" aria-hidden="true">¶</a></h2>
+<p>Well, the more you<span class="widont">&nbsp;</span>learn…</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Published on 2017-12-29.
+            Last updated 2017-12-29 23:42:05 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-x-percent-one/index.md">articles/python-x-percent-one/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
