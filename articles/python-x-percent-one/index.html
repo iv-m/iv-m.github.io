@@ -17,11 +17,12 @@
       <div class="content-wrap">
         <h1>Division by 1: just when you thought you knew Python</h1>
         <div class="content"><p>To the hard people that came from ruthless land of C, many things in
-Python look like craziness. But years passed, and I’m at home
-here you just see… <code>x % 1</code>.</p>
+Python look like craziness. But with the years are passing,
+you get to feel like at home with it… until you see something like
+<code>x % 1</code>.</p>
 <p>Why would anyone do that? In production<span class="widont">&nbsp;</span>code?</p>
 <h2 id="the-docs">The Docs <a class="header-anchor" href="#the-docs" aria-hidden="true">¶</a></h2>
-<p>The <a href="https://docs.python.org/2/reference/expressions.html#binary-arithmetic-operations">Python documentation</a> gives a bit of clue regarding possible uses
+<p>The <a href="https://docs.python.org/2/reference/expressions.html#binary-arithmetic-operations">Python documentation</a> gives a bit of clue regarding the possible uses
 of such<span class="widont">&nbsp;</span>expression:</p>
 <blockquote>
 <p>The arguments may be floating point numbers, e.g., <code>3.14 % 0.7</code> equals
@@ -35,9 +36,9 @@ value of the second<span class="widont">&nbsp;</span>operand.</p>
 <p>So, contrary to my C-fostered intuition, the dividend does not have to be
 integer. The modulo operator for <code>x % y</code> in this case returns such number that
 <code>x = r * y + (x % y)</code> for the largest possible <em>integer</em> <code>r</code> (well, for
-negative numbers it’s a bit more complicated, but the idea is the<span class="widont">&nbsp;</span>same).</p>
+the negative numbers it’s a bit more complicated, but the idea is the<span class="widont">&nbsp;</span>same).</p>
 <p>This means that when you take modulo by <code>1</code> what you get is… right,
-the <em>fractional part</em> of <code>x</code>. And in much more concise way then usual
+the <em>fractional part</em> of <code>x</code>. And in a much more concise way then usual
 <code>math.modf</code>.</p>
 <h2 id="the-examples">The Examples <a class="header-anchor" href="#the-examples" aria-hidden="true">¶</a></h2>
 <p>Let’s try this:</p>
@@ -50,6 +51,11 @@ the <em>fractional part</em> of <code>x</code>. And in much more concise way the
 <p>As you see, this works <em>almost</em> as in docs. Well, that’s floating point
 arithmetic for you<span class="widont">&nbsp;</span>=).</p>
 <h2 id="the-end">The End <a class="header-anchor" href="#the-end" aria-hidden="true">¶</a></h2>
+<p>It worth pointing out that Python is not unique in this respect. While
+in C both operands of the <code>%</code> operator will be cast to <code>int</code>, in most
+interpreted languages (including Ruby and <span class="caps">JS</span>), and, quite surprisingly,
+in Java, <code>%</code> is defined for floating point numbers in pretty much
+the same way as it is in<span class="widont">&nbsp;</span>Python.</p>
 <p>Well, the more you<span class="widont">&nbsp;</span>learn…</p>
 </div>
       </div>
@@ -64,12 +70,12 @@ of a site because it seemed like a good idea.</p>
         <div class="last-update">
           <p>
             Published on 2017-12-29.
-            Last updated 2017-12-29 23:42:05 +0400.
+            Last updated 2018-01-28 10:58:11 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-x-percent-one/index.md">articles/python-x-percent-one/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2017 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>
