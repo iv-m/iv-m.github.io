@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -ex
+
+git pull --ff-only
+
+(cd build/ && git pull --ff-only)
