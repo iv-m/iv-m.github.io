@@ -15,6 +15,10 @@
     "_": "underscore",
     "typogr": "typogr"
   },
+  "ignore": [
+      "**/.ipynb*/**",
+      "README*"
+  ],
   "jade": {
     "pretty": true
   },
