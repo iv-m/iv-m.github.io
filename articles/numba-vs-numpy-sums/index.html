@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Numba vs Numpy: some sums - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Numba vs Numpy: some sums</h1>
+        <div class="content"><p><a href="http://numba.pydata.org/">Numba</a> is open-source optimizing compiler for Python. It seems work like magic: just add a simple decorator to your pure-python function, and it immediately becomes 200 times faster – at least, so clames the <a href="https://en.wikipedia.org/w/index.php?title=Numba&amp;oldid=831668946">Wikipedia article about Numba</a>. Even this is hard to believe, but Wikipedia goes further and claims that a vary naive implementation of a sum of a numpy array is 30% faster then <code>numpy.sum</code>. Somehow, I would expect that <code>numpy.sum</code> is as optimized as it can be, so this clame sounds even more ambitious. Let’s check this with some<span class="widont">&nbsp;</span>benchmarks!</p>
+<h2 id="system-setup">System setup <a class="header-anchor" href="#system-setup" aria-hidden="true">¶</a></h2>
+<p>As usual, I’m working on my Lenovo T440p laptop running AltLinux. It has mobile Haswell processor with 2 cores and 4 hardware threads. To make benchmarks more reproducible, I’ve disabled TurboBoost and locked scaling to almost 2 GHz<span class="widont">&nbsp;</span>(~1995).</p>
+<pre><code class="hljs lang-sh">%%sh
+uname <span class="_">-a</span>
+</code></pre>
+<pre><code>Linux imelnikov.localdomain 4.14.24-un-def-alt0.M80P.1 #1 SMP PREEMPT Tue Mar 6 15:00:33 UTC 2018 x86_64 GNU/Linux
+</code></pre>
+<pre><code class="hljs lang-sh">%%sh
+cat /proc/cpuinfo | egrep <span class="string">'^model name|Hz'</span>
+</code></pre>
+<pre><code>model name	: Intel(R) Core(TM) i5-4300M CPU @ 2.60GHz
+cpu MHz		: 1995.544
+model name	: Intel(R) Core(TM) i5-4300M CPU @ 2.60GHz
+cpu MHz		: 1995.545
+model name	: Intel(R) Core(TM) i5-4300M CPU @ 2.60GHz
+cpu MHz		: 1995.545
+model name	: Intel(R) Core(TM) i5-4300M CPU @ 2.60GHz
+cpu MHz		: 1995.543
+</code></pre>
+<p>Let’s import some modules and check the<span class="widont">&nbsp;</span>versions:</p>
+<pre><code class="hljs lang-python"><span class="keyword">import</span> sys
+<span class="keyword">import</span> numba
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+plt.style.use(<span class="string">'ggplot'</span>)
+</code></pre>
+<pre><code class="hljs lang-python">print(<span class="string">"python version:"</span>, <span class="string">''</span>.join(sys.version.splitlines()))
+print(<span class="string">"numpy version:"</span>, np.__version__)
+print(<span class="string">"numba version:"</span>, numba.__version__)
+</code></pre>
+<pre><code>python version: 3.6.4 |Anaconda custom (64-bit)| (default, Jan 16 2018, 18:10:19) [GCC 7.2.0]
+numpy version: 1.14.0
+numba version: 0.36.2
+</code></pre>
+<pre><code class="hljs lang-python">np.random.seed(<span class="number">42</span>)
+</code></pre>
+<h2 id="system-under-test">System under test <a class="header-anchor" href="#system-under-test" aria-hidden="true">¶</a></h2>
+<p>Here is the code from<span class="widont">&nbsp;</span>Wikipedia:</p>
+<pre><code class="hljs lang-python"><span class="function"><span class="keyword">def</span> <span class="title">sum1d</span><span class="params">(my_double_array)</span>:</span>
+    total = <span class="number">0.0</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> range(my_double_array.shape[<span class="number">0</span>]):
+        total += my_double_array[i]
+    <span class="keyword">return</span> total
+</code></pre>
+<p>Numba’s <code>jit</code> is intended to be used as decorator, but we’re going to call it explicitly to make sure we run the same code with and without<span class="widont">&nbsp;</span>jit:</p>
+<pre><code class="hljs lang-python">sum1d_jit = numba.jit(nopython=<span class="keyword">True</span>)(sum1d)
+</code></pre>
+<pre><code class="hljs lang-python">sum1d_jit
+</code></pre>
+<pre><code>CPUDispatcher(&lt;function sum1d at 0x7fb4eee77158&gt;)
+</code></pre>
+<p>We’ll also check if parallelization will make any difference for<span class="widont">&nbsp;</span>us:</p>
+<pre><code class="hljs lang-python">sum1d_par = numba.jit(nopython=<span class="keyword">True</span>, parallel=<span class="keyword">True</span>)(sum1d)
+</code></pre>
+<p>Let’s run a quick test to make sure we’ve done everything correctly, and to force numba to compile <code>float64</code> version of our <code>sum1d</code>:</p>
+<pre><code class="hljs lang-python">sample_data = np.random.randn(<span class="number">42</span>)
+</code></pre>
+<pre><code class="hljs lang-python">sum1d(sample_data), sum1d_jit(sample_data), sum1d_par(sample_data), np.sum(sample_data)
+</code></pre>
+<pre><code>(-7.835638675532193,
+ -7.835638675532193,
+ -7.835638675532193,
+ -7.835638675532195)
+</code></pre>
+<p>It’s interesting: naive python version and jitted version return the same number exactly, but <code>numpy.sum</code> apparently calculates things in a bit<span class="widont">&nbsp;</span>differntly.</p>
+<h2 id="measurements">Measurements <a class="header-anchor" href="#measurements" aria-hidden="true">¶</a></h2>
+<p>We’ll make a few runs for various array<span class="widont">&nbsp;</span>sizes:</p>
+<pre><code class="hljs lang-python">measures = <span class="number">13</span>
+sizes = <span class="number">4</span> ** np.arange(measures)
+</code></pre>
+<p>We’ll save the average runtime<span class="widont">&nbsp;</span>here:</p>
+<pre><code class="hljs lang-python">res_numpy = np.zeros(measures)
+res_python = np.zeros(measures)
+res_numba = np.zeros(measures)
+res_numba_par = np.zeros(measures)
+</code></pre>
+<p>It’s time to measures all the things! This will take a few<span class="widont">&nbsp;</span>minutes:</p>
+<pre><code class="hljs lang-python">%%time
+<span class="keyword">for</span> idx, size <span class="keyword">in</span> enumerate(sizes):
+    print(<span class="string">"size ="</span>, size)
+    data = np.random.randn(size).astype(<span class="string">'f8'</span>)
+    res = %timeit -o np.sum(data)
+    res_numpy[idx] = res.average
+    res = %timeit -o sum1d(data)
+    res_python[idx] = res.average
+    res = %timeit -o sum1d_jit(data)
+    res_numba[idx] = res.average
+    res = %timeit -o sum1d_par(data)
+    res_numba_par[idx] = res.average
+<span class="keyword">del</span> data
+</code></pre>
+<pre><code>size = 1
+5.53 µs ± 298 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+1.04 µs ± 93.7 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+448 ns ± 8.96 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+469 ns ± 19.5 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+size = 4
+4.07 µs ± 182 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+1.6 µs ± 26.5 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+473 ns ± 6.14 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+453 ns ± 6.65 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+size = 16
+4.17 µs ± 205 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+4.35 µs ± 172 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+526 ns ± 77.8 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+585 ns ± 26 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+size = 64
+4.54 µs ± 418 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+16.6 µs ± 2.29 µs per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+678 ns ± 46.8 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+676 ns ± 22.4 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+size = 256
+5.89 µs ± 401 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+75.3 µs ± 1.61 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+1.02 µs ± 35.7 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+958 ns ± 14.4 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+size = 1024
+6.33 µs ± 228 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+319 µs ± 32.8 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+2.28 µs ± 169 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+2.21 µs ± 118 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+size = 4096
+8.31 µs ± 158 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+1.2 ms ± 49.9 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+7.06 µs ± 59.2 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+7.02 µs ± 23.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+size = 16384
+18.2 µs ± 323 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+4.7 ms ± 149 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+26.7 µs ± 363 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+26.5 µs ± 136 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+size = 65536
+52.9 µs ± 2.09 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+19.7 ms ± 670 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+102 µs ± 950 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+101 µs ± 144 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+size = 262144
+176 µs ± 3.17 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+77.9 ms ± 6.35 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+440 µs ± 4.42 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+457 µs ± 15.9 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+size = 1048576
+948 µs ± 36.6 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+320 ms ± 18.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+1.89 ms ± 52.7 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+1.86 ms ± 64.7 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+size = 4194304
+3.51 ms ± 67.8 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+1.22 s ± 27.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+7.31 ms ± 74.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+7.32 ms ± 77.5 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+size = 16777216
+14.8 ms ± 583 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+4.87 s ± 116 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+29.2 ms ± 88.9 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+29.7 ms ± 349 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+CPU times: user 6min 4s, sys: 267 ms, total: 6min 5s
+Wall time: 6min 5s
+</code></pre>
+<h2 id="looking-at-the-data">Looking at the data <a class="header-anchor" href="#looking-at-the-data" aria-hidden="true">¶</a></h2>
+<p>First, let’s look at various speedups and<span class="widont">&nbsp;</span>slowdowns:</p>
+<pre><code class="hljs lang-python">numba_vs_naive = res_python / res_numba
+numba_vs_naive.max()
+</code></pre>
+<pre><code>192.3750032906321
+</code></pre>
+<p>Well, it’s not 200 times as Wikipedia claimed, but it’s pretty much close to<span class="widont">&nbsp;</span>it.</p>
+<pre><code class="hljs lang-python">numba_vs_numpy = res_numba / res_numpy
+numba_vs_numpy.min(), numba_vs_numpy.max()
+</code></pre>
+<pre><code>(0.08103373848130296, 2.505059846262734)
+</code></pre>
+<p>Numba can be 2.5 times slower then numpy, but it can also be faster. Let’s look at the graphs<span class="widont">&nbsp;</span>below.</p>
+<pre><code class="hljs lang-python">numba_vs_par = res_numba / res_numba_par
+numba_vs_par.min(), numba_vs_par.max()
+</code></pre>
+<pre><code>(0.8986877079731856, 1.0664777926145088)
+</code></pre>
+<p>Aparently, numba cannot parallelize our function – it’s too naive for that. Let’s look how speedups/slowdowns change with the array<span class="widont">&nbsp;</span>size:</p>
+<pre><code class="hljs lang-python">fig, (ax1, ax2, ax3) = plt.subplots(<span class="number">1</span>,<span class="number">3</span>)
+
+fig.set_size_inches(<span class="number">16</span>, <span class="number">5</span>)
+
+ax1.set_title(<span class="string">'numba vs numpy'</span>)
+ax1.set_xlabel(<span class="string">'array size'</span>)
+ax1.set_ylabel(<span class="string">'slowdown'</span>)
+ax1.semilogx(sizes, numba_vs_numpy, basex=<span class="number">2</span>);
+
+
+ax2.set_title(<span class="string">'numba vs naive python'</span>)
+ax2.set_xlabel(<span class="string">'array size'</span>)
+ax2.set_ylabel(<span class="string">'slowdown'</span>)
+ax2.semilogx(sizes, numba_vs_naive, basex=<span class="number">2</span>, color=<span class="string">'b'</span>);
+
+ax3.set_title(<span class="string">'effect of parallel=True'</span>)
+ax3.set_xlabel(<span class="string">'array size'</span>)
+ax3.set_ylabel(<span class="string">'speedup'</span>)
+ax3.semilogx(sizes, numba_vs_par, basex=<span class="number">2</span>, color=<span class="string">'g'</span>);
+</code></pre>
+<p><img src="./index_35_0.png" alt="png"></p>
+<pre><code class="hljs lang-python">plt.figure().set_size_inches(<span class="number">12</span>, <span class="number">10</span>)
+plt.loglog(sizes, res_numba, label=<span class="string">'numba'</span>, basex=<span class="number">2</span>)
+plt.loglog(sizes, res_numba_par, label=<span class="string">'numba parallel'</span>, basex=<span class="number">2</span>)
+plt.loglog(sizes, res_numpy, label=<span class="string">'numpy'</span>, basex=<span class="number">2</span>)
+plt.loglog(sizes, res_python, label=<span class="string">'naive python'</span>, basex=<span class="number">2</span>)
+plt.xlabel(<span class="string">"array size"</span>)
+plt.ylabel(<span class="string">"runtime, seconds"</span>);
+plt.legend();
+</code></pre>
+<p><img src="./index_36_0.png" alt="png"></p>
+<p>The jitted version is more then 5 times faster on smaller arrays, but for larger arrays numpy becomes ~2.5 times faster then numba; they show similar performance when array sizes are about<span class="widont">&nbsp;</span>4000.</p>
+<h2 id="conclusions">Conclusions <a class="header-anchor" href="#conclusions" aria-hidden="true">¶</a></h2>
+<p>I consider both clames of the Wikipedia article confirmed: numba brings tremendous speedup to naive python code at the const of just one decorator (and one huge additional dependency – the numba itself <code>^_-</code>); for arrays of quite reasonable size numba can be much faster then numpy – e.g. for size 1024 it ~2 times<span class="widont">&nbsp;</span>faster!</p>
+<p>This allows me to conclude that <strong>numba is awesome</strong>. Let’s see how it will behave on more real-life projects of<span class="widont">&nbsp;</span>mine.</p>
+<p>You can download the full notebook <a href="Numba_vs_Numpy_-_some_sums.ipynb">here</a>.</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Published on 2018-03-28.
+            Last updated 2018-03-28 18:47:45 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/numba-vs-numpy-sums/index.md">articles/numba-vs-numpy-sums/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -30,11 +30,8 @@ a:hover {
 
 pre {
   overflow: auto;
-  background: #fff;
-  border: 1px solid #d2d2d2;
-  border-radius: 5px;
   margin: 5px 0px 5px 2em;
-  padding: 3px;
+  padding: 2px;
 }
 
 blockquote {
@@ -189,6 +186,14 @@ code {
 pre code {
   display: block;
   line-height: 1.2;
+  padding: 4px 1ex 4px 1ex;
+  border-radius: 5px;
+}
+
+pre code.hljs {
+  background-color: #ccc;
+  background-color: white;
+  border: 1px solid #d2d2d2;
 }
 
 p code {
