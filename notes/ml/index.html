@@ -16,7 +16,7 @@
     <div id="content">
       <div class="content-wrap">
         <h1>General Machine Learning Notes</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#learning-machine-learning">Learning Machine Learning</a><ul><li><a href="#ml-courses-from-yandex"><span class="caps">ML</span> courses from Yandex: Машинное обучение и анализ<span class="widont">&nbsp;</span>данных</a></li></ul></li><li><a href="#learning-deep-learning">Learning Deep Learning</a><ul><li><a href="#stanford-cs231n-convolutional-neural-networks-for-visual-recognition">Stanford CS231n: Convolutional Neural Networks for Visual<span class="widont">&nbsp;</span>Recognition</a></li><li><a href="#standford-cs224n-natural-language-processing-with-deep-learning">Standford CS224n: Natural Language Processing with Deep<span class="widont">&nbsp;</span>Learning</a></li><li><a href="#deep-learning-specialization-from-deeplearningai">Deep Learning specialization from<span class="widont">&nbsp;</span>deeplearning.ai</a></li><li><a href="#advanced-machine-learning-from-yandex-and-hse">Advanced Machine Learning, from Yandex and<span class="widont">&nbsp;</span><span class="caps">HSE</span></a></li><li><a href="#book-neural-networks-and-deep-learning">Book: Neural Networks and Deep<span class="widont">&nbsp;</span>Learning</a></li><li><a href="#book-deep-learning-book">Book: Deep learning<span class="widont">&nbsp;</span>book</a></li></ul></li><li><a href="#recommendations-for-learning-recommender-systems">Recommendations for Learning Recommender Systems</a><ul><li><a href="#recommender-systems-specialization">Recommender Systems Specialization</a></li><li><a href="#recommender-systems-handbook-2nd-edition">Recommender Systems Handbook, 2<span class="ord">nd</span><span class="widont">&nbsp;</span>edition</a></li></ul></li></ul></div></p>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#learning-machine-learning">Learning Machine Learning</a><ul><li><a href="#ml-courses-from-yandex"><span class="caps">ML</span> courses from Yandex: Машинное обучение и анализ<span class="widont">&nbsp;</span>данных</a></li><li><a href="#big-data-for-data-engineers-specialization">Big Data for Data Engineers<span class="widont">&nbsp;</span>Specialization</a></li></ul></li><li><a href="#learning-deep-learning">Learning Deep Learning</a><ul><li><a href="#stanford-cs231n-convolutional-neural-networks-for-visual-recognition">Stanford CS231n: Convolutional Neural Networks for Visual<span class="widont">&nbsp;</span>Recognition</a></li><li><a href="#standford-cs224n-natural-language-processing-with-deep-learning">Standford CS224n: Natural Language Processing with Deep<span class="widont">&nbsp;</span>Learning</a></li><li><a href="#deep-learning-specialization-from-deeplearningai">Deep Learning specialization from<span class="widont">&nbsp;</span>deeplearning.ai</a></li><li><a href="#advanced-machine-learning-from-yandex-and-hse">Advanced Machine Learning, from Yandex and<span class="widont">&nbsp;</span><span class="caps">HSE</span></a></li><li><a href="#book-neural-networks-and-deep-learning">Book: Neural Networks and Deep<span class="widont">&nbsp;</span>Learning</a></li><li><a href="#book-deep-learning-book">Book: Deep learning<span class="widont">&nbsp;</span>book</a></li></ul></li><li><a href="#recommendations-for-learning-recommender-systems">Recommendations for Learning Recommender Systems</a><ul><li><a href="#recommender-systems-specialization">Recommender Systems Specialization</a></li><li><a href="#recommender-systems-handbook-2nd-edition">Recommender Systems Handbook, 2<span class="ord">nd</span><span class="widont">&nbsp;</span>edition</a></li></ul></li><li><a href="#python-libs">Python libs</a></li></ul></div></p>
 <h2 id="learning-machine-learning">Learning Machine Learning <a class="header-anchor" href="#learning-machine-learning" aria-hidden="true">¶</a></h2>
 <h3 id="ml-courses-from-yandex"><span class="caps">ML</span> courses from Yandex: Машинное обучение и анализ данных <a class="header-anchor" href="#ml-courses-from-yandex" aria-hidden="true">¶</a></h3>
 <ul>
@@ -27,6 +27,10 @@
 from this specialization. You won’t get the certificate and won’t be able
 to submit the practical assignments, but you’ll all the videos and materials
 – for<span class="widont">&nbsp;</span>free.</p>
+<h3 id="big-data-for-data-engineers-specialization">Big Data for Data Engineers Specialization <a class="header-anchor" href="#big-data-for-data-engineers-specialization" aria-hidden="true">¶</a></h3>
+<ul>
+<li><a href="https://www.coursera.org/specializations/big-data-engineering">https://www.coursera.org/specializations/big-data-engineering</a></li>
+</ul>
 <h2 id="learning-deep-learning">Learning Deep Learning <a class="header-anchor" href="#learning-deep-learning" aria-hidden="true">¶</a></h2>
 <h3 id="stanford-cs231n-convolutional-neural-networks-for-visual-recognition">Stanford CS231n: Convolutional Neural Networks for Visual Recognition <a class="header-anchor" href="#stanford-cs231n-convolutional-neural-networks-for-visual-recognition" aria-hidden="true">¶</a></h3>
 <ul>
@@ -61,6 +65,33 @@ Learn from Top<span class="widont">&nbsp;</span>Kagglers”</a>.</p>
 <p><a href="https://www.coursera.org/specializations/recommender-systems">https://www.coursera.org/specializations/recommender-systems</a></p>
 <h3 id="recommender-systems-handbook-2nd-edition">Recommender Systems Handbook, 2<span class="ord">nd</span> edition <a class="header-anchor" href="#recommender-systems-handbook-2nd-edition" aria-hidden="true">¶</a></h3>
 <p><a href="http://www.springer.com/gp/book/9781489976369">http://www.springer.com/gp/book/9781489976369</a></p>
+<h2 id="python-libs">Python libs <a class="header-anchor" href="#python-libs" aria-hidden="true">¶</a></h2>
+<p>General stuff:</p>
+<pre><code>conda install future
+pip install hacking
+pip install opencv-python
+</code></pre>
+<p><span class="caps">ML</span>-related:</p>
+<pre><code>pip install kaggle
+pip install xgboost
+pip install lightgbm
+pip install scikits.bootstrap
+pip install scikit-optimize
+</code></pre>
+<p>Neural networks:</p>
+<pre><code>conda install numpy --upgrade  # for TF
+# check for the latest version
+pip install 'https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.5.0-cp36-cp36m-linux_x86_64.whl'
+pip install keras
+conda install pytorch-cpu torchvision -c pytorch
+</code></pre>
+<p>Notebooks:</p>
+<pre><code>conda install tqdm
+conda install -c damianavila82 rise
+pip install mpld3
+conda install bokeh
+pip install holoviews
+</code></pre>
 </div>
       </div>
     </div>
@@ -74,7 +105,7 @@ of a site because it seemed like a good idea.</p>
         <div class="last-update">
           <p>
             Published on 2018-03-12.
-            Last updated 2018-03-12 18:46:11 +0400.
+            Last updated 2018-05-24 16:27:26 +0400.
             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/ml/index.md">notes/ml/index.md</a>.
           </p>
         </div>
