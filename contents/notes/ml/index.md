@@ -20,6 +20,11 @@ to submit the practical assignments, but you'll all the videos and materials
 -- for free.
 
 
+### Big Data for Data Engineers Specialization
+
+* https://www.coursera.org/specializations/big-data-engineering
+
+
 ## Learning Deep Learning
 
 ### Stanford CS231n: Convolutional Neural Networks for Visual Recognition
@@ -78,3 +83,37 @@ https://www.coursera.org/specializations/recommender-systems
 
 http://www.springer.com/gp/book/9781489976369
 
+
+## Python libs
+
+General stuff:
+
+    conda install future
+    pip install hacking
+    pip install opencv-python
+
+ML-related:
+
+    pip install kaggle
+    pip install xgboost
+    pip install lightgbm
+    pip install scikits.bootstrap
+    pip install scikit-optimize
+
+
+Neural networks:
+
+    conda install numpy --upgrade  # for TF
+    # check for the latest version
+    pip install 'https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.5.0-cp36-cp36m-linux_x86_64.whl'
+    pip install keras
+    conda install pytorch-cpu torchvision -c pytorch
+
+
+Notebooks:
+
+    conda install tqdm
+    conda install -c damianavila82 rise
+    pip install mpld3
+    conda install bokeh
+    pip install holoviews
