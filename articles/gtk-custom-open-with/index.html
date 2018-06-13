@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Opening files with a custom application in GNOME and suchlike - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Opening files with a custom application in GNOME and suchlike</h1>
+        <div class="content"><p>In effort to make things simper, the software developers often reach
+quite an opposite goal. One such example I’ve suddenly stumbled upon
+today is <span class="caps">GTK</span> <em>Open With</em> dialog: adding a custom item there is,
+surprisingly, quite a technical task, in a sense that you have to use
+google, read the docs and edit some files (with a text editor!). I simply
+had to share the<span class="widont">&nbsp;</span>details.</p>
+<h2 id="the-problem">The problem <a class="header-anchor" href="#the-problem" aria-hidden="true">¶</a></h2>
+<p>If you’re <a href="https://xkcd.com/1567/">anything like me</a>, from time to time you experience an urge
+to open a file in <code>vim</code>, even from Firefox, or from your point-and-click
+file manager. I don’t like the <span class="caps">GUI</span> versions of <code>vim</code>, so I would prefer
+to open it in a new terminal window – something<span class="widont">&nbsp;</span>like</p>
+<pre><code class="hljs lang-bash">urxvt &lt;other options&gt; <span class="_">-e</span> vim &lt;filename&gt;
+</code></pre>
+<p>But the best thing you can get from those overly graphical
+programs is the <span class="caps">GTK</span> <em>Open With</em> dialog that allows you (with another dialog)
+to select another<span class="widont">&nbsp;</span>application:</p>
+<p><img src="open-with-dialog.png" alt="Screenshot of the dialog"></p>
+<p>As I’m not that young and I’ve seen some things in my time, I can still
+remember that there was a button that allowed the user to point to a
+custom binary. This was far from perfect — I would prefer an interface
+that would allow to put in a command line — but it was still something.
+Now, no such or similar button is provided; so, I had to dwell into
+the mythic realm of <em>Desktop<span class="widont">&nbsp;</span>Files</em>.</p>
+<h2 id="the-mythic-realm-of-desktop-files">The mythic realm of Desktop Files <a class="header-anchor" href="#the-mythic-realm-of-desktop-files" aria-hidden="true">¶</a></h2>
+<p>I’ve always had a strange feeling about all the <code>freedesktop.org</code>
+standards – that what they do is very unix-way, and, at the same time,
+it’s absolutely<span class="widont">&nbsp;</span>not.</p>
+<p>The <em>Open With</em> dialog takes the list of the applications from the
+desktop files that should be placed in the specific well-known
+locations: either <code>/usr/share/applications/</code>,
+<code>/usr/local/share/applications</code>  or <code>~/.local/share/applications/</code>. I’ve
+chosen the latter, since it’s always better idea to play with your <code>$HOME</code>
+then with your <code>/</code>.</p>
+<p>The <a href="https://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html">desktop files</a> are, unsurprisingly, files, in a format that
+resembles <span class="caps">INI</span>. After some googling and some reading, I came up with
+a desktop file that is close to what is claimed to be<span class="widont">&nbsp;</span>minimal:</p>
+<pre><code>[Desktop Entry]
+Exec=urxvt -geometry 144x42 -e vim %F
+Type=Application
+Name=ViTerm
+</code></pre>
+<p>I’ve put these lines into <code>~/.local/share/applications/viterm.desktop</code>
+file, and it just worked — no need to refresh or restart anything,
+just reopen the application selection<span class="widont">&nbsp;</span>dialog.</p>
+<h1>Final words</h1>
+<p>I’ve put all the relevant words into the introduction of this article.
+It’s awesome that there is such degree of customizability, and I find
+that configuration via text files is quite convenient. It’s just a bit
+surprising that there is no other<span class="widont">&nbsp;</span>way…</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Published on 2018-05-29.
+            Last updated 2018-06-13 23:00:54 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/gtk-custom-open-with/index.md">articles/gtk-custom-open-with/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

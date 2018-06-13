@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Samba development notes - iv goes technical
+    </title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hljs.css">
+  </head>
+  <body>
+    <header>
+      <p><span class="logo"><a href="http://iv-m.github.io">iv goes technical</a></span>&nbsp;&#9899;&nbsp;<a href="/">home</a>&nbsp;&#9899;&nbsp;<a href="/about.html">about</a>&nbsp;&#9899;&nbsp;<a href="/notes/">pale of notes</a>&nbsp;&#9899;&nbsp;<a href="/articles/">articles by date</a></p>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <h1>Samba development notes</h1>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#development-documentation">Development documentation</a></li><li><a href="#tdb-file-format"><span class="caps">TDB</span> file format</a></li></ul></div></p>
+<h2 id="development-documentation">Development documentation <a class="header-anchor" href="#development-documentation" aria-hidden="true">¶</a></h2>
+<p>Links, 2, 3,<span class="widont">&nbsp;</span>4…</p>
+<p><a href="https://wiki.samba.org/index.php/Development_Resources">https://wiki.samba.org/index.php/Development_Resources</a></p>
+<p>Protocol documentation from Microsoft, now freely available:
+<a href="https://msdn.microsoft.com/en-us/openspecifications/dn646763.aspx">https://msdn.microsoft.com/en-us/openspecifications/dn646763.aspx</a>
+Keyword to search in <span class="caps">MSDN</span>: <span class="caps">WSSP</span> (Workgroup Server Protocol<span class="widont">&nbsp;</span>Program)</p>
+<h2 id="tdb-file-format"><span class="caps">TDB</span> file format <a class="header-anchor" href="#tdb-file-format" aria-hidden="true">¶</a></h2>
+<p>In short:</p>
+<pre><code>if TDB_FEATURE_FLAG_MUTEX:
+    tdb_mutexes:
+        tdb_header
+        allrecords_mutex
+        allrecord_lock          // the type of the lock, short int
+        mutexes[hash_size + 1]  // free list + one for each bucket
+tdb_header                      // repeated if there are mutexes; it's RO anyway
+offsets[hash_size + 1]          // same as mutexes: #0 is for free list, then one for each bucket
+records[...]:
+    tdb_record
+    key
+    data
+</code></pre>
+<p>Records are aligned, so one cannot assume one record follows<span class="widont">&nbsp;</span>another.</p>
+<p>Records are allocated 25% larger than strictly required, to reduce
+the fragmentation. So typically the size of the record is larger
+then <code>sizeof(*rec) + rec-&gt;key_size + rec-&gt;data_size</code>. It’s never
+smaller,<span class="widont">&nbsp;</span>obviously.</p>
+<p><span class="caps">TDB</span> file format is defined, in addition to the above map, by
+the following <code>struct</code>s:</p>
+<ul>
+<li><code>tdb_header</code></li>
+<li><code>tdb_mutexes</code> (not interesting)</li>
+<li><code>tdb_record</code></li>
+</ul>
+<p>These structures are read directly from file into the memory
+(<code>__attribute__((packed))</code>, where are you?), and, if required,
+converted to respect the<span class="widont">&nbsp;</span>endianness.</p>
+</div>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="about"><p>Ivan A. Melnikov (AKA iv AKA iv-m) is a software engineer living in
+Saratov, Russia. One lonely winter evening he started this mess
+of a site because it seemed like a good idea.</p>
+
+        </div>
+        <div class="last-update">
+          <p>
+            Published on 2018-05-29.
+            Last updated 2018-06-13 23:00:54 +0400.
+            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/samba/index.md">notes/samba/index.md</a>.
+          </p>
+        </div>
+        <div class="copy">
+          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
