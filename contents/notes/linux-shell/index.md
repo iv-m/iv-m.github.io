@@ -99,6 +99,16 @@ $ amixer get Master | egrep -o '[0-9]{1,3}?%'
 100%
 ```
 
+## Using less to follow files
+
+`less` can serve as a convenient replacement for `tail -f`,
+especially when you're watching somewhat untrusted log
+that may hack your terminal emulator:
+
+```bash
+less -R +F <file>
+```
+
 ## Parsing comma-separated string into a bash array
 
 ```bash
