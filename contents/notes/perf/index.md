@@ -1,7 +1,7 @@
 ---
 title: perf_events notes
 date: 2017-01-01 22:00
-template: article.jade
+template: article.pug
 ---
 
 Some useful commands and links related to using `perf` utility (AKA perf_events).

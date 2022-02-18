@@ -1,7 +1,7 @@
 ---
 title: Samba development notes
 date: 2018-05-29 12:00
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

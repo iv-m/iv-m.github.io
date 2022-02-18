@@ -6,7 +6,7 @@ NOTEBOOK="Numba_vs_Numpy_-_some_sums.ipynb"
 METADATA='---
 title: "Numba vs Numpy: some sums"
 date: 2018-03-28
-template: article.jade
+template: article.pug
 ---'
 
 rm -rf index*

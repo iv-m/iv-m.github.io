@@ -1,7 +1,7 @@
 ---
 title: (Linux) shell tips
 date: 2017-01-04 11:00
-template: article.jade
+template: article.pug
 ---
 
 Command-line (unix shell) tips. Some may be bash- or linux-specific.

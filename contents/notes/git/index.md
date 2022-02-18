@@ -1,7 +1,7 @@
 ---
 title: git tips
 date: 2017-01-06
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

@@ -1,7 +1,7 @@
 ---
 title: Kafka in minkube
 date: 2017-01-09 15:00
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

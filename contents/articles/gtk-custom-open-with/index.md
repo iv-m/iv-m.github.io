@@ -1,7 +1,7 @@
 ---
 title: Opening files with a custom application in GNOME and suchlike
 date: 2018-05-29
-template: article.jade
+template: article.pug
 ---
 
 In effort to make things simper, the software developers often reach

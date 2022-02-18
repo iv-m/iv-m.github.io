@@ -1,7 +1,7 @@
 ---
 title: General Machine Learning Notes
 date: 2018-03-12 18:00
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

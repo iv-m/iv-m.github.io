@@ -1,7 +1,7 @@
 ---
 title: "Division by 1: just when you thought you knew Python"
 date: 2017-12-29
-template: article.jade
+template: article.pug
 ---
 
 To the hard people that came from ruthless land of C, many things in

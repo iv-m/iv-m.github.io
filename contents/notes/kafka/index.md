@@ -1,7 +1,7 @@
 ---
 title: Apache Kafka notes
 date: 2017-01-09 10:00
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

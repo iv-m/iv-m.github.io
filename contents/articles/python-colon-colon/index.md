@@ -1,7 +1,7 @@
 ---
 title: "Colon colon: just when you thought you knew Python"
 date: 2017-12-11
-template: article.jade
+template: article.pug
 ---
 
 For a simple scripting language Python bears more then enough brain-exploding

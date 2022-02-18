@@ -1,7 +1,7 @@
 ---
 title: First article, or how this site started
 date: 2016-12-25 17:30
-template: article.jade
+template: article.pug
 ---
 
 Hi there!

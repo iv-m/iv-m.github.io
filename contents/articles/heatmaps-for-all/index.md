@@ -1,7 +1,7 @@
 ---
 title: Heatmaps for all!
 date: 2017-01-05 14:33
-template: article.jade
+template: article.pug
 ---
 
 Heatmaps are awesome: in many cases, using color to represent an extra

@@ -1,7 +1,7 @@
 ---
 title: Node, JS, this blog...
 date: 2017-01-06 11:00
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

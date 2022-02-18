@@ -1,7 +1,7 @@
 ---
 title: "First steps in securing Apache Kafka: SSL and SASL/PLAIN"
 date: 2017-01-18 20:00
-template: draft.jade
+template: draft.pug
 ---
 
 In this article, we'll take a quick look onto configuring

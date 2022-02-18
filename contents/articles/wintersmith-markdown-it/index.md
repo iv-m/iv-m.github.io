@@ -1,7 +1,7 @@
 ---
 title: Switching to markdown-it
 date: 2017-01-04 15:00
-template: article.jade
+template: article.pug
 ---
 
 I've switched from [marked] to [markdown-it] for this site.

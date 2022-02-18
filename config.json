@@ -19,7 +19,7 @@
       "**/.ipynb*/**",
       "README*"
   ],
-  "jade": {
+  "pug": {
     "pretty": true
   },
   "markdown-it": {

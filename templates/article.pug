@@ -6,8 +6,8 @@ block prepend footer
     !=contents['about_footer.md'].html
   .last-update
     p Published on #{moment.utc(page.date).format('YYYY-MM-DD')}.
-      | Last updated #{env.helpers.getLastUpdateTime(page.filepath.relative)}.
-      | Build from&nbsp;
+      |  Last updated #{env.helpers.getLastUpdateTime(page.filepath.relative)}.
+      |  Build from&nbsp;
       a(href='https://github.com/iv-m/iv-m.github.io/blob/src/contents/' + page.filepath.relative)
         | #{ page.filepath.relative }
       |.

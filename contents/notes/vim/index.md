@@ -1,7 +1,7 @@
 ---
 title: Vim notes
 date: 2017-01-15 15:00
-template: article.jade
+template: article.pug
 ---
 
 [[toc]]

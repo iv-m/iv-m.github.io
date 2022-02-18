@@ -12,16 +12,16 @@
   },
   "dependencies": {
     "markdown-it-abbr": "^1.0.4",
-    "markdown-it-anchor": "^4.0.0",
-    "markdown-it-emoji": "^1.3.0",
+    "markdown-it-anchor": "^8.4.1",
+    "markdown-it-emoji": "^2.0.0",
     "markdown-it-footnote": "^3.0.1",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
-    "markdown-it-table-of-contents": "^0.3.1",
+    "markdown-it-table-of-contents": "^0.6.0",
     "moment": "^2.18.1",
     "typogr": "^0.6.6",
     "underscore": "^1.8.3",
-    "wintersmith": "^2.3.6",
+    "wintersmith": "^2.5.0",
     "wintersmith-markdown-it": "^0.1.1"
   },
   "repository": {

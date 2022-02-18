@@ -1,7 +1,7 @@
 ---
 title: "Kafka metrics: what does 'rate' mean"
 date: 2017-06-20 10:00
-template: draft.jade
+template: draft.pug
 ---
 
 Both Kafka servers and clients expose a number of [metrics] that are
