@@ -16,10 +16,10 @@
     <div id="content">
       <div class="content-wrap">
         <h1>git tips</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#bus-factor">Bus factor</a></li><li><a href="#useful-aliases">Useful aliases</a></li><li><a href="#highlighting-differences-of-changed-lines">Highlighting differences of changed<span class="widont">&nbsp;</span>lines</a></li><li><a href="#http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed<span class="widont">&nbsp;</span>certificates</a></li><li><a href="#git-grep-configuration">git grep configuration</a></li><li><a href="#seldom-known-commands-and-features">Seldom known commands and<span class="widont">&nbsp;</span>features</a></li></ul></div></p>
-<h2 id="bus-factor">Bus factor <a class="header-anchor" href="#bus-factor" aria-hidden="true">¶</a></h2>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#bus-factor">Bus factor </a></li><li><a href="#useful-aliases">Useful aliases </a></li><li><a href="#highlighting-differences-of-changed-lines">Highlighting differences of changed<span class="widont">&nbsp;</span>lines </a></li><li><a href="#http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed<span class="widont">&nbsp;</span>certificates </a></li><li><a href="#git-grep-configuration">git grep configuration </a></li><li><a href="#seldom-known-commands-and-features">Seldom known commands and<span class="widont">&nbsp;</span>features </a></li></ul></div></p>
+<h2 id="bus-factor" tabindex="-1">Bus factor <a class="header-anchor" href="#bus-factor">¶</a></h2>
 <p><a href="http://zgrossbart.github.io/busfactor/">http://zgrossbart.github.io/busfactor/</a></p>
-<h2 id="useful-aliases">Useful aliases <a class="header-anchor" href="#useful-aliases" aria-hidden="true">¶</a></h2>
+<h2 id="useful-aliases" tabindex="-1">Useful aliases <a class="header-anchor" href="#useful-aliases">¶</a></h2>
 <pre><code>[alias]
     hist = log --pretty=format:\&quot;%C(auto)%h %ad %s%d [%an]\&quot; --graph --date=short
     root = rev-parse --show-toplevel
@@ -27,7 +27,7 @@
 <p>Basicaly the same as <code>git hist</code>, if you’re not the machine<span class="widont">&nbsp;</span>owner:</p>
 <pre><code>$ git log --all --oneline --graph --decorate=short
 </code></pre>
-<h2 id="highlighting-differences-of-changed-lines">Highlighting differences of changed lines <a class="header-anchor" href="#highlighting-differences-of-changed-lines" aria-hidden="true">¶</a></h2>
+<h2 id="highlighting-differences-of-changed-lines" tabindex="-1">Highlighting differences of changed lines <a class="header-anchor" href="#highlighting-differences-of-changed-lines">¶</a></h2>
 <p>Git <code>congrib</code> directory has a script for that: <code>diff-highlight</code>
 (<code>/usr/share/git-core/contrib/diff-highlight/diff-highlight</code>).
 To use it, add the following to your <code>~/.gitconfig</code>:</p>
@@ -40,14 +40,14 @@ To use it, add the following to your <code>~/.gitconfig</code>:</p>
 <p><img src="diff-highlight.png" alt=""></p>
 <p>Of course, you can always use <code>git-diff --color-words=.</code> or something
 like<span class="widont">&nbsp;</span>that.</p>
-<h2 id="http-proxy-and-self-signed-certificates"><span class="caps">HTTP</span> proxy and self-signed certificates <a class="header-anchor" href="#http-proxy-and-self-signed-certificates" aria-hidden="true">¶</a></h2>
+<h2 id="http-proxy-and-self-signed-certificates" tabindex="-1"><span class="caps">HTTP</span> proxy and self-signed certificates <a class="header-anchor" href="#http-proxy-and-self-signed-certificates">¶</a></h2>
 <pre><code>[http]
         sslVerify = true
 [http &quot;https://weak.example.com&quot;]
         sslVerify = false
         proxy = proxy.example.com:3128
 </code></pre>
-<h2 id="git-grep-configuration">git grep configuration <a class="header-anchor" href="#git-grep-configuration" aria-hidden="true">¶</a></h2>
+<h2 id="git-grep-configuration" tabindex="-1">git grep configuration <a class="header-anchor" href="#git-grep-configuration">¶</a></h2>
 <pre><code>[color]
 	grep = auto
 [grep]
@@ -57,7 +57,7 @@ like<span class="widont">&nbsp;</span>that.</p>
 	linenumber = green
 	function = yellow
 </code></pre>
-<h2 id="seldom-known-commands-and-features">Seldom known commands and features <a class="header-anchor" href="#seldom-known-commands-and-features" aria-hidden="true">¶</a></h2>
+<h2 id="seldom-known-commands-and-features" tabindex="-1">Seldom known commands and features <a class="header-anchor" href="#seldom-known-commands-and-features">¶</a></h2>
 <p>Mainly because they’re seldom<span class="widont">&nbsp;</span>needed?</p>
 <pre><code>git clean -fxd
 git config merge.log 9000
@@ -78,14 +78,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-01-06.
-            Last updated 2017-03-27 11:28:45 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/git/index.md">notes/git/index.md</a>.
+          <p>Published on 2017-01-06. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/git/index.md">notes/git/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

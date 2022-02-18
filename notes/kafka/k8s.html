@@ -16,8 +16,8 @@
     <div id="content">
       <div class="content-wrap">
         <h1>Kafka in minkube</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started-with-k8s">Getting started with<span class="widont">&nbsp;</span>k8s</a></li><li><a href="#various-commands">Various commands</a></li><li><a href="#deploying-kafka-fist-try">Deploying kafka: fist try</a><ul><li><a href="#zookeeper">ZooKeeper</a></li><li><a href="#kafka">Kafka</a></li><li><a href="#first-testing">First testing</a></li></ul></li><li><a href="#environment-variables-for-services">Environment variables for services</a><ul><li><a href="#wat"><span class="caps">WAT</span>?</a></li></ul></li><li><a href="#when-youre-done-with-it">When you&#8217;re done with<span class="widont">&nbsp;</span>it</a></li><li><a href="#random-links">Random links</a></li></ul></div></p>
-<h2 id="getting-started-with-k8s">Getting started with k8s <a class="header-anchor" href="#getting-started-with-k8s" aria-hidden="true">¶</a></h2>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started-with-k8s">Getting started with<span class="widont">&nbsp;</span>k8s </a></li><li><a href="#various-commands">Various commands </a></li><li><a href="#deploying-kafka%3A-fist-try">Deploying kafka: fist try </a><ul><li><a href="#zookeeper">ZooKeeper </a></li><li><a href="#kafka">Kafka </a></li><li><a href="#first-testing">First testing </a></li></ul></li><li><a href="#environment-variables-for-services">Environment variables for services </a><ul><li><a href="#wat%3F"><span class="caps">WAT</span>? </a></li></ul></li><li><a href="#when-you%E2%80%99re-done-with-it">When you’re done with<span class="widont">&nbsp;</span>it </a></li><li><a href="#random-links">Random links </a></li></ul></div></p>
+<h2 id="getting-started-with-k8s" tabindex="-1">Getting started with k8s <a class="header-anchor" href="#getting-started-with-k8s">¶</a></h2>
 <p>In the older times, there were <a href="https://github.com/kubernetes/community/blob/master/contributors/devel/local-cluster/docker.md">hypercube and docker-based solution</a>,
 but no one does that anymore. Also, <code>minikube</code> uses <code>localkube</code>
 internally, so there must be a<span class="widont">&nbsp;</span>way.</p>
@@ -43,13 +43,13 @@ internally, so there must be a<span class="widont">&nbsp;</span>way.</p>
 </li>
 </ul>
 <pre><code class="hljs lang-bash">kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
-kubectl expose deployment hello-minikube --type=NodePort
+kubectl expose deployment hello-minikube --<span class="built_in">type</span>=NodePort
 kubectl get pod
 curl $(minikube service hello-minikube --url)
 <span class="comment"># check it out, then cleanup:</span>
 kubectl delete deployment hello-minikube
 </code></pre>
-<h2 id="various-commands">Various commands <a class="header-anchor" href="#various-commands" aria-hidden="true">¶</a></h2>
+<h2 id="various-commands" tabindex="-1">Various commands <a class="header-anchor" href="#various-commands">¶</a></h2>
 <p>Just tried them<span class="widont">&nbsp;</span>out:</p>
 <pre><code class="hljs lang-bash">minikube ssh
 kubectl get pods
@@ -60,15 +60,15 @@ vboxmanage showvminfo minikube | less
 <p>Switch to mikube context after using gcloud context for a<span class="widont">&nbsp;</span>while:</p>
 <pre><code>kubectl config use-context minikube
 </code></pre>
-<h2 id="deploying-kafka-fist-try">Deploying kafka: fist try <a class="header-anchor" href="#deploying-kafka-fist-try" aria-hidden="true">¶</a></h2>
+<h2 id="deploying-kafka%3A-fist-try" tabindex="-1">Deploying kafka: fist try <a class="header-anchor" href="#deploying-kafka%3A-fist-try">¶</a></h2>
 <p>From <a href="https://github.com/CloudTrackInc/kubernetes-kafka">https://github.com/CloudTrackInc/kubernetes-kafka</a></p>
-<h3 id="zookeeper">ZooKeeper <a class="header-anchor" href="#zookeeper" aria-hidden="true">¶</a></h3>
+<h3 id="zookeeper" tabindex="-1">ZooKeeper <a class="header-anchor" href="#zookeeper">¶</a></h3>
 <pre><code class="hljs lang-bash"><span class="comment"># Create the service and the pod:</span>
-kubectl create <span class="_">-f</span> zoo-service.yaml
-kubectl create <span class="_">-f</span> zoo-rc.yaml
+kubectl create -f zoo-service.yaml
+kubectl create -f zoo-rc.yaml
 
 <span class="comment"># Expose the service for testing</span>
-kubectl expose svc kafka-zoo-svc --port=2181 --type=NodePort --name kafka-zoo-svc-ext
+kubectl expose svc kafka-zoo-svc --port=2181 --<span class="built_in">type</span>=NodePort --name kafka-zoo-svc-ext
 
 <span class="comment"># Get the exposed <span class="caps">ZK</span> <span class="caps">URL</span></span>
 minikube service --format=<span class="string">"{{.<span class="caps">IP</span>}}:{{.Port}}"</span> kafka-zoo-svc-ext
@@ -82,7 +82,7 @@ visible via <code>kubectl get -o yaml</code> though. For<span class="widont">&nb
 <pre><code>$ kubectl get -o yaml svc | grep nodePort
     - nodePort: 31189
 </code></pre>
-<h3 id="kafka">Kafka <a class="header-anchor" href="#kafka" aria-hidden="true">¶</a></h3>
+<h3 id="kafka" tabindex="-1">Kafka <a class="header-anchor" href="#kafka">¶</a></h3>
 <p>Change to chroot:</p>
 <pre><code class="hljs lang-diff">           - name: KAFKA_ZOOKEEPER_CONNECT
 <span class="deletion">-            value: kafka-zoo-svc:2181</span>
@@ -94,15 +94,15 @@ to create the corresponding <span class="caps">ZK</span> node. For example, type
 <pre><code>create kafka1 ''
 </code></pre>
 <p>Start everything:</p>
-<pre><code class="hljs lang-bash">kubectl create <span class="_">-f</span> kafka-service.yam
-kubectl create <span class="_">-f</span> kafka-rc.yaml
+<pre><code class="hljs lang-bash">kubectl create -f kafka-service.yam
+kubectl create -f kafka-rc.yaml
 </code></pre>
-<h3 id="first-testing">First testing <a class="header-anchor" href="#first-testing" aria-hidden="true">¶</a></h3>
+<h3 id="first-testing" tabindex="-1">First testing <a class="header-anchor" href="#first-testing">¶</a></h3>
 <p>Pretend we’re in docker: run the following on two tabs of your<span class="widont">&nbsp;</span>terminal:</p>
 <pre><code class="hljs lang-bash"><span class="built_in">eval</span> $(minikube docker-env)
 docker ps
 docker <span class="built_in">exec</span> -ti \
-    $(docker ps --no-trunc --format <span class="string">"{{.<span class="caps">ID</span>}}:{{.Command}}"</span> | grep kubernetes-start | head -n1 | cut <span class="_">-d</span>: <span class="_">-f</span>1) \
+    $(docker ps --no-trunc --format <span class="string">"{{.<span class="caps">ID</span>}}:{{.Command}}"</span> | grep kubernetes-start | head -n1 | cut -d: -f1) \
     bash -i
 <span class="comment"># in the container</span>
 <span class="built_in">cd</span> /opt/kafka*
@@ -125,7 +125,7 @@ bin/kafka-topics.sh --zookeeper kafka-zoo-svc:2181/kafka1 --describe --topic dem
 <pre><code>kubectl run -i -t test2 --image=cloudtrackinc/kubernetes-kafka:latest --command -- tail -f /dev/null
 </code></pre>
 <p><code>tailf</code> does not work – there is no such command in most of the<span class="widont">&nbsp;</span>images.</p>
-<h2 id="environment-variables-for-services">Environment variables for services <a class="header-anchor" href="#environment-variables-for-services" aria-hidden="true">¶</a></h2>
+<h2 id="environment-variables-for-services" tabindex="-1">Environment variables for services <a class="header-anchor" href="#environment-variables-for-services">¶</a></h2>
 <p>Kubernetes includes service location information into environment<span class="widont">&nbsp;</span>variables:</p>
 <pre><code>$ kubectl exec kafka-broker-msggm -- sh -c set | grep SERVICE
 KAFKA_SERVICE_HOST='10.0.0.2'
@@ -148,7 +148,7 @@ Kubernetes service. K8s kindly injects the <span class="caps">API</span> key and
 service into every container. For example, this is how to get
 an external <span class="caps">IP</span> and port of <code>kafka-service</code> service in the <code>default</code>
 namesapce:</p>
-<pre><code class="hljs lang-bash">curl <span class="_">-s</span>S \
+<pre><code class="hljs lang-bash">curl -sS \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
     -H <span class="string">"Authorization: Bearer <span class="variable">$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)</span>"</span> \
     https://kubernetes/api/v1/namespaces/default/services/kafka-service \
@@ -156,18 +156,18 @@ namesapce:</p>
 </code></pre>
 <p>The default namespace to be used for namespaced <span class="caps">API</span> operations is placed in a file
 at <code>/var/run/secrets/kubernetes.io/serviceaccount/namespace</code> in each<span class="widont">&nbsp;</span>container.</p>
-<h3 id="wat"><span class="caps">WAT</span>? <a class="header-anchor" href="#wat" aria-hidden="true">¶</a></h3>
-<pre><code class="hljs lang-bash">curl <span class="_">-s</span>S \
+<h3 id="wat%3F" tabindex="-1"><span class="caps">WAT</span>? <a class="header-anchor" href="#wat%3F">¶</a></h3>
+<pre><code class="hljs lang-bash">curl -sS \
     --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
     -H <span class="string">"Authorization: Bearer <span class="variable">$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)</span>"</span> \
     <span class="string">"https://<span class="variable">$KUBERNETES_SERVICE_HOST</span>/api/v1/namespaces/manual-lle/secrets/tvs-mysql-mysqldb"</span> \
-    | jq -r <span class="string">'.data."mysql-root-password"'</span> | base64 <span class="_">-d</span>
+    | jq -r <span class="string">'.data."mysql-root-password"'</span> | base64 -d
 </code></pre>
-<h2 id="when-youre-done-with-it">When you’re done with it <a class="header-anchor" href="#when-youre-done-with-it" aria-hidden="true">¶</a></h2>
+<h2 id="when-you%E2%80%99re-done-with-it" tabindex="-1">When you’re done with it <a class="header-anchor" href="#when-you%E2%80%99re-done-with-it">¶</a></h2>
 <pre><code>minikube stop
 vboxmanage list runningvms  # oh it's gone...
 </code></pre>
-<h2 id="random-links">Random links <a class="header-anchor" href="#random-links" aria-hidden="true">¶</a></h2>
+<h2 id="random-links" tabindex="-1">Random links <a class="header-anchor" href="#random-links">¶</a></h2>
 <ul>
 <li><a href="https://github.com/Yolean/kubernetes-kafka">https://github.com/Yolean/kubernetes-kafka</a>
 <ul>
@@ -201,14 +201,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-01-09.
-            Last updated 2017-01-18 19:09:09 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/kafka/k8s.md">notes/kafka/k8s.md</a>.
+          <p>Published on 2017-01-09. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/kafka/k8s.md">notes/kafka/k8s.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

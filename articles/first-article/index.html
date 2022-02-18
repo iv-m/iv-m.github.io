@@ -20,7 +20,7 @@
 <p>Now, when I ductaped together quite a bit of infrastructure,
 it’s time to write something <strong>for real</strong>. I’d also like to describe
 how and what was done, and how I feel about<span class="widont">&nbsp;</span>it.</p>
-<h2 id="so-do-you-want-a-blog">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog" aria-hidden="true">¶</a></h2>
+<h2 id="so%2C-do-you-want-a-blog%3F" tabindex="-1">So, do you want a blog? <a class="header-anchor" href="#so%2C-do-you-want-a-blog%3F">¶</a></h2>
 <p>They say that most of programmers are optimistic, and also tend to
 search for technical solutions for non-technical problems. So here I am,
 thinking: “Maybe if tooling around my blog is awesome and convenient
@@ -29,10 +29,10 @@ for last two or three attempts, but that’s certainly not because I just
 was lazy and could not come up with something interesting to write –
 that was because <em>the tooling was not awesome enough</em>. 100% sure it was<span class="widont">&nbsp;</span>that.</p>
 <p>So, let’s build something<span class="widont">&nbsp;</span>neat.</p>
-<h2 id="so-do-you-want-a-blog-2">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog-2" aria-hidden="true">¶</a></h2>
+<h2 id="so%2C-do-you-want-a-blog%3F-1" tabindex="-1">So, do you want a blog? <a class="header-anchor" href="#so%2C-do-you-want-a-blog%3F-1">¶</a></h2>
 <p>Well, not exactly. It should be more like a place to dump some stuff I’d
 like to share, then come back and fix, then come back and<span class="widont">&nbsp;</span>rewrite…</p>
-<h2 id="so-do-you-want-a-blog-3">So, do you want a blog? <a class="header-anchor" href="#so-do-you-want-a-blog-3" aria-hidden="true">¶</a></h2>
+<h2 id="so%2C-do-you-want-a-blog%3F-2" tabindex="-1">So, do you want a blog? <a class="header-anchor" href="#so%2C-do-you-want-a-blog%3F-2">¶</a></h2>
 <p>Let’s see. I want to write some stuff. Locally, in my Vim, as it’s the
 most convenient way of writing.  Preferably using some neat markup, like<span class="widont">&nbsp;</span>markdown.</p>
 <p>I want to commit what’s written to git. I’m fond of git. I’m a git
@@ -41,10 +41,10 @@ control to be<span class="widont">&nbsp;</span>productive.</p>
 <p>Then, I want to publish it nicely, with certain meta-information added
 for me by, say, robots. But I want to manually check stuff before it
 goes to<span class="widont">&nbsp;</span>production.</p>
-<h2 id="how-do-i-get-there">How do I get there? <a class="header-anchor" href="#how-do-i-get-there" aria-hidden="true">¶</a></h2>
+<h2 id="how-do-i-get-there%3F" tabindex="-1">How do I get there? <a class="header-anchor" href="#how-do-i-get-there%3F">¶</a></h2>
 <p>First <a href="https://pages.github.com/">github pages</a>. The tutorial is very straightforward, and I walked
 through it some time ago, leaving it with a simple <code>index.html</code> saying
-&quot;Under construction&quot;.  The main outcome was: I can put some pages into
+“Under construction”.  The main outcome was: I can put some pages into
 the master branch of a particular repository, and then push it to
 <code>origin</code> – and these pages immediately become my site,
 <a href="http://iv-m.github.io">http://iv-m.github.io</a>.</p>
@@ -62,7 +62,7 @@ from separate components (like markdown renderer and templating
 engine) using a general-purpose build system. Other than that,
 the choice of Wintersmith out of all the node-base static site
 generators was almost<span class="widont">&nbsp;</span>arbitrary.</p>
-<h2 id="commands-and-details">Commands and details <a class="header-anchor" href="#commands-and-details" aria-hidden="true">¶</a></h2>
+<h2 id="commands-and-details" tabindex="-1">Commands and details <a class="header-anchor" href="#commands-and-details">¶</a></h2>
 <p>I’d like to use a separate git branch for sources – let’s name it
 <code>src</code>. Then, I can commit one of the build results to <code>master</code> and
 push it to publish the<span class="widont">&nbsp;</span>update.</p>
@@ -71,8 +71,8 @@ push it to publish the<span class="widont">&nbsp;</span>update.</p>
 vim .gitignore
 vim README.md
 git add .
-git commit <span class="_">-a</span>
-git push --set-upstream origin src
+git commit -a
+git push --<span class="built_in">set</span>-upstream origin src
 </code></pre>
 <p>Then let’s create new <code>npm</code> project:</p>
 <pre><code class="hljs lang-bash">npm init
@@ -125,7 +125,7 @@ site, thanks to the Github<span class="widont">&nbsp;</span>magic.</p>
 <p>Now I have a small script for committing there, which includes
 shortlog of the commit of <code>src</code> branch into the commit message.
 But that’s beyond the basic<span class="widont">&nbsp;</span>setup.</p>
-<h2 id="kind-of-conclusion">Kind of conclusion <a class="header-anchor" href="#kind-of-conclusion" aria-hidden="true">¶</a></h2>
+<h2 id="kind-of-conclusion" tabindex="-1">Kind of conclusion <a class="header-anchor" href="#kind-of-conclusion">¶</a></h2>
 <p>If you’re reading this, it seems to work – at least, I
 have something I’m not terribly ashamed of, and I can build up
 from<span class="widont">&nbsp;</span>here:</p>
@@ -152,14 +152,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2016-12-25.
-            Last updated 2017-01-22 19:24:35 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/first-article/index.md">articles/first-article/index.md</a>.
+          <p>Published on 2016-12-25. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/first-article/index.md">articles/first-article/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

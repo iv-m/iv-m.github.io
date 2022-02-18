@@ -17,8 +17,8 @@
       <div class="content-wrap">
         <h1>(Linux) shell tips</h1>
         <div class="content"><p>Command-line (unix shell) tips. Some may be bash- or<span class="widont">&nbsp;</span>linux-specific.</p>
-<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping mans</a></li><li><a href="#mosh-tmux-systemd">mosh + tmux +<span class="widont">&nbsp;</span>systemd</a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without<span class="widont">&nbsp;</span>docker</a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running<span class="widont">&nbsp;</span>process</a></li><li><a href="#find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching<span class="widont">&nbsp;</span>part</a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash<span class="widont">&nbsp;</span>array</a></li><li><a href="#extracting-a-single-file-from-the-rpm-package">Extracting a single file from the <span class="caps">RPM</span><span class="widont">&nbsp;</span>package</a></li><li><a href="#when-youre-too-lazy-to-explain-everything">When you&#8217;re too lazy to explain<span class="widont">&nbsp;</span>everything</a></li></ul></div></p>
-<h2 id="grepping-mans">Grepping mans <a class="header-anchor" href="#grepping-mans" aria-hidden="true">¶</a></h2>
+<p><div class="table-of-contents"><ul><li><a href="#grepping-mans">Grepping mans </a></li><li><a href="#mosh-%2B-tmux-%2B-systemd">mosh + tmux +<span class="widont">&nbsp;</span>systemd </a></li><li><a href="#entering-docker-container-without-docker">Entering docker container without<span class="widont">&nbsp;</span>docker </a></li><li><a href="#environment-variables-of-a-running-process">Environment variables of a running<span class="widont">&nbsp;</span>process </a></li><li><a href="#find-matching-line%2C-and-extract-the-matching-part">Find matching line, and extract the matching<span class="widont">&nbsp;</span>part </a></li><li><a href="#using-less-to-follow-files">Using less to follow<span class="widont">&nbsp;</span>files </a></li><li><a href="#parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash<span class="widont">&nbsp;</span>array </a></li><li><a href="#extracting-a-single-file-from-the-rpm-package">Extracting a single file from the <span class="caps">RPM</span><span class="widont">&nbsp;</span>package </a></li><li><a href="#when-you%E2%80%99re-too-lazy-to-explain-everything">When you’re too lazy to explain<span class="widont">&nbsp;</span>everything </a></li></ul></div></p>
+<h2 id="grepping-mans" tabindex="-1">Grepping mans <a class="header-anchor" href="#grepping-mans">¶</a></h2>
 <p>Here’s a piece of <code>man git-log | xxd</code>:</p>
 <pre><code>00000a0: 2020 5f08 675f 0869 5f08 7420 5f08 6c5f    _.g_.i_.t _.l_
 00000b0: 086f 5f08 6720 5b3c 6f70 7469 6f6e 733e  .o_.g [&lt;options&gt;
@@ -32,18 +32,18 @@ but grep won’t find it: it needs a help for yet another command,
 <pre><code class="hljs lang-bash">$ man git-log | col -b | grep <span class="string">'git log'</span> | head -n 1
     git <span class="built_in">log</span> [&lt;options&gt;] [&lt;revision range&gt;] [[--] &lt;path&gt;...]
 </code></pre>
-<h2 id="mosh-tmux-systemd">mosh + tmux + systemd <a class="header-anchor" href="#mosh-tmux-systemd" aria-hidden="true">¶</a></h2>
+<h2 id="mosh-%2B-tmux-%2B-systemd" tabindex="-1">mosh + tmux + systemd <a class="header-anchor" href="#mosh-%2B-tmux-%2B-systemd">¶</a></h2>
 <p>Systemd-logind kills user processes when the session is over.
 To overcome this, I’ve created the following one-line script
 in my <code>~/bin</code>.</p>
 <pre><code class="hljs lang-bash"><span class="meta">#!/bin/sh
 </span>
-<span class="built_in">exec</span> urxvt <span class="_">-e</span> mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
+<span class="built_in">exec</span> urxvt -e mosh <span class="string">"<span class="variable">${1:-gd-ws}</span>"</span> \
     --server=<span class="string">'systemd-run --scope --user mosh-server new'</span> \
     -- tmux att
 </code></pre>
 <p>Explaining this command would make a nice article <code>;)</code><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p>
-<h2 id="entering-docker-container-without-docker">Entering docker container without docker <a class="header-anchor" href="#entering-docker-container-without-docker" aria-hidden="true">¶</a></h2>
+<h2 id="entering-docker-container-without-docker" tabindex="-1">Entering docker container without docker <a class="header-anchor" href="#entering-docker-container-without-docker">¶</a></h2>
 <p><code>docker exec</code> executes command within the container cgroup;
 if this cgroup has hard <span class="caps">CPU</span> and/or <span class="caps">RAM</span> limitations, this
 may affect your production code. If you have root access
@@ -63,7 +63,7 @@ in the container, as seen from the<span class="widont">&nbsp;</span>host.</p>
 10:pids:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
 9:memory:/init.scope/system.slice/docker-2b341597dbf7d223f820c1be8edc7c78c394b0f447547f4679f4926e36d07060.scope
 </code></pre>
-<h2 id="environment-variables-of-a-running-process">Environment variables of a running process <a class="header-anchor" href="#environment-variables-of-a-running-process" aria-hidden="true">¶</a></h2>
+<h2 id="environment-variables-of-a-running-process" tabindex="-1">Environment variables of a running process <a class="header-anchor" href="#environment-variables-of-a-running-process">¶</a></h2>
 <p>You can get them from <code>/proc/$PID/environ</code>. Variables are <span class="caps">NULL</span>-separated. For<span class="widont">&nbsp;</span>example:</p>
 <pre><code># cat /proc/`pgrep dockerd`/environ | xargs -0L1
 LANG=ru_RU.UTF-8
@@ -72,14 +72,20 @@ NOTIFY_SOCKET=/run/systemd/notify
 OPTIONS=
 DOCKER_STORAGE_OPTIONS=
 </code></pre>
-<h2 id="find-matching-line-and-extract-the-matching-part">Find matching line, and extract the matching part <a class="header-anchor" href="#find-matching-line-and-extract-the-matching-part" aria-hidden="true">¶</a></h2>
+<h2 id="find-matching-line%2C-and-extract-the-matching-part" tabindex="-1">Find matching line, and extract the matching part <a class="header-anchor" href="#find-matching-line%2C-and-extract-the-matching-part">¶</a></h2>
 <p>There is <code>-o</code> switch in <code>grep</code> for that<span class="widont">&nbsp;</span>exactly.</p>
 <pre><code>$ amixer get Master | egrep -o '[0-9]{1,3}?%'
 100%
 100%
 </code></pre>
-<h2 id="parsing-comma-separated-string-into-a-bash-array">Parsing comma-separated string into a bash array <a class="header-anchor" href="#parsing-comma-separated-string-into-a-bash-array" aria-hidden="true">¶</a></h2>
-<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> <span class="_">-a</span> <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
+<h2 id="using-less-to-follow-files" tabindex="-1">Using less to follow files <a class="header-anchor" href="#using-less-to-follow-files">¶</a></h2>
+<p><code>less</code> can serve as a convenient replacement for <code>tail -f</code>,
+especially when you’re watching somewhat untrusted log
+that may hack your terminal<span class="widont">&nbsp;</span>emulator:</p>
+<pre><code class="hljs lang-bash">less -R +F &lt;file&gt;
+</code></pre>
+<h2 id="parsing-comma-separated-string-into-a-bash-array" tabindex="-1">Parsing comma-separated string into a bash array <a class="header-anchor" href="#parsing-comma-separated-string-into-a-bash-array">¶</a></h2>
+<pre><code class="hljs lang-bash"><span class="function"><span class="title">parse_array</span></span> () { <span class="built_in">local</span> <span class="caps">IFS</span>=<span class="string">','</span>; <span class="built_in">read</span> -a <span class="string">"<span class="variable">$1</span>"</span> &lt; &lt;(<span class="built_in">echo</span> <span class="string">"<span class="variable">$2</span>"</span>); }
 </code></pre>
 <p>This takes two arguments – name and content, and sets global
 variable with the given name to an array parsed from comma-separated
@@ -96,11 +102,11 @@ port
 service name
 comment
 </code></pre>
-<h2 id="extracting-a-single-file-from-the-rpm-package">Extracting a single file from the <span class="caps">RPM</span> package <a class="header-anchor" href="#extracting-a-single-file-from-the-rpm-package" aria-hidden="true">¶</a></h2>
+<h2 id="extracting-a-single-file-from-the-rpm-package" tabindex="-1">Extracting a single file from the <span class="caps">RPM</span> package <a class="header-anchor" href="#extracting-a-single-file-from-the-rpm-package">¶</a></h2>
 <p>Beware of the traces of nasty hacks in the example<span class="widont">&nbsp;</span>below:</p>
 <pre><code class="hljs lang-bash">rpm2cpio net-tools-1.60-114.el6.x86_64.rpm | cpio -iv --to-stdout  ./sbin/ifconfig &gt; /sbin/ifconfig-compat
 </code></pre>
-<h2 id="when-youre-too-lazy-to-explain-everything">When you’re too lazy to explain everything <a class="header-anchor" href="#when-youre-too-lazy-to-explain-everything" aria-hidden="true">¶</a></h2>
+<h2 id="when-you%E2%80%99re-too-lazy-to-explain-everything" tabindex="-1">When you’re too lazy to explain everything <a class="header-anchor" href="#when-you%E2%80%99re-too-lazy-to-explain-everything">¶</a></h2>
 <p><a href="http://explainshell.com/">http://explainshell.com/</a></p>
 <hr class="footnotes-sep">
 <section class="footnotes">
@@ -121,14 +127,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-01-04.
-            Last updated 2017-06-23 10:37:05 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
+          <p>Published on 2017-01-04. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/linux-shell/index.md">notes/linux-shell/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

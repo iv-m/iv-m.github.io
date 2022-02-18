@@ -16,18 +16,18 @@
     <div id="content">
       <div class="content-wrap">
         <h1>Apache Kafka notes</h1>
-        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started">Getting started</a></li><li><a href="#deployment-considerations">Deployment considerations</a><ul><li><a href="#kafka-and-zookeeper">Kafka and Zookeeper</a></li><li><a href="#offsets-replication-factor">Offsets replication factor</a></li></ul></li><li><a href="#monitoring-and-management-uis">Monitoring and management UIs</a><ul><li><a href="#offsetsconsumers">Offsets/consumers</a></li><li><a href="#management">Management</a></li></ul></li><li><a href="#operations-notes">Operations notes</a><ul><li><a href="#getting-the-list-of-active-brokers">Getting the list of active<span class="widont">&nbsp;</span>brokers</a></li><li><a href="#managing-partitions">Managing partitions</a></li></ul></li><li><a href="#random-links">Random links</a></li></ul></div></p>
-<h2 id="getting-started">Getting started <a class="header-anchor" href="#getting-started" aria-hidden="true">¶</a></h2>
+        <div class="content"><p><div class="table-of-contents"><ul><li><a href="#getting-started">Getting started </a></li><li><a href="#deployment-considerations">Deployment considerations </a><ul><li><a href="#kafka-and-zookeeper">Kafka and Zookeeper </a></li><li><a href="#offsets-replication-factor">Offsets replication factor </a></li></ul></li><li><a href="#monitoring-and-management-uis">Monitoring and management UIs </a><ul><li><a href="#offsets%2Fconsumers">Offsets/consumers </a></li><li><a href="#management">Management </a></li></ul></li><li><a href="#operations-notes">Operations notes </a><ul><li><a href="#getting-the-list-of-active-brokers">Getting the list of active<span class="widont">&nbsp;</span>brokers </a></li><li><a href="#managing-partitions">Managing partitions </a></li></ul></li><li><a href="#random-links">Random links </a></li></ul></div></p>
+<h2 id="getting-started" tabindex="-1">Getting started <a class="header-anchor" href="#getting-started">¶</a></h2>
 <p><a href="http://kafka.apache.org/documentation/">Documentation</a> is really awesome, <a href="http://kafka.apache.org/quickstart">quckstart</a><span class="widont">&nbsp;</span>works.</p>
 <p><strong>Advice</strong>: don’t use root ZooKeeper path: <code>--zookeeper localhost:2181/kafka</code> works.</p>
 <p><span class="caps">TBD</span>: what if we have <span class="caps">ZK</span> cluster? Probably the syntax is
 <code>--zookeeper localhost:2181,localhost:2182/kafka</code>
 (path is mentioned only once, at the very<span class="widont">&nbsp;</span>end).</p>
-<h2 id="deployment-considerations">Deployment considerations <a class="header-anchor" href="#deployment-considerations" aria-hidden="true">¶</a></h2>
-<h3 id="kafka-and-zookeeper">Kafka and Zookeeper <a class="header-anchor" href="#kafka-and-zookeeper" aria-hidden="true">¶</a></h3>
+<h2 id="deployment-considerations" tabindex="-1">Deployment considerations <a class="header-anchor" href="#deployment-considerations">¶</a></h2>
+<h3 id="kafka-and-zookeeper" tabindex="-1">Kafka and Zookeeper <a class="header-anchor" href="#kafka-and-zookeeper">¶</a></h3>
 <p><a href="TBD">Netflix says scary things</a> — like, kafka cluster is not really good
 in surviving <span class="caps">ZK</span> ensemble break down. They deploy <span class="caps">ZK</span> cluster per kafka<span class="widont">&nbsp;</span>cluster.</p>
-<h3 id="offsets-replication-factor">Offsets replication factor <a class="header-anchor" href="#offsets-replication-factor" aria-hidden="true">¶</a></h3>
+<h3 id="offsets-replication-factor" tabindex="-1">Offsets replication factor <a class="header-anchor" href="#offsets-replication-factor">¶</a></h3>
 <p>You should increase replication factor of <code>__consumer_offsets</code>
 topic to at least 3. For<span class="widont">&nbsp;</span>example:</p>
 <pre><code>offsets.topic.replication.factor=3
@@ -36,8 +36,8 @@ topic to at least 3. For<span class="widont">&nbsp;</span>example:</p>
 is created (e.g. when the first consumer is connected)
 we have 3 alive brokers. Otherwise, we may need to
 manually increase the replication factor for this<span class="widont">&nbsp;</span>topic.</p>
-<h2 id="monitoring-and-management-uis">Monitoring and management UIs <a class="header-anchor" href="#monitoring-and-management-uis" aria-hidden="true">¶</a></h2>
-<h3 id="offsetsconsumers">Offsets/consumers <a class="header-anchor" href="#offsetsconsumers" aria-hidden="true">¶</a></h3>
+<h2 id="monitoring-and-management-uis" tabindex="-1">Monitoring and management UIs <a class="header-anchor" href="#monitoring-and-management-uis">¶</a></h2>
+<h3 id="offsets%2Fconsumers" tabindex="-1">Offsets/consumers <a class="header-anchor" href="#offsets%2Fconsumers">¶</a></h3>
 <ul>
 <li><a href="https://github.com/linkedin/Burrow">https://github.com/linkedin/Burrow</a>
 <ul>
@@ -54,7 +54,7 @@ manually increase the replication factor for this<span class="widont">&nbsp;</sp
 </li>
 <li><a href="https://github.com/andreas-schroeder/kafka-health-check">https://github.com/andreas-schroeder/kafka-health-check</a></li>
 </ul>
-<h3 id="management">Management <a class="header-anchor" href="#management" aria-hidden="true">¶</a></h3>
+<h3 id="management" tabindex="-1">Management <a class="header-anchor" href="#management">¶</a></h3>
 <ul>
 <li><a href="http://www.landoop.com/blog/2016/08/kafka-topics-ui/">http://www.landoop.com/blog/2016/08/kafka-topics-ui/</a>
 <ul>
@@ -80,14 +80,14 @@ manually increase the replication factor for this<span class="widont">&nbsp;</sp
 <li><a href="https://github.com/linkedin/kafka-monitor">https://github.com/linkedin/kafka-monitor</a></li>
 </ul>
 <p>The Kafka <span class="caps">REST</span> Proxy can also be<span class="widont">&nbsp;</span>used.</p>
-<h2 id="operations-notes">Operations notes <a class="header-anchor" href="#operations-notes" aria-hidden="true">¶</a></h2>
-<h3 id="getting-the-list-of-active-brokers">Getting the list of active brokers <a class="header-anchor" href="#getting-the-list-of-active-brokers" aria-hidden="true">¶</a></h3>
+<h2 id="operations-notes" tabindex="-1">Operations notes <a class="header-anchor" href="#operations-notes">¶</a></h2>
+<h3 id="getting-the-list-of-active-brokers" tabindex="-1">Getting the list of active brokers <a class="header-anchor" href="#getting-the-list-of-active-brokers">¶</a></h3>
 <p>Somewhat ugly, but works when you need it, and you don’t have
 a way to compile Java code<span class="widont">&nbsp;</span>handy:</p>
 <pre><code class="hljs lang-bash">bin/zookeeper-shell.sh localhost:2181/kafka/<span class="built_in">local</span> ls /brokers/ids \
     | tail -n1 | egrep -o <span class="string">'[[:digit:]]+'</span>
 </code></pre>
-<h3 id="managing-partitions">Managing partitions <a class="header-anchor" href="#managing-partitions" aria-hidden="true">¶</a></h3>
+<h3 id="managing-partitions" tabindex="-1">Managing partitions <a class="header-anchor" href="#managing-partitions">¶</a></h3>
 <p>Partitions can be reassigned<span class="widont">&nbsp;</span>manually:</p>
 <ul>
 <li>if you need to change the replication factor of the existing<span class="widont">&nbsp;</span>topic;</li>
@@ -115,7 +115,7 @@ need some special adjustments, or we want to change the replication
 factor (this is done by adding more brokers) — than we’ll have to edit
 this plan, either manually or with some kind of script, or just generate
 the plan with a script right<span class="widont">&nbsp;</span>away.</p>
-<h2 id="random-links">Random links <a class="header-anchor" href="#random-links" aria-hidden="true">¶</a></h2>
+<h2 id="random-links" tabindex="-1">Random links <a class="header-anchor" href="#random-links">¶</a></h2>
 <ul>
 <li><a href="http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf">http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf</a></li>
 <li><a href="https://github.com/vasilievip/jeeconf-kafka-camel-boot">https://github.com/vasilievip/jeeconf-kafka-camel-boot</a></li>
@@ -138,14 +138,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-01-09.
-            Last updated 2017-11-03 09:57:29 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/kafka/index.md">notes/kafka/index.md</a>.
+          <p>Published on 2017-01-09. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/notes/kafka/index.md">notes/kafka/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

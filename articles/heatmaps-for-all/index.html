@@ -19,7 +19,7 @@
         <div class="content"><p>Heatmaps are awesome: in many cases, using color to represent an extra
 dimension allows to get good insights on what’s really happening. But
 how to draw them?  Below, I’ll take a quick look onto a couple of<span class="widont">&nbsp;</span>ways.</p>
-<h2 id="the-experiment">The Experiment <a class="header-anchor" href="#the-experiment" aria-hidden="true">¶</a></h2>
+<h2 id="the-experiment" tabindex="-1">The Experiment <a class="header-anchor" href="#the-experiment">¶</a></h2>
 <p>Currently, I work on a Solr-based search service for one of the <span class="caps">US</span>
 e-retailers, and of course I’m interested in its performance. I can
 easiliy gather the response times from the service – from various
@@ -32,7 +32,7 @@ experiment, I’m taking response times for the few minutes after the
 application startup, with all the cache warming disabled. This way,
 we’ll be able to see how response time changes as <span class="caps">JVM</span> and Solr caches
 are<span class="widont">&nbsp;</span>warming.</p>
-<h2 id="trace2heatmappl"><a href="http://trace2heatmap.pl">trace2heatmap.pl</a> <a class="header-anchor" href="#trace2heatmappl" aria-hidden="true">¶</a></h2>
+<h2 id="trace2heatmap.pl" tabindex="-1"><a href="http://trace2heatmap.pl">trace2heatmap.pl</a> <a class="header-anchor" href="#trace2heatmap.pl">¶</a></h2>
 <p><a href="http://www.brendangregg.com">Brendan Gregg</a> once created a very simple, easy to use perl script
 to build heat maps from traces gathered with <a href="http://www.brendangregg.com/HeatMaps/latency.html">various tools</a>, most
 notably <a href="http://www.brendangregg.com/blog/2014-07-01/perf-heat-maps.html">perf</a>, and made it available
@@ -65,7 +65,7 @@ in the status line below the map. For that, the <span class="caps">SVG</span> sh
 included not as image, but as<span class="widont">&nbsp;</span>object:</p>
 <pre><code class="hljs lang-html"><span class="tag">&lt;<span class="name">object</span> <span class="attr">data</span>=<span class="string">"heatmap-warmup.svg"</span> <span class="attr">type</span>=<span class="string">"image/svg+xml"</span>&gt;</span><span class="tag">&lt;/<span class="name">object</span>&gt;</span>
 </code></pre>
-<h2 id="numpy-matplotlib">numpy + matplotlib <a class="header-anchor" href="#numpy-matplotlib" aria-hidden="true">¶</a></h2>
+<h2 id="numpy-%2B-matplotlib" tabindex="-1">numpy + matplotlib <a class="header-anchor" href="#numpy-%2B-matplotlib">¶</a></h2>
 <p><a href="http://matplotlib.org/">matplotlib</a> is a python 2D plotting library known in the scientific<span class="widont">&nbsp;</span>community.</p>
 <p>Creating heatmap with it is totally googleable, but the simplest option
 — <code>plt.hist2d(...)</code> —  did not work for me: it displayed the picture
@@ -74,7 +74,7 @@ flipped upside down. So, I had to come up with a bit more elaborate<span class="
 <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
 
 <span class="comment"># read the data</span>
-x, y = np.loadtxt(<span class="string">'responses.dat'</span>, unpack=<span class="keyword">True</span>)
+x, y = np.loadtxt(<span class="string">'responses.dat'</span>, unpack=<span class="literal">True</span>)
 
 <span class="comment"># change absolute timestamps to relative to start, and convert to seconds:</span>
 x = (x - x[<span class="number">0</span>]) / <span class="number">1000.0</span>
@@ -120,7 +120,7 @@ Also, the interactive <span class="caps">UI</span> is rather slow, and making it
 data for the point under cursor is somewhat<span class="widont">&nbsp;</span>tricky.</p>
 <p>In fact, everything is kind of tricky. There are just so
 may knobs and<span class="widont">&nbsp;</span>buttons…</p>
-<h2 id="gnuplot">gnuplot <a class="header-anchor" href="#gnuplot" aria-hidden="true">¶</a></h2>
+<h2 id="gnuplot" tabindex="-1">gnuplot <a class="header-anchor" href="#gnuplot">¶</a></h2>
 <p>A few years ago I was using <code>gnuplot</code> every day: no other plotting tool
 could handle a few thousand data points with that ease and speed. Since
 that<span class="widont">&nbsp;</span>time</p>
@@ -153,7 +153,7 @@ even<span class="widont">&nbsp;</span>simpler:</p>
 
 <span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(src_file, dst_file, xbins, ybins)</span>:</span>
     <span class="comment"># read the data</span>
-    x, y = np.loadtxt(src_file, unpack=<span class="keyword">True</span>)
+    x, y = np.loadtxt(src_file, unpack=<span class="literal">True</span>)
 
     <span class="comment"># change absolute timestamps to relative to start, and convert to seconds:</span>
     x = (x - x[<span class="number">0</span>]) / <span class="number">1000.0</span>
@@ -205,7 +205,7 @@ time to go through the docs and examples and get things<span class="widont">&nbs
 <li><a href="http://lowrank.net/gnuplot/index-e.html">Gnuplot tips — not so Frequently Asked<span class="widont">&nbsp;</span>Questions</a></li>
 <li><a href="http://psy.swansea.ac.uk/staff/carter/gnuplot/">gnuplot Examples from Neil<span class="widont">&nbsp;</span>Carter</a></li>
 </ul>
-<h2 id="concluding-remarks">Concluding remarks <a class="header-anchor" href="#concluding-remarks" aria-hidden="true">¶</a></h2>
+<h2 id="concluding-remarks" tabindex="-1">Concluding remarks <a class="header-anchor" href="#concluding-remarks">¶</a></h2>
 <p>I’ve not covered many other options, most notably <code>R</code>, which seems
 to become <em>the</em> tool for data manipulation and analysis, and has
 excellent visualization options; but I don’t feel like diving there<span class="widont">&nbsp;</span>now.</p>
@@ -224,14 +224,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-01-05.
-            Last updated 2017-01-22 19:24:35 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/heatmaps-for-all/index.md">articles/heatmaps-for-all/index.md</a>.
+          <p>Published on 2017-01-05. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/heatmaps-for-all/index.md">articles/heatmaps-for-all/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

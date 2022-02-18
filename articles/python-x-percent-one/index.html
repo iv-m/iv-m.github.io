@@ -21,7 +21,7 @@ Python look like craziness. But with the years are passing,
 you get to feel like at home with it… until you see something like
 <code>x % 1</code>.</p>
 <p>Why would anyone do that? In production<span class="widont">&nbsp;</span>code?</p>
-<h2 id="the-docs">The Docs <a class="header-anchor" href="#the-docs" aria-hidden="true">¶</a></h2>
+<h2 id="the-docs" tabindex="-1">The Docs <a class="header-anchor" href="#the-docs">¶</a></h2>
 <p>The <a href="https://docs.python.org/2/reference/expressions.html#binary-arithmetic-operations">Python documentation</a> gives a bit of clue regarding the possible uses
 of such<span class="widont">&nbsp;</span>expression:</p>
 <blockquote>
@@ -40,7 +40,7 @@ the negative numbers it’s a bit more complicated, but the idea is the<span cla
 <p>This means that when you take modulo by <code>1</code> what you get is… right,
 the <em>fractional part</em> of <code>x</code>. And in a much more concise way then usual
 <code>math.modf</code>.</p>
-<h2 id="the-examples">The Examples <a class="header-anchor" href="#the-examples" aria-hidden="true">¶</a></h2>
+<h2 id="the-examples" tabindex="-1">The Examples <a class="header-anchor" href="#the-examples">¶</a></h2>
 <p>Let’s try this:</p>
 <pre><code class="hljs lang-python"><span class="meta">&gt;&gt;&gt; </span>x = <span class="number">3.14</span>
 <span class="meta">&gt;&gt;&gt; </span>x % <span class="number">.7</span>
@@ -50,7 +50,7 @@ the <em>fractional part</em> of <code>x</code>. And in a much more concise way t
 </code></pre>
 <p>As you see, this works <em>almost</em> as in docs. Well, that’s floating point
 arithmetic for you<span class="widont">&nbsp;</span>=).</p>
-<h2 id="the-end">The End <a class="header-anchor" href="#the-end" aria-hidden="true">¶</a></h2>
+<h2 id="the-end" tabindex="-1">The End <a class="header-anchor" href="#the-end">¶</a></h2>
 <p>It worth pointing out that Python is not unique in this respect. While
 in C both operands of the <code>%</code> operator will be cast to <code>int</code>, in most
 interpreted languages (including Ruby and <span class="caps">JS</span>), and, quite surprisingly,
@@ -68,14 +68,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-12-29.
-            Last updated 2018-01-28 10:58:11 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-x-percent-one/index.md">articles/python-x-percent-one/index.md</a>.
+          <p>Published on 2017-12-29. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-x-percent-one/index.md">articles/python-x-percent-one/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

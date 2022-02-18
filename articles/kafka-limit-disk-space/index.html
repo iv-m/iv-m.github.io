@@ -20,7 +20,7 @@
 <a href="http://kafka.apache.org">Apache Kafka</a> can use. But it turns out that this is not as trivial
 as one might imagine — for me, it took several iterations to find
 the correct settings. The details<span class="widont">&nbsp;</span>below.</p>
-<h2 id="step-zero-admit-you-have-a-problem">Step Zero: admit you have a problem <a class="header-anchor" href="#step-zero-admit-you-have-a-problem" aria-hidden="true">¶</a></h2>
+<h2 id="step-zero%3A-admit-you-have-a-problem" tabindex="-1">Step Zero: admit you have a problem <a class="header-anchor" href="#step-zero%3A-admit-you-have-a-problem">¶</a></h2>
 <p>All the messages Kafka broker receives are written to <em>commit logs</em> —
 essentially, files on the file<span class="widont">&nbsp;</span>system.</p>
 <p>What happens when logs fill all the available disk space? That’s simple
@@ -35,10 +35,10 @@ to bring the broker back up, after making some space available to<span class="wi
 tests against a Kafka cluster. Kafka is <em>fast</em>, so I had to throw quite
 a lot of data into it to see how it behaves under the load — and it
 turned out that disk space of my test machines are rather<span class="widont">&nbsp;</span>limited.</p>
-<h2 id="step-one-naive-first-try">Step One: naive first try <a class="header-anchor" href="#step-one-naive-first-try" aria-hidden="true">¶</a></h2>
+<h2 id="step-one%3A-naive-first-try" tabindex="-1">Step One: naive first try <a class="header-anchor" href="#step-one%3A-naive-first-try">¶</a></h2>
 <p>Kafka broker has two basic parameters that define the logs retention:
 time-based <code>log.retention.hours</code> and volume-based <code>log.retention.bytes</code>.
-When both are defined, they are combined on &quot;whichever comes first&quot;
+When both are defined, they are combined on “whichever comes first”
 basis: the message can be deleted if they are older than
 <code>log.retention.hours</code> <strong><span class="caps">OR</span></strong> they are more than <code>log.retention.bytes</code>
 behind the last message. In other words, a message is safe from
@@ -47,7 +47,7 @@ and no more than <code>log.retention.bytes</code> behind the last<span class="wi
 <p>So, can you just set <code>log.retention.bytes</code> (which is not set
 by default) and live happily ever<span class="widont">&nbsp;</span>after?</p>
 <p><span class="caps">NOT</span> <span class="caps">REALLY</span>.</p>
-<h2 id="how-it-really-works-segments">How it really works: segments <a class="header-anchor" href="#how-it-really-works-segments" aria-hidden="true">¶</a></h2>
+<h2 id="how-it-really-works%3A-segments" tabindex="-1">How it really works: segments <a class="header-anchor" href="#how-it-really-works%3A-segments">¶</a></h2>
 <p>In fact, Kafka splits log for each replica into segments: it writes new
 messages to the last of them, and when the current segment reaches the
 certain size, it creates the next one and starts writing incoming
@@ -68,7 +68,7 @@ distributed evenly across 3 brokers) I did not notice any performance<span class
 <p>So, can we go and set <code>log.segment.bytes</code> to, say, <code>107374182</code>, and then
 get back to what we were<span class="widont">&nbsp;</span>doing?</p>
 <p><span class="caps">NOT</span> <span class="caps">REALLY</span>.</p>
-<h2 id="how-it-really-really-works-periodic-check">How it really really works: periodic check <a class="header-anchor" href="#how-it-really-really-works-periodic-check" aria-hidden="true">¶</a></h2>
+<h2 id="how-it-really-really-works%3A-periodic-check" tabindex="-1">How it really really works: periodic check <a class="header-anchor" href="#how-it-really-really-works%3A-periodic-check">¶</a></h2>
 <p>The segments are not deleted at the very moment the broker has a right
 to do it: it would be impractical and certainly hit the performance to
 check if there is anything to delete on every incoming message. Instead,
@@ -80,7 +80,7 @@ ok) for the usual settings when you are storing last 168 hours (7 days)
 of messages, but for my tests that was just too big, and I reduced the
 check period to 20 seconds. Did this finally work for<span class="widont">&nbsp;</span>me?</p>
 <p><span class="caps">NOT</span> <span class="caps">REALLY</span>.</p>
-<h2 id="how-it-really-really-really-works-delete-delay">How it really really really works: delete delay <a class="header-anchor" href="#how-it-really-really-really-works-delete-delay" aria-hidden="true">¶</a></h2>
+<h2 id="how-it-really-really-really-works%3A-delete-delay" tabindex="-1">How it really really really works: delete delay <a class="header-anchor" href="#how-it-really-really-really-works%3A-delete-delay">¶</a></h2>
 <p>Since December 2012 and <a href="https://issues.apache.org/jira/browse/KAFKA-636"><span class="caps">KAFKA</span>-636</a>, the periodic check does not really
 delete the segments: instead, it marks the segment for deletion by
 renaming the file (it adds <code>.deleted</code> suffix) and schedules the actual
@@ -96,7 +96,7 @@ directory, and actual deletion will not happen until the last file
 descriptor to this file is closed – so I boldly reduced that delay from
 60 seconds to one. Did this do the job for<span class="widont">&nbsp;</span>me?</p>
 <p>Well, looks like<span class="widont">&nbsp;</span>it.</p>
-<h2 id="wrapping-up">Wrapping up <a class="header-anchor" href="#wrapping-up" aria-hidden="true">¶</a></h2>
+<h2 id="wrapping-up" tabindex="-1">Wrapping up <a class="header-anchor" href="#wrapping-up">¶</a></h2>
 <p>I found it really interesting that despite the fact that I’ve read
 through the documentation, and the fact that the documentation is
 awesome, and the fact that the way Kafka code works makes a lot of sense
@@ -120,14 +120,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-02-26.
-            Last updated 2017-03-26 22:29:33 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-limit-disk-space/index.md">articles/kafka-limit-disk-space/index.md</a>.
+          <p>Published on 2017-02-26. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-limit-disk-space/index.md">articles/kafka-limit-disk-space/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

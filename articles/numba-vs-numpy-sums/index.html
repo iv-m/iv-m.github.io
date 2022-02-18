@@ -17,10 +17,10 @@
       <div class="content-wrap">
         <h1>Numba vs Numpy: some sums</h1>
         <div class="content"><p><a href="http://numba.pydata.org/">Numba</a> is open-source optimizing compiler for Python. It seems work like magic: just add a simple decorator to your pure-python function, and it immediately becomes 200 times faster – at least, so clames the <a href="https://en.wikipedia.org/w/index.php?title=Numba&amp;oldid=831668946">Wikipedia article about Numba</a>. Even this is hard to believe, but Wikipedia goes further and claims that a vary naive implementation of a sum of a numpy array is 30% faster then <code>numpy.sum</code>. Somehow, I would expect that <code>numpy.sum</code> is as optimized as it can be, so this clame sounds even more ambitious. Let’s check this with some<span class="widont">&nbsp;</span>benchmarks!</p>
-<h2 id="system-setup">System setup <a class="header-anchor" href="#system-setup" aria-hidden="true">¶</a></h2>
+<h2 id="system-setup" tabindex="-1">System setup <a class="header-anchor" href="#system-setup">¶</a></h2>
 <p>As usual, I’m working on my Lenovo T440p laptop running AltLinux. It has mobile Haswell processor with 2 cores and 4 hardware threads. To make benchmarks more reproducible, I’ve disabled TurboBoost and locked scaling to almost 2 GHz<span class="widont">&nbsp;</span>(~1995).</p>
 <pre><code class="hljs lang-sh">%%sh
-uname <span class="_">-a</span>
+uname -a
 </code></pre>
 <pre><code>Linux imelnikov.localdomain 4.14.24-un-def-alt0.M80P.1 #1 SMP PREEMPT Tue Mar 6 15:00:33 UTC 2018 x86_64 GNU/Linux
 </code></pre>
@@ -53,7 +53,7 @@ numba version: 0.36.2
 </code></pre>
 <pre><code class="hljs lang-python">np.random.seed(<span class="number">42</span>)
 </code></pre>
-<h2 id="system-under-test">System under test <a class="header-anchor" href="#system-under-test" aria-hidden="true">¶</a></h2>
+<h2 id="system-under-test" tabindex="-1">System under test <a class="header-anchor" href="#system-under-test">¶</a></h2>
 <p>Here is the code from<span class="widont">&nbsp;</span>Wikipedia:</p>
 <pre><code class="hljs lang-python"><span class="function"><span class="keyword">def</span> <span class="title">sum1d</span><span class="params">(my_double_array)</span>:</span>
     total = <span class="number">0.0</span>
@@ -62,14 +62,14 @@ numba version: 0.36.2
     <span class="keyword">return</span> total
 </code></pre>
 <p>Numba’s <code>jit</code> is intended to be used as decorator, but we’re going to call it explicitly to make sure we run the same code with and without<span class="widont">&nbsp;</span>jit:</p>
-<pre><code class="hljs lang-python">sum1d_jit = numba.jit(nopython=<span class="keyword">True</span>)(sum1d)
+<pre><code class="hljs lang-python">sum1d_jit = numba.jit(nopython=<span class="literal">True</span>)(sum1d)
 </code></pre>
 <pre><code class="hljs lang-python">sum1d_jit
 </code></pre>
 <pre><code>CPUDispatcher(&lt;function sum1d at 0x7fb4eee77158&gt;)
 </code></pre>
 <p>We’ll also check if parallelization will make any difference for<span class="widont">&nbsp;</span>us:</p>
-<pre><code class="hljs lang-python">sum1d_par = numba.jit(nopython=<span class="keyword">True</span>, parallel=<span class="keyword">True</span>)(sum1d)
+<pre><code class="hljs lang-python">sum1d_par = numba.jit(nopython=<span class="literal">True</span>, parallel=<span class="literal">True</span>)(sum1d)
 </code></pre>
 <p>Let’s run a quick test to make sure we’ve done everything correctly, and to force numba to compile <code>float64</code> version of our <code>sum1d</code>:</p>
 <pre><code class="hljs lang-python">sample_data = np.random.randn(<span class="number">42</span>)
@@ -82,7 +82,7 @@ numba version: 0.36.2
  -7.835638675532195)
 </code></pre>
 <p>It’s interesting: naive python version and jitted version return the same number exactly, but <code>numpy.sum</code> apparently calculates things in a bit<span class="widont">&nbsp;</span>differntly.</p>
-<h2 id="measurements">Measurements <a class="header-anchor" href="#measurements" aria-hidden="true">¶</a></h2>
+<h2 id="measurements" tabindex="-1">Measurements <a class="header-anchor" href="#measurements">¶</a></h2>
 <p>We’ll make a few runs for various array<span class="widont">&nbsp;</span>sizes:</p>
 <pre><code class="hljs lang-python">measures = <span class="number">13</span>
 sizes = <span class="number">4</span> ** np.arange(measures)
@@ -176,7 +176,7 @@ size = 16777216
 CPU times: user 6min 4s, sys: 267 ms, total: 6min 5s
 Wall time: 6min 5s
 </code></pre>
-<h2 id="looking-at-the-data">Looking at the data <a class="header-anchor" href="#looking-at-the-data" aria-hidden="true">¶</a></h2>
+<h2 id="looking-at-the-data" tabindex="-1">Looking at the data <a class="header-anchor" href="#looking-at-the-data">¶</a></h2>
 <p>First, let’s look at various speedups and<span class="widont">&nbsp;</span>slowdowns:</p>
 <pre><code class="hljs lang-python">numba_vs_naive = res_python / res_numba
 numba_vs_naive.max()
@@ -228,7 +228,7 @@ plt.legend();
 </code></pre>
 <p><img src="./index_36_0.png" alt="png"></p>
 <p>The jitted version is more then 5 times faster on smaller arrays, but for larger arrays numpy becomes ~2.5 times faster then numba; they show similar performance when array sizes are about<span class="widont">&nbsp;</span>4000.</p>
-<h2 id="conclusions">Conclusions <a class="header-anchor" href="#conclusions" aria-hidden="true">¶</a></h2>
+<h2 id="conclusions" tabindex="-1">Conclusions <a class="header-anchor" href="#conclusions">¶</a></h2>
 <p>I consider both clames of the Wikipedia article confirmed: numba brings tremendous speedup to naive python code at the const of just one decorator (and one huge additional dependency – the numba itself <code>^_-</code>); for arrays of quite reasonable size numba can be much faster then numpy – e.g. for size 1024 it ~2 times<span class="widont">&nbsp;</span>faster!</p>
 <p>This allows me to conclude that <strong>numba is awesome</strong>. Let’s see how it will behave on more real-life projects of<span class="widont">&nbsp;</span>mine.</p>
 <p>You can download the full notebook <a href="Numba_vs_Numpy_-_some_sums.ipynb">here</a>.</p>
@@ -243,14 +243,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2018-03-28.
-            Last updated 2018-03-28 18:47:45 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/numba-vs-numpy-sums/index.md">articles/numba-vs-numpy-sums/index.md</a>.
+          <p>Published on 2018-03-28. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/numba-vs-numpy-sums/index.md">articles/numba-vs-numpy-sums/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

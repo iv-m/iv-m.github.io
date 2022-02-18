@@ -21,7 +21,7 @@ magic, like metaclasses and descriptors. But what if a simple language
 construct, in a simple code, just makes you stop and say <em>“<span class="caps">WAT</span>?”</em>.
 That’s exactly what happened to me when I saw this: <code>x = x[::-1]</code>.
 What does <em>that</em> mean? Let’s take a quick<span class="widont">&nbsp;</span>look.</p>
-<h2 id="the-docs">The Docs <a class="header-anchor" href="#the-docs" aria-hidden="true">¶</a></h2>
+<h2 id="the-docs" tabindex="-1">The Docs <a class="header-anchor" href="#the-docs">¶</a></h2>
 <p>The “official” definition how subscriptions work in Python can, with certain
 luck, be found in <a href="https://docs.python.org/2.7/library/stdtypes.html#sequence-types-str-unicode-list-tuple-bytearray-buffer-xrange">Python docs</a>:</p>
 <blockquote>
@@ -34,7 +34,7 @@ depends on the sign of <code>k</code>).</p>
 </blockquote>
 <p>So, with <code>x[::-1]</code> we are taking the whole <code>x</code> (similarly to <code>x[:]</code>), but
 with step <code>-1</code> – which means, we are having <code>x</code> reversed.</p>
-<h2 id="the-examples">The Examples <a class="header-anchor" href="#the-examples" aria-hidden="true">¶</a></h2>
+<h2 id="the-examples" tabindex="-1">The Examples <a class="header-anchor" href="#the-examples">¶</a></h2>
 <p>Let’s try it:</p>
 <pre><code class="hljs lang-python"><span class="meta">&gt;&gt;&gt; </span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>][::<span class="number">-1</span>]
 [<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]
@@ -46,7 +46,7 @@ with step <code>-1</code> – which means, we are having <code>x</code> reversed
 <p>What I also have to notice is that this construct (unlike, e.g., [reversed]
 builtin) preserves the type of its argument: for tuple, you get tuple,
 and for string, you get string. This is often<span class="widont">&nbsp;</span>convenient.</p>
-<h2 id="the-end">The End <a class="header-anchor" href="#the-end" aria-hidden="true">¶</a></h2>
+<h2 id="the-end" tabindex="-1">The End <a class="header-anchor" href="#the-end">¶</a></h2>
 <p>Well, the more you<span class="widont">&nbsp;</span>learn…</p>
 </div>
       </div>
@@ -59,14 +59,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-12-11.
-            Last updated 2017-12-11 13:52:36 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-colon-colon/index.md">articles/python-colon-colon/index.md</a>.
+          <p>Published on 2017-12-11. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/python-colon-colon/index.md">articles/python-colon-colon/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>

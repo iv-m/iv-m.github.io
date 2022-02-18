@@ -18,8 +18,7 @@
         <div class="warn">
           <h3>This is a DRAFT ARTICLE</h3>
           <p>
-            It is probably incomplete, wrong, and broken in
-            many respects. Please hesitate from reading this until
+            It is probably incomplete, wrong, and broken inmany respects. Please hesitate from reading this until
             this work is complete; or just consider yourself warned.
           </p>
         </div>
@@ -27,7 +26,7 @@
         <div class="content"><p>Both Kafka servers and clients expose a number of <a href="http://kafka.apache.org/documentation.html#monitoring">metrics</a> that are
 indispensable for monitoring. But when you see a metric like ‘average request
 size’, or ‘request rate’, what does that really mean? Let’s<span class="widont">&nbsp;</span>explore.</p>
-<h2 id="a-question-of-frameworks">A question of frameworks <a class="header-anchor" href="#a-question-of-frameworks" aria-hidden="true">¶</a></h2>
+<h2 id="a-question-of-frameworks" tabindex="-1">A question of frameworks <a class="header-anchor" href="#a-question-of-frameworks">¶</a></h2>
 <p>Kafka brokers use two frameworks for metrics reporting: Yammer
 metrics (which are now <a href="http://metrics.dropwizard.io/">Code Hale metrics</a>, but Kafka still
 uses the older version of the artifact), and Kafka’s own
@@ -38,7 +37,7 @@ use the latter<span class="widont">&nbsp;</span>only.</p>
 less known, and clients use Kafka metrics only. But please be aware
 some of the things written below are not applicable to <em>all</em> of
 the broker<span class="widont">&nbsp;</span>metrics.</p>
-<h2 id="quick-overview">Quick overview <a class="header-anchor" href="#quick-overview" aria-hidden="true">¶</a></h2>
+<h2 id="quick-overview" tabindex="-1">Quick overview <a class="header-anchor" href="#quick-overview">¶</a></h2>
 <p>Let say we want to measure, for example, various message size metrics:
 average, maximum size, and so on. For<span class="widont">&nbsp;</span>that,</p>
 <ul>
@@ -63,7 +62,7 @@ them in various<span class="widont">&nbsp;</span>ways;</li>
 </li>
 </ul>
 <p>Let’s take a look at this at a bit more<span class="widont">&nbsp;</span>detail.</p>
-<h2 id="metrics-measurables-and-stats">Metrics, Measurables and Stats <a class="header-anchor" href="#metrics-measurables-and-stats" aria-hidden="true">¶</a></h2>
+<h2 id="metrics%2C-measurables-and-stats" tabindex="-1">Metrics, Measurables and Stats <a class="header-anchor" href="#metrics%2C-measurables-and-stats">¶</a></h2>
 <p>When you read the metrics, you deal with an entity that
 is named, quite expectedly, <a href="TBD">Metric</a>. Metric is <em>“a named, numerical
 measurement”</em> – which is expressed in the code as clear as
@@ -193,7 +192,7 @@ recycled to begin recording the next<span class="widont">&nbsp;</span>sample.</p
 <hr class="footnotes-sep">
 <section class="footnotes">
 <ol class="footnotes-list">
-<li id="fn1" class="footnote-item"><p>Here and below, for sake of brevity, I&#8217;m stripping the
+<li id="fn1" class="footnote-item"><p>Here and below, for sake of brevity, I’m stripping the
 javadocs from the interfaces. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
 </li>
 </ol>
@@ -209,14 +208,12 @@ of a site because it seemed like a good idea.</p>
 
         </div>
         <div class="last-update">
-          <p>
-            Published on 2017-06-20.
-            Last updated 2017-11-03 09:57:29 +0400.
-            Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-metrics-what-rate-means/index.md">articles/kafka-metrics-what-rate-means/index.md</a>.
+          <p>Published on 2017-06-20. Last updated 2022-02-18 11:31:20 +0400.
+             Build from&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/blob/src/contents/articles/kafka-metrics-what-rate-means/index.md">articles/kafka-metrics-what-rate-means/index.md</a>.
           </p>
         </div>
         <div class="copy">
-          <p>&copy; 2016-2018 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
+          <p>&copy; 2016-2022 Ivan A. Melnikov &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>  &mdash;&nbsp;<a href="https://github.com/iv-m/iv-m.github.io/tree/src">source on github</a></p>
         </div>
       </div>
     </footer>
